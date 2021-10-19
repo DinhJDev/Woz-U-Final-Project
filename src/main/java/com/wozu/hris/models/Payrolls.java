@@ -23,9 +23,9 @@ import java.util.Date;
                                         LINE INDEX
     -----------------------------------------------------------------------------------
                                  Attributes - 36
-                     Created And Updated At - 50
-                        Getters And Setters - 71
-             Created And Updated At Getters - 111
+                     Created And Updated At - 54
+                        Getters And Setters - 75
+             Created And Updated At Getters - 115
 */
 
 @Entity

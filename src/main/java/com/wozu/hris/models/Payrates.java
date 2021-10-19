@@ -23,9 +23,9 @@ import java.util.Date;
                                         LINE INDEX
     -----------------------------------------------------------------------------------
                                  Attributes - 35
-                     Created And Updated At - 50
-                        Getters And Setters - 71
-             Created And Updated At Getters - 119
+                     Created And Updated At - 54
+                        Getters And Setters - 75
+             Created And Updated At Getters - 123
 */
 @Entity
 @Table(name="payrates")
