@@ -1,10 +1,10 @@
-package com.wozu;
+package com.wozu.hris;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WozUFinalProjectApplicationTests {
+class HrisApplicationTests {
 
 	@Test
 	void contextLoads() {
