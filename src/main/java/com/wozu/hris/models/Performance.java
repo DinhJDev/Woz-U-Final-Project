@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -9,6 +10,7 @@ public class Performance {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private Date createdAt;
     private Date updatedAt;
     private String Comments;
