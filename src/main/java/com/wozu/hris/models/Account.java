@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -9,7 +10,9 @@ public class Account {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String username;
+    @NotNull
     private String password;
     private Date createdAt;
     private Date updatedAt;
