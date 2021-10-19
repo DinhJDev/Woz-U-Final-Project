@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /*
@@ -40,7 +41,10 @@ public class Payrolls {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private Long employee_id;
+
     private Date date;
     private Double amount;
 

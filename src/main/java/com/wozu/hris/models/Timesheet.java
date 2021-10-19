@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.util.Date;
 
@@ -42,7 +43,10 @@ public class Timesheet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private Long employee_id;
+
     private Date date;
     private Time time_start;
     private Time time_end;
