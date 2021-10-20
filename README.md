@@ -2,8 +2,6 @@
 
 <h1 align="center">McMillianHRIS</h1>
 
----
-
 <p align="center"> This project is an HRIS that has been built to provide an online solution for the McMillian and Associates organization. 
 <br> 
 </p>
