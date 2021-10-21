@@ -29,7 +29,7 @@ import java.util.Date;
 */
 @Entity
 @Table(name="payrates")
-public class Payrates {
+public class Payrate {
     /*
 
     -----------------------------------------------------------------------------------
