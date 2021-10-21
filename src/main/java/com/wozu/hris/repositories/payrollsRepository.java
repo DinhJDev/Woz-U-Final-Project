@@ -2,6 +2,7 @@ package com.wozu.hris.repositories;
 
 import com.wozu.hris.models.Payrolls;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /*
 
@@ -13,5 +14,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
  */
 
-public interface payrollsRepository extends JpaRepository<Payrolls, Integer> {
+@Repository
+public interface payrollsRepository extends JpaRepository<Payrolls, Long> {
 }
