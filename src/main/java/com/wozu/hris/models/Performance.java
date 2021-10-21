@@ -10,10 +10,10 @@ public class Performance {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private Date createdAt;
     private Date updatedAt;
-    private String Comments;
+    @NotNull
+    private String comment;
 
     @PrePersist
     protected void onCreate(){
@@ -41,10 +41,10 @@ public class Performance {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-    public String getComments() {
-        return Comments;
+    public String getComment() {
+        return comment;
     }
-    public void setComments(String comments) {
-        Comments = comments;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
