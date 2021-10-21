@@ -31,7 +31,7 @@ import java.util.Date;
 */
 
 @Entity
-@Table(name="timesheet")
+@Table(name="timesheets")
 public class Timesheet {
     /*
 
