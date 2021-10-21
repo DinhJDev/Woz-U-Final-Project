@@ -15,7 +15,7 @@ public class Candidate {
     @NotNull
     private String lastName;
     @NotNull
-    private String dateOfBirth;
+    private Date dateOfBirth;
     private Date createdAt;
     private Date updatedAt;
 
@@ -53,11 +53,11 @@ public class Candidate {
         this.lastName = lastName;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

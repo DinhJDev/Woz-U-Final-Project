@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="employees")
-public class Employee {
+public class Employee extends Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
