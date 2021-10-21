@@ -30,7 +30,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="payrolls")
-public class Payrolls {
+public class Payroll {
     /*
 
     -----------------------------------------------------------------------------------
