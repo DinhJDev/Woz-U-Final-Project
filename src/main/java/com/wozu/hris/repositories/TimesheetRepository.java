@@ -15,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface timesheetRepository extends JpaRepository<Timesheet, Long> {
+public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
 }
