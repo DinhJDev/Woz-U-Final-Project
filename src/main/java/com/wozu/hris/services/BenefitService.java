@@ -2,6 +2,7 @@ package com.wozu.hris.services;
 
 import com.wozu.hris.models.Benefit;
 import com.wozu.hris.repositories.BenefitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,8 @@ import java.util.Optional;
 **  —— 35. Return benefits
 **  —— 43. Create benefit
 **  —— 51. Retrieve benefit
+**  —— 63. Update benefit
+**  —— 76. Delete benefit
 ** -----------------------------------------------------------------*/
 
 @Service
@@ -26,11 +29,7 @@ public class BenefitService {
     ADD BENEFIT REPOSITORY AS DEPENDENCY
     ----------------------------------------------------------------*/
 
-    private final BenefitRepository benefitRepository;
-
-    public BenefitService(BenefitRepository benefitRepository) {
-        this.benefitRepository = benefitRepository;
-    }
+    @Autowired BenefitRepository benefitRepository;
 
     /*----------------------------------------------------------------
     RETURN ALL BENEFITS
@@ -59,5 +58,26 @@ public class BenefitService {
         } else {
             return null;
         }
+    }
+
+    /*----------------------------------------------------------------
+    UPDATE BENEFIT
+    ----------------------------------------------------------------*/
+
+    public Benefit updateBenefit(Long benefitID, Benefit benefit) {
+        Optional<Benefit> optionalBenefit = benefitRepository.findById(benefitID);
+        if(optionalBenefit.isPresent()) {
+            return benefitRepository.save(benefit);
+        } else {
+            return null;
+        }
+    }
+
+    /*----------------------------------------------------------------
+    DELETE BENEFIT
+    ----------------------------------------------------------------*/
+
+    public void deleteBenefit(Long benefitID) {
+        this.benefitRepository.deleteById(benefitID);
     }
 }
