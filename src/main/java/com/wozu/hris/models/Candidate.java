@@ -4,6 +4,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+
+
 @Entity
 @Table(name="candidates")
 public class Candidate {
@@ -76,4 +78,5 @@ public class Candidate {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }
