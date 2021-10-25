@@ -1,6 +1,5 @@
 package com.wozu.hris.models;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -10,9 +9,9 @@ public class Training {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-   @NotNull
     private Date createdAt;
     private Date updatedAt;
+    @NotNull
     private String trainingName;
     private String description;
 
