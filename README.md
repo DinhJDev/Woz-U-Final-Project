@@ -1,3 +1,4 @@
+
 <img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/Chetachi-Benefits/assets/McMillian%20HRIS.png">
 
 <h1 align="center">McMillianHRIS</h1>
@@ -74,12 +75,14 @@ Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a id = "authors"></a>
 
-- [@Addison]()
-- [@Alaina]()
+
+- [@Addison](https://github.com/Addisonhal)
+- [@Alaina](https://github.com/alainaFletcher)
 - [@Chetachi](https://github.com/chetachiezikeuzor)
-- [@Collin]()
-- [@Jason]()
-- [@Nathan]()
+- [@Collin](https://github.com/CVL101516)
+- [@Jason](https://github.com/DinhJDev)
+- [@Nathan](https://github.com/KienDu)
+
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
