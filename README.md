@@ -1,6 +1,3 @@
-from: https://github.com/DinhJDev/Woz-U-Final-Project/tree/Chetachi-Benefits
-
-credit: Chetachi Ezikeuzor
 
 <img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/Chetachi-Benefits/assets/McMillian%20HRIS.png">
 
@@ -78,12 +75,14 @@ Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a id = "authors"></a>
 
+
 - [@Addison](https://github.com/Addisonhal)
 - [@Alaina](https://github.com/alainaFletcher)
 - [@Chetachi](https://github.com/chetachiezikeuzor)
 - [@Collin](https://github.com/CVL101516)
 - [@Jason](https://github.com/DinhJDev)
 - [@Nathan](https://github.com/KienDu)
+
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
