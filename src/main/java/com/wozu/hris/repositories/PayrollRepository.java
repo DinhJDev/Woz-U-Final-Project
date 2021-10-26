@@ -15,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface PayrollsRepository extends JpaRepository<Payroll, Long> {
+public interface PayrollRepository extends JpaRepository<Payroll, Long> {
 }

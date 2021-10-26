@@ -1,7 +1,7 @@
 package com.wozu.hris.services;
 
 import com.wozu.hris.models.Payrate;
-import com.wozu.hris.repositories.PayratesRepository;
+import com.wozu.hris.repositories.PayrateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class PayrateService {
 
     @Autowired
-    PayratesRepository prRepo;
+    PayrateRepository prRepo;
 
     public List<Payrate> allPayrates(){
         return prRepo.findAll();

@@ -15,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface PayratesRepository extends JpaRepository<Payrate, Long> {
+public interface PayrateRepository extends JpaRepository<Payrate, Long> {
 }
