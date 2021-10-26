@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/Chetachi-Benefits/assets/McMillian%20HRIS.png">
+<img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png">
 
 <h1 align="center">McMillianHRIS</h1>
 
