@@ -26,6 +26,11 @@ public class Account {
         this.updatedAt = new Date();
     }
 
+    public Account(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
