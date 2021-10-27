@@ -15,11 +15,9 @@ public class Department {
     //attributes
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long dept_id;
+    private Long id;
     @NotNull
-    private String dept_name;
-    @NotNull
-    private int manager_id;
+    private String name;
     private Date createdAt;
     private Date updatedAt;
 
@@ -37,16 +35,14 @@ public class Department {
 
 
     //getters
-    public Long getDeptId() {
-        return dept_id;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public String getDeptName() {
-        return dept_name;
-    }
-
-    public int getManagerId() {
-        return manager_id;
+    public String getName() {
+        return name;
     }
 
     public Date getCreatedAt() {
@@ -59,16 +55,14 @@ public class Department {
 
 
     //setters
-    public void setDeptId(Long did) {
-        this.dept_id = did;
+
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setDeptName(String dn) {
-        this.dept_name = dn;
-    }
-
-    public void setManagerId(int mid) {
-        this.manager_id = mid;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setCreatedAt(Date c) {

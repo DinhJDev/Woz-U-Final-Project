@@ -27,7 +27,7 @@ public class DepartmentService {
 
     // Find department by name
     public Department findByDeptName(String dn) {
-        return deptRepo.findByDeptName(dn);
+        return deptRepo.findByName(dn);
     }
 
     // Find department by id

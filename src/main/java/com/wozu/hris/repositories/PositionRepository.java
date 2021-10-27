@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
-    Position findByPosName(String pos_name);
+    Position findByName(String name);
 }

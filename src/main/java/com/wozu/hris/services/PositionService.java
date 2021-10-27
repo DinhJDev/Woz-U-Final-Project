@@ -27,7 +27,7 @@ public class PositionService {
 
     // Find position by name
     public Position findByDeptName(String pn) {
-        return posRepo.findByPosName(pn);
+        return posRepo.findByName(pn);
     }
 
     // Find position by id

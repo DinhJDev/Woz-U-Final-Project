@@ -14,9 +14,9 @@ public class Position {
     //attributes
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long pos_id;
+    private Long id;
     @NotNull
-    private String pos_name;
+    private String name;
     @NotNull
     private Date createdAt;
     private Date updatedAt;
@@ -34,12 +34,14 @@ public class Position {
     }
 
     //getters
-    public Long getPosId() {
-        return pos_id;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public String getPosName() {
-        return pos_name;
+    public String getName() {
+        return name;
     }
 
     public Date getCreatedAt() {
@@ -52,12 +54,14 @@ public class Position {
 
 
     //setters
-    public void setPosId(Long pid) {
-        this.pos_id = pid;
+
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPosName(String pn) {
-        this.pos_name = pn;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setCreatedAt(Date c) {
