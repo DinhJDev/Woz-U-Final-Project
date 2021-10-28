@@ -3,6 +3,7 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 // departments model
 //created: 10/25/21
@@ -33,6 +34,13 @@ public class Department {
         this.updatedAt = new Date();
     }
 
+    //relationships
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
+
+    @OneToMany(mappedBy = "department")
+    private List<DepartmentEmployee> employees;
 
     //getters
 

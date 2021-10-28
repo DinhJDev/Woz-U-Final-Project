@@ -2,6 +2,9 @@ package com.wozu.hris.models;
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="trainings")
@@ -14,6 +17,10 @@ public class Training {
     @NotNull
     private String trainingName;
     private String description;
+
+    @OneToMany(mappedBy = "employee")
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
+
 
     @PrePersist
     protected void onCreate(){
@@ -52,5 +59,13 @@ public class Training {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
+    }
+
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 }

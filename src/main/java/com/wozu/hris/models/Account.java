@@ -17,6 +17,10 @@ public class Account {
     private Date createdAt;
     private Date updatedAt;
 
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = new Date();

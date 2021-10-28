@@ -3,11 +3,14 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
 @Table(name="employees")
-public class Employee extends Candidate {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,6 +23,36 @@ public class Employee extends Candidate {
     private Date createdAt;
     private Date updatedAt;
 
+    @OneToOne(mappedBy = "employee")
+    private Account account;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Timesheet> timesheets;
+
+    @OneToMany(mappedBy = "employee")
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
+
+    @OneToMany(mappedBy = "employee")
+    private List<Payroll> payrolls;
+
+    @OneToOne(mappedBy = "employee")
+    private Payrate payrate;
+
+    @ManyToOne
+    @JoinColumn(name="benefit_id")
+    private Benefit benefit;
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<Performance> reviews;
+
+    @OneToMany(mappedBy = "reviewee")
+    private List<Performance> performances;
+
+    @OneToOne(mappedBy = "manager")
+    private Department mDepartment;
+
+    @OneToMany(mappedBy = "employee")
+    private List<DepartmentEmployee> department;
 
     @PrePersist
     protected void onCreate(){
@@ -76,5 +109,29 @@ public class Employee extends Candidate {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public List<Timesheet> getTimesheets() {
+        return timesheets;
+    }
+
+    public void setTimesheets(List<Timesheet> timesheets) {
+        this.timesheets = timesheets;
+    }
+
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
+    }
+
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 }
