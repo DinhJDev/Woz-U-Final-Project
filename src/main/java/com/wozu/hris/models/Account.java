@@ -14,6 +14,8 @@ public class Account {
     private String username;
     @NotNull
     private String password;
+    @Transient
+    private String passwordConfirmation;
     private Date createdAt;
     private Date updatedAt;
 
@@ -68,5 +70,23 @@ public class Account {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
+    }
+
+
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }
