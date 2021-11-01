@@ -16,11 +16,13 @@ public class AccountController {
     @Autowired
     AccountService aService;
 
+    // Returns index.html (Landing Page) for user to view.
     @GetMapping("/")
     public String landingPage() {
         return "index";
     }
 
+    // Allows user input to register account.
     @PostMapping("/register")
     public String registerAccount(@Valid @RequestBody Account account, BindingResult result, HttpSession session){
         aService.registerAccount(account, result);
@@ -31,6 +33,7 @@ public class AccountController {
         return "redirect:/dashboard";
     }
 
+    // Allows user input to login account.
     @PostMapping("login")
     public String loginAccount(@Valid @RequestBody Account account, BindingResult result, HttpSession session){
         Account acc = aService.authenticate(account, result);
