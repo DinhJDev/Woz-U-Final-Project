@@ -3,6 +3,7 @@ package com.wozu.hris.controllers;
 import com.wozu.hris.models.Account;
 import com.wozu.hris.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
-@RestController
+@Controller
 @RequestMapping("")
 public class AccountController {
     @Autowired
