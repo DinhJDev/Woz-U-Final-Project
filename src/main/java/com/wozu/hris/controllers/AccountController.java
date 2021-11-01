@@ -17,10 +17,15 @@ public class AccountController {
     @Autowired
     AccountService aService;
 
-    // Returns index.html (Landing Page) for user to view.
+    // Returns homepage.
     @GetMapping("/")
-    public String landingPage() {
-        return "index";
+    public String homePage() {
+        return "homepage";
+    }
+
+    @GetMapping("/registration")
+    public String registration() {
+        return "registration";
     }
 
     // Allows user input to register account.
@@ -28,10 +33,15 @@ public class AccountController {
     public String registerAccount(@Valid @RequestBody Account account, BindingResult result, HttpSession session){
         aService.registerAccount(account, result);
         if(result.hasErrors()) {
-            return "index";
+            return "register";
         }
         session.setAttribute("user_id", account.getId());
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
 
     // Allows user input to login account.
@@ -39,10 +49,20 @@ public class AccountController {
     public String loginAccount(@Valid @RequestBody Account account, BindingResult result, HttpSession session){
         Account acc = aService.authenticate(account, result);
         if(result.hasErrors()) {
-            return "index";
+            return "login";
         }
         session.setAttribute("user_id", account.getId());
         return "redirect:/dashboard";
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session) {
+        return "dashboard";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
