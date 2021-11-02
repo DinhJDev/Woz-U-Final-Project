@@ -49,7 +49,7 @@ function Hero() {
           <div className="split-content">
             <div className="side-content-wrapper feature-single">
               <img
-                src="https://raw.githubusercontent.com/chetachiezikeuzor/Highlightr-Plugin/master/assets/highlightr.png"
+                src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png"
                 alt=""
                 className="image feature-single"
               />
@@ -59,7 +59,7 @@ function Hero() {
       </div>
       <div className="side-content-wrapper feature-single">
         <img
-          src="https://raw.githubusercontent.com/chetachiezikeuzor/Highlightr-Plugin/master/assets/highlightr.png"
+          src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png"
           style={{
             opacity: 1,
             transform:
