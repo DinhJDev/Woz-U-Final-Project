@@ -55,4 +55,10 @@ public class Performance {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public Performance(String comment, Employee reviewer_employee_id, Employee reviewee_employee_id){
+        this.comment = comment;
+        this.reviewer = reviewer_employee_id;
+        this.reviewee = reviewee_employee_id;
+    }
 }
