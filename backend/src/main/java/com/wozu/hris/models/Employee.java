@@ -206,6 +206,5 @@ public class Employee {
         this.dateOfBirth = dateOfBirth;
         this.benefit = benefit;
         this.permissionLevel = 1; //or whatever level employees should have by default
-
     }
 }

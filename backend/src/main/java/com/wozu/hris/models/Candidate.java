@@ -83,7 +83,6 @@ public class Candidate {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-
     }
 
 }
