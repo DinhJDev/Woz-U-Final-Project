@@ -95,7 +95,8 @@ Add additional notes about how to deploy this on a live system.
 | Smoke White | ![#F8F9FD](https://via.placeholder.com/10/F8F9FD?text=+) `#F8F9FD` |
 | Alice Blue  | ![#E3E7EF](https://via.placeholder.com/10/E3E7EF?text=+) `#E3E7EF` |
 | Ice Blue    | ![#E3E7EE](https://via.placeholder.com/10/E3E7EE?text=+) `#E3E7EE` |
-| Light Mauve | ![#F9CCFF](https://via.placeholder.com/10/F9CCFF?text=+) `#F9CCFF` |
+| Blue Sky    | ![#85C8FF](https://via.placeholder.com/10/85C8FF?text=+) `#85C8FF` |
+| Dodgerblue  | ![#1E90FF](https://via.placeholder.com/10/1E90FF?text=+) `#1E90FF` |
 | Deep Shadow | ![#171C26](https://via.placeholder.com/10/171C26?text=+) `#171C26` |
 | Granite     | ![#030304](https://via.placeholder.com/10/030304?text=+) `#030304` |
 
