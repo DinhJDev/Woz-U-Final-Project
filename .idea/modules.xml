@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Woz-U-Final-Project.iml" filepath="$PROJECT_DIR$/.idea/Woz-U-Final-Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/hris.iml" filepath="$PROJECT_DIR$/backend/hris.iml" />
     </modules>
   </component>
