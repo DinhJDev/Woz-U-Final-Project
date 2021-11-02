@@ -68,8 +68,19 @@ public class Payrate {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+    /*
 
-     /*
+    -----------------------------------------------------------------------------------
+                                      RELATIONSHIPS
+    -----------------------------------------------------------------------------------
+
+    */
+
+    @OneToOne
+    @JoinColumn(insertable = false, updatable = false, name = "employee_id")
+    private Employee employee;
+
+    /*
 
     -----------------------------------------------------------------------------------
                                    GETTERS AND SETTERS

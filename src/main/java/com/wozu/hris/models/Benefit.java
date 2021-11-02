@@ -3,6 +3,7 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /* ------------------------------------------------------------------
 **  —— Benefits Model
@@ -51,6 +52,13 @@ public class Benefit {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+
+    /*----------------------------------------------------------------
+    RELATIONSHIPS
+    ----------------------------------------------------------------*/
+
+    @OneToMany(mappedBy = "benefit")
+    private List<Employee> employees;
 
     /*----------------------------------------------------------------
     GETTERS

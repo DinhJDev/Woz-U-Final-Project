@@ -15,6 +15,14 @@ public class Performance {
     @NotNull
     private String comment;
 
+    @ManyToOne
+    @JoinColumn(name="reviewer_id")
+    private Employee reviewer;
+
+    @ManyToOne
+    @JoinColumn(name="reviewee_id")
+    private Employee reviewee;
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = new Date();

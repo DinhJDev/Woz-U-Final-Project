@@ -7,6 +7,7 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="positions")
@@ -32,6 +33,10 @@ public class Position {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+
+    @OneToMany(mappedBy = "position")
+    private List<DepartmentEmployee> departmentEmployee;
+
 
     //getters
 
