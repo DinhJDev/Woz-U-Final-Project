@@ -8,14 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="hris" />
+        <module name="Woz-U-Final-Project" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="hris" target="1.8" />
+      <module name="Woz-U-Final-Project" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Woz-U-Final-Project" options="-parameters" />
       <module name="hris" options="-parameters" />
     </option>
   </component>
