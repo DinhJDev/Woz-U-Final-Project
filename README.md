@@ -112,5 +112,7 @@ Add additional notes about how to deploy this on a live system.
 
 | Website                              |
 | ------------------------------------ |
+| [Absurd](https://absurd.design)      |
+| [Unsplash](https://unsplash.com)     |
 | [Rawpixel](https://www.rawpixel.com) |
 | [Scribbl](https://weareskribbl.com)  |
