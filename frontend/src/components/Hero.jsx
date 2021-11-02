@@ -1,12 +1,15 @@
 import React from "react";
 
-import SideBlobs from "./SideBlobs";
+import FullBlobs from "./FullBlobs";
 
 function Hero() {
   return (
     <section className="section feature-single-hero home-hero" id="hero">
       <div className="container-default feature-single content-container">
-        <div className="split feature-single-hero-wrapper">
+        <div
+          className="split feature-single-hero-wrapper"
+          style={{ maxWidth: "480px" }}
+        >
           <div className="split-content feature-single-hero-left">
             <h1
               style={{
@@ -46,15 +49,6 @@ function Hero() {
               ></span>
             </a>
           </div>
-          <div className="split-content">
-            <div className="side-content-wrapper feature-single">
-              <img
-                src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png"
-                alt=""
-                className="image feature-single"
-              />
-            </div>
-          </div>
         </div>
       </div>
       <div className="side-content-wrapper feature-single">
@@ -69,7 +63,7 @@ function Hero() {
           className="image feature-single large"
         />
       </div>
-      <SideBlobs />
+      <FullBlobs />
     </section>
   );
 }

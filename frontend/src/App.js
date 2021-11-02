@@ -6,7 +6,12 @@ import RegistrationPage from "./pages/RegistrationPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ServerErrorPage from "./pages/ServerErrorPage";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 import "./styles/fonts/Larsseit.css";
 import "./styles/fonts/Thicccboi.css";
@@ -22,16 +27,37 @@ import "./styles/Footer.css";
 import "./styles/Utility.css";
 
 function App() {
+  const routes = [
+    {
+      path: ["/", "/home", "homepage"],
+      component: HomePage,
+    },
+    {
+      path: ["/login", "/signin"],
+      component: LoginPage,
+    },
+    {
+      path: ["/register", "/signup"],
+      component: RegistrationPage,
+    },
+    {
+      path: ["/404", "*"],
+      component: NotFoundPage,
+    },
+    {
+      path: "/500",
+      component: ServerErrorPage,
+    },
+  ];
+
+  const routeComponents = routes.map(({ path, component }, key) => (
+    <Route exact path={path} component={component} key={key} />
+  ));
+
   return (
     <div className="App">
       <Router>
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/login" exact component={LoginPage} />
-          <Route path="/register" exact component={RegistrationPage} />
-          <Route path="/404" exact component={NotFoundPage} />
-          <Route path="/500" exact component={ServerErrorPage} />
-        </Switch>
+        <Switch>{routeComponents}</Switch>
       </Router>
     </div>
   );
