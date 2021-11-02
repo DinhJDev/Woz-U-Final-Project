@@ -199,4 +199,13 @@ public class Employee {
     public void setDepartment(List<DepartmentEmployee> department) {
         this.department = department;
     }
+
+    public Employee (String firstName, String lastName, Date dateOfBirth, Benefit benefit){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.benefit = benefit;
+        this.permissionLevel = 1; //or whatever level employees should have by default
+
+    }
 }
