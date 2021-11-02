@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +27,7 @@ import com.wozu.hris.services.EmployeeService;
 @Component
 public class EmployeeController {
 
+    @Autowired
     EmployeeService employeeService;
 
     // get all employees
