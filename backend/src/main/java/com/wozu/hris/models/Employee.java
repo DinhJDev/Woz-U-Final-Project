@@ -20,6 +20,7 @@ public class Employee {
     private String lastName;
     @NotNull
     private Date dateOfBirth;
+    private int permissionLevel;
     private Date createdAt;
     private Date updatedAt;
 
@@ -133,5 +134,69 @@ public class Employee {
 
     public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
+    }
+
+    public int getPermissionLevel() {
+        return permissionLevel;
+    }
+
+    public void setPermissionLevel(int permissionLevel) {
+        this.permissionLevel = permissionLevel;
+    }
+
+    public List<Payroll> getPayrolls() {
+        return payrolls;
+    }
+
+    public void setPayrolls(List<Payroll> payrolls) {
+        this.payrolls = payrolls;
+    }
+
+    public Payrate getPayrate() {
+        return payrate;
+    }
+
+    public void setPayrate(Payrate payrate) {
+        this.payrate = payrate;
+    }
+
+    public Benefit getBenefit() {
+        return benefit;
+    }
+
+    public void setBenefit(Benefit benefit) {
+        this.benefit = benefit;
+    }
+
+    public List<Performance> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Performance> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Performance> getPerformances() {
+        return performances;
+    }
+
+    public void setPerformances(List<Performance> performances) {
+        this.performances = performances;
+    }
+
+    public Department getmDepartment() {
+        return mDepartment;
+    }
+
+    public void setmDepartment(Department mDepartment) {
+        this.mDepartment = mDepartment;
+    }
+
+    public List<DepartmentEmployee> getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(List<DepartmentEmployee> department) {
+        this.department = department;
     }
 }
