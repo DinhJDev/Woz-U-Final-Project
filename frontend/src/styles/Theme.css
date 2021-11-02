@@ -1,0 +1,108 @@
+button#darkMode {
+  padding: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  line-height: 1em;
+  font-size: 20px;
+  text-align: center;
+  align-self: center;
+  background-color: var(--white-alpha-36);
+  border: 1px solid var(--white-alpha-75);
+  border-radius: 100%;
+}
+
+#darkMode:before {
+  font-family: boxicons;
+  content: "\edf7";
+}
+
+body.light-mode #darkMode:before {
+  content: "\ee97";
+}
+
+body.dark-mode,
+body.dark-mode html {
+  background-color: #101010;
+  text-shadow: 0 0 0;
+  background-image: unset;
+}
+
+body.dark-mode,
+body.dark-mode iframe {
+  background-image: none;
+}
+
+body.dark-mode {
+  --white-alpha-40: hsla(220, 27%, 91%, 0.7);
+  --white-alpha-36: hsla(216, 45%, 98%, 0.5);
+  --white-alpha-75: #f5f7fa;
+  -webkit-filter: invert(1) hue-rotate(180deg);
+  filter: invert(1) hue-rotate(180deg);
+}
+
+body.dark-mode .header-main-wrapper {
+  border: 1px solid var(--white-alpha-75);
+  background-color: var(--white-alpha-75);
+}
+
+body.dark-mode .nav-logo,
+body.dark-mode .nav-header svg,
+body.dark-mode .nav-header img {
+  filter: invert(1) hue-rotate(180deg);
+  fill: white;
+}
+
+body.dark-mode img,
+body.dark-mode iframe,
+body.dark-mode video,
+body.dark-mode *[data-img],
+body.dark-mode *[data-thumb-url],
+body.dark-mode :not(object):not(body) > embed,
+body.dark-mode svg image,
+body.dark-mode [style*="background:url"],
+body.dark-mode [style*="background-image:url"],
+body.dark-mode [style*="background: url"],
+body.dark-mode [style*="background-image: url"],
+body.dark-mode [background],
+body.dark-mode {
+  -webkit-filter: invert(1) hue-rotate(180deg);
+  filter: invert(1) hue-rotate(180deg);
+}
+
+body.dark-mode .footer,
+body.dark-mode [style*="background:url"] *,
+body.dark-mode [style*="background-image:url"] *,
+body.dark-mode [style*="background: url"] *,
+body.dark-mode [style*="background-image: url"] *,
+body.dark-mode [background] *,
+body.dark-mode input,
+body.dark-mode :-webkit-full-screen,
+body.dark-mode :-webkit-full-screen *,
+body.dark-mode body.dark-mode {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+
+body.dark-mode .footer {
+  -webkit-filter: none !important;
+  filter: none !important;
+  background-color: #efe !important;
+}
+
+body.dark-mode .footer .footer-link,
+body.dark-mode .footer .footer-title {
+  color: var(--text-muted) !important;
+}
+
+body.dark-mode .scrolltop:hover {
+  background: var(--dodgerblue);
+}
+
+body.dark-mode .social-icon i {
+  color: #363636 !important;
+}
+
+body.dark-mode .icon-password {
+  color: var(--granite);
+}

@@ -1,0 +1,51 @@
+.bg-blobs-wrapper {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  z-index: -1;
+  padding: 0px;
+}
+
+.image.blob.h-1 {
+  left: -402px;
+  top: 138px;
+  max-width: 75%;
+  -webkit-transform: rotate(-70deg);
+  -ms-transform: rotate(-70deg);
+  transform: rotate(-70deg);
+}
+
+.image.blob.h-2 {
+  top: 313px;
+  right: -535px;
+  max-width: 88%;
+}
+
+.image.blob.h-4 {
+  top: -193px;
+  max-width: 69%;
+  margin-left: 918px;
+}
+
+.image.blob.h-5 {
+  left: -442px;
+  top: auto;
+  bottom: -159px;
+  -webkit-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+.image.blob.h-2 {
+  top: 313px;
+  right: -535px;
+  max-width: 88%;
+}
+
+.image.blob {
+  position: absolute;
+  display: block;
+  max-width: 80%;
+}

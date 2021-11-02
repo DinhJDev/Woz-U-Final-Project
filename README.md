@@ -1,4 +1,3 @@
-
 <img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png">
 
 <h1 align="center">McMillianHRIS</h1>
@@ -75,7 +74,6 @@ Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a id = "authors"></a>
 
-
 - [@Addison](https://github.com/Addisonhal)
 - [@Alaina](https://github.com/alainaFletcher)
 - [@Chetachi](https://github.com/chetachiezikeuzor)
@@ -83,8 +81,38 @@ Add additional notes about how to deploy this on a live system.
 - [@Jason](https://github.com/DinhJDev)
 - [@Nathan](https://github.com/KienDu)
 
-
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - Inspiration
 - References
+
+## 🎨 Style Guide
+
+#### Colors
+
+| Color       | Hex                                                                |
+| ----------- | ------------------------------------------------------------------ |
+| Smoke White | ![#F8F9FD](https://via.placeholder.com/10/F8F9FD?text=+) `#F8F9FD` |
+| Alice Blue  | ![#E3E7EF](https://via.placeholder.com/10/E3E7EF?text=+) `#E3E7EF` |
+| Ice Blue    | ![#E3E7EE](https://via.placeholder.com/10/E3E7EE?text=+) `#E3E7EE` |
+| Blue Sky    | ![#85C8FF](https://via.placeholder.com/10/85C8FF?text=+) `#85C8FF` |
+| Dodgerblue  | ![#1E90FF](https://via.placeholder.com/10/1E90FF?text=+) `#1E90FF` |
+| Deep Shadow | ![#171C26](https://via.placeholder.com/10/171C26?text=+) `#171C26` |
+| Granite     | ![#030304](https://via.placeholder.com/10/030304?text=+) `#030304` |
+
+#### Fonts
+
+| Use       | Font                                                                           | Alternative                                                                  |
+| --------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Headings  | [Thicccboi](https://github.com/wonderunit/font-thicccboi)                      |                                                                              |
+| Text      | [Larsseit](https://www.fonts.com/font/type-dynamic/larsseit)                   | [DM Sans](https://fonts.google.com/specimen/DM+Sans)                         |
+| Monospace | [Relative Mono 10 Pitch](https://www.colophon-foundry.org/typefaces/relative/) | [Insolata](https://fonts.google.com/specimen/Inconsolata?category=Monospace) |
+
+#### Illustrations
+
+| Website                              |
+| ------------------------------------ |
+| [Absurd](https://absurd.design)      |
+| [Unsplash](https://unsplash.com)     |
+| [Rawpixel](https://www.rawpixel.com) |
+| [Scribbl](https://weareskribbl.com)  |
