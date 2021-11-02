@@ -6,6 +6,52 @@ import TeamTwo from "../images/TeamTwoLogo.png";
 import { NavHashLink } from "react-router-hash-link";
 import MobileMenu from "./MobileMenu";
 
+import { isLoggedIn } from "../utils/isLoggedIn";
+
+function UserNavButton() {
+  return (
+    <a
+      href="/login"
+      style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
+      className="button-primary app-button"
+    >
+      <span
+        className="bx bx-log-out image login-icon"
+        style={{
+          lineHeight: "inherit",
+        }}
+      ></span>
+      Logout
+    </a>
+  );
+}
+
+function GuestNavButton() {
+  return (
+    <a
+      href="/login"
+      style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
+      className="button-primary app-button"
+    >
+      <span
+        className="bx bx-lock image login-icon"
+        style={{
+          lineHeight: "inherit",
+        }}
+      ></span>
+      Login
+    </a>
+  );
+}
+
+function ButtonDisplay() {
+  const loggedInState = isLoggedIn;
+  if (loggedInState) {
+    return <UserNavButton />;
+  }
+  return <GuestNavButton />;
+}
+
 function Navigation() {
   return (
     <div
@@ -66,19 +112,7 @@ function Navigation() {
                 style={{ display: "flex" }}
                 className="login-button app-link-block"
               />
-              <a
-                href="/login"
-                style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
-                className="button-primary app-button"
-              >
-                <span
-                  className="bx bx-lock image login-icon"
-                  style={{
-                    lineHeight: "inherit",
-                  }}
-                ></span>
-                Login
-              </a>
+              <ButtonDisplay loggedInState={isLoggedIn} />
 
               <MobileMenu />
             </div>

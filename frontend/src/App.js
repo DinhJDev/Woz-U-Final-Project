@@ -13,6 +13,8 @@ import {
   Redirect,
 } from "react-router-dom";
 
+import { isLoggedIn } from "./utils/isLoggedIn";
+
 import "./styles/fonts/Larsseit.css";
 import "./styles/fonts/Thicccboi.css";
 
@@ -27,6 +29,12 @@ import "./styles/Footer.css";
 import "./styles/Utility.css";
 
 function App() {
+  let returnHomeFromRegistration;
+  let returnHomeFromLogin;
+
+  returnHomeFromRegistration = isLoggedIn ? HomePage : RegistrationPage;
+  returnHomeFromLogin = isLoggedIn ? HomePage : LoginPage;
+
   const routes = [
     {
       path: ["/", "/home", "homepage"],
@@ -34,11 +42,11 @@ function App() {
     },
     {
       path: ["/login", "/signin"],
-      component: LoginPage,
+      component: returnHomeFromLogin,
     },
     {
       path: ["/register", "/signup"],
-      component: RegistrationPage,
+      component: returnHomeFromRegistration,
     },
     {
       path: ["/404", "*"],
@@ -57,7 +65,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>{routeComponents}</Switch>
+        <Switch>
+          {routeComponents}
+          <Redirect to="/404"></Redirect>
+        </Switch>
       </Router>
     </div>
   );

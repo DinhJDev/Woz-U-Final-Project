@@ -55,9 +55,9 @@ body {
   height: 100vh;
   font-weight: 500;
   font-size: 18px;
-  color: var(--text-muted);
-  background-color: var(--smoke-white);
   line-height: 1.667em;
+  color: var(--text-muted);
+  background-color: var(--alice-blue);
   font-family: var(--default-font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

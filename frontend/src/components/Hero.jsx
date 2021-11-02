@@ -1,6 +1,54 @@
 import React from "react";
 
-import FullBlobs from "./FullBlobs";
+import { isLoggedIn } from "../utils/isLoggedIn";
+
+function UserHeroButton() {
+  return (
+    <a
+      href="/register"
+      style={{ opacity: 1 }}
+      className="button-primary app-button"
+    >
+      Dashboard
+      <span
+        className="bx bx-arrow-back"
+        style={{
+          lineHeight: "inherit",
+          rotate: "180deg",
+          marginLeft: "6px",
+        }}
+      ></span>
+    </a>
+  );
+}
+
+function GuestHeroButton() {
+  return (
+    <a
+      href="/register"
+      style={{ opacity: 1 }}
+      className="button-primary app-button"
+    >
+      Register
+      <span
+        className="bx bx-arrow-back"
+        style={{
+          lineHeight: "inherit",
+          rotate: "180deg",
+          marginLeft: "6px",
+        }}
+      ></span>
+    </a>
+  );
+}
+
+function ButtonDisplay() {
+  const loggedInState = isLoggedIn;
+  if (loggedInState) {
+    return <UserHeroButton />;
+  }
+  return <GuestHeroButton />;
+}
 
 function Hero() {
   return (
@@ -33,21 +81,7 @@ function Hero() {
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
               enim ad minim veniam, quis nost.
             </p>
-            <a
-              href="/register"
-              style={{ opacity: 1 }}
-              className="button-primary app-button"
-            >
-              Register
-              <span
-                className="bx bx-arrow-back"
-                style={{
-                  lineHeight: "inherit",
-                  rotate: "180deg",
-                  marginLeft: "6px",
-                }}
-              ></span>
-            </a>
+            <ButtonDisplay loggedInState={isLoggedIn} />
           </div>
         </div>
       </div>
@@ -63,7 +97,6 @@ function Hero() {
           className="image feature-single large"
         />
       </div>
-      <FullBlobs />
     </section>
   );
 }
