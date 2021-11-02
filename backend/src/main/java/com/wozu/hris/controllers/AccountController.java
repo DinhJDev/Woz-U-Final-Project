@@ -10,38 +10,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-
-@Controller
-@RequestMapping("")
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+@RequestMapping("/api/auth")
 public class AccountController {
     @Autowired
     AccountService aService;
 
-    // Returns homepage.
-    @GetMapping("/")
-    public String homePage() {
-        return "homepage";
-    }
-
-    @GetMapping("/registration")
-    public String registration() {
-        return "registration";
-    }
-
     // Allows user input to register account.
     @PostMapping("/register")
     public String registerAccount(@Valid @RequestBody Account account, BindingResult result, HttpSession session){
-        aService.registerAccount(account, result);
+        aService.registerCandidateAccount(account, result);
         if(result.hasErrors()) {
             return "register";
         }
         session.setAttribute("user_id", account.getId());
         return "redirect:/dashboard";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
     }
 
     // Allows user input to login account.
@@ -57,12 +41,12 @@ public class AccountController {
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session) {
-        return "dashboard";
+        return "index";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login";
+        return "index";
     }
 }
