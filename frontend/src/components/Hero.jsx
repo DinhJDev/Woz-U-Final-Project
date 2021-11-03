@@ -1,12 +1,63 @@
 import React from "react";
 
-import SideBlobs from "./SideBlobs";
+import { isLoggedIn } from "../utils/isLoggedIn";
+
+function UserHeroButton() {
+  return (
+    <a
+      href="/register"
+      style={{ opacity: 1 }}
+      className="button-primary app-button"
+    >
+      Dashboard
+      <span
+        className="bx bx-arrow-back"
+        style={{
+          lineHeight: "inherit",
+          rotate: "180deg",
+          marginLeft: "6px",
+        }}
+      ></span>
+    </a>
+  );
+}
+
+function GuestHeroButton() {
+  return (
+    <a
+      href="/register"
+      style={{ opacity: 1 }}
+      className="button-primary app-button"
+    >
+      Register
+      <span
+        className="bx bx-arrow-back"
+        style={{
+          lineHeight: "inherit",
+          rotate: "180deg",
+          marginLeft: "6px",
+        }}
+      ></span>
+    </a>
+  );
+}
+
+function ButtonDisplay() {
+  const loggedInState = isLoggedIn;
+  if (loggedInState) {
+    return <UserHeroButton />;
+  }
+  return <GuestHeroButton />;
+}
 
 function Hero() {
   return (
     <section className="section feature-single-hero home-hero" id="hero">
       <div className="container-default feature-single content-container">
-        <div className="split feature-single-hero-wrapper">
+        <div
+          className="split feature-single-hero-wrapper"
+          style={{ maxWidth: "480px" }}
+        >
           <div className="split-content feature-single-hero-left">
             <h1
               style={{
@@ -30,30 +81,7 @@ function Hero() {
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
               enim ad minim veniam, quis nost.
             </p>
-            <a
-              href="/register"
-              style={{ opacity: 1 }}
-              className="button-primary app-button"
-            >
-              Register
-              <span
-                className="bx bx-arrow-back"
-                style={{
-                  lineHeight: "inherit",
-                  rotate: "180deg",
-                  marginLeft: "6px",
-                }}
-              ></span>
-            </a>
-          </div>
-          <div className="split-content">
-            <div className="side-content-wrapper feature-single">
-              <img
-                src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png"
-                alt=""
-                className="image feature-single"
-              />
-            </div>
+            <ButtonDisplay loggedInState={isLoggedIn} />
           </div>
         </div>
       </div>
@@ -69,7 +97,6 @@ function Hero() {
           className="image feature-single large"
         />
       </div>
-      <SideBlobs />
     </section>
   );
 }
