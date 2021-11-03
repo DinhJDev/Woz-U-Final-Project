@@ -6,7 +6,7 @@ import com.wozu.hris.models.Role;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -18,7 +18,7 @@ public class AccountService {
     @Autowired
     AccountRepository aRepo;
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder bCryptPasswordEncoder;
     @Autowired
     RoleRepository rRepo;
 
@@ -90,23 +90,15 @@ public class AccountService {
     }
 
     // Authenticate/Login account
-    public Account authenticate(Account account, BindingResult result) {
-        if(result.hasErrors()) {
-            return null;
-        }
+    public Account authenticate(Account account) {
         Optional<Account> potentialAccount = aRepo.findByUsername(account.getUsername());
         if(!potentialAccount.isPresent()) {
-            result.rejectValue("email", "Unique", "Unknown username!");
             return null;
         }
         Account acc = potentialAccount.get();
         if(!bCryptPasswordEncoder.matches(account.getPassword(), acc.getPassword())) {
-            result.rejectValue("password", "Matches", "Invalid Password!");
-        }
-        if(result.hasErrors()) {
             return null;
-        } else {
-            return acc;
         }
+        return acc;
     }
 }

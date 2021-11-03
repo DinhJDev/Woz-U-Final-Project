@@ -20,7 +20,12 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String password, List<GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
     }
 
     public static UserDetailsImpl build(Account account) {

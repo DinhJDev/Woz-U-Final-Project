@@ -39,6 +39,10 @@ public class Account {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+    public Account(){
+        this.username = "";
+        this.password = "";
+    };
 
     public Account(String username, String password) {
         this.username = username;
