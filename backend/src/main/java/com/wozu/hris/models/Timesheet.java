@@ -43,10 +43,6 @@ public class Timesheet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    private Long employee_id;
-
     private Date start;
     private Date end;
 
@@ -97,14 +93,6 @@ public class Timesheet {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getEmployee_id() {
-        return employee_id;
-    }
-
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
     }
 
     public Date getStart() {

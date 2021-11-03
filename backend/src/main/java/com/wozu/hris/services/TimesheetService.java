@@ -1,5 +1,6 @@
 package com.wozu.hris.services;
 
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Timesheet;
 import com.wozu.hris.repositories.TimesheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ public class TimesheetService {
 
     public List<Timesheet> allTimesheets(){
         return tsRepo.findAll();
+    }
+
+    public List<Timesheet> latest3Timesheets(Employee employee) {
+        return tsRepo.findTop3ByEmployee(employee);
     }
 
     public Timesheet createTimesheet(Timesheet t){
