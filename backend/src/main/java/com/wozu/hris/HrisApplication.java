@@ -14,12 +14,9 @@ import org.springframework.boot.Banner;
 @SpringBootApplication
 public class HrisApplication {
 
-
 	public static void main(String[] args) {
-		//SpringApplication.run(HrisApplication.class, args);
-		final SpringApplication application = new SpringApplication(HrisApplication.class);
-		final ConfigurableApplicationContext context = application.run(args);
-		ShellCommands.setVar(context);
+		SpringApplication.run(HrisApplication.class, args);
+
 	}
 
 }
