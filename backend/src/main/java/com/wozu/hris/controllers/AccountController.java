@@ -3,12 +3,12 @@ package com.wozu.hris.controllers;
 import com.wozu.hris.models.Account;
 import com.wozu.hris.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -16,6 +16,12 @@ import javax.validation.Valid;
 public class AccountController {
     @Autowired
     AccountService aService;
+
+    // List all accounts rest api
+    @GetMapping("/accounts")
+    public List<Account> getAllAccounts(){
+        return aService.allAccounts();
+    }
 
     // Allows user input to register account.
     @PostMapping("/register")

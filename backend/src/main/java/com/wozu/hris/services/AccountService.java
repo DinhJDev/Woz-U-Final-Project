@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,6 +22,11 @@ public class AccountService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     RoleRepository rRepo;
+
+    // Returns all the accounts
+    public List<Account> allAccounts() {
+        return aRepo.findAll();
+    }
 
     // Register candidate account and hash their password
     public Account registerCandidateAccount(Account account, BindingResult result) {

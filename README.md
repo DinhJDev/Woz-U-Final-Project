@@ -15,6 +15,7 @@
 - [Built Using](#built_using)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
+- [Style Guide](#style_guide)
 
 ## 🧐 About <a name = "about"></a>
 
@@ -71,6 +72,7 @@ Add additional notes about how to deploy this on a live system.
 - [Java](https://www.java.com/en/) - Server-side
 - [Spring Shell](https://vuejs.org/) - JDBC
 - [MySQL](https://www.mysql.com) - Database
+- [React](https://reactjs.org) - User Interface
 
 ## ✍️ Authors <a id = "authors"></a>
 
@@ -86,7 +88,7 @@ Add additional notes about how to deploy this on a live system.
 - Inspiration
 - References
 
-## 🎨 Style Guide
+## 🎨 Style Guide <a name = "style_guide"></a>
 
 #### Colors
 
