@@ -8,7 +8,6 @@ import com.wozu.hris.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 import java.util.Set;
