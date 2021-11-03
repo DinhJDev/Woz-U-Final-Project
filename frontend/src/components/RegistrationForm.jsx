@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import "@vaadin/vaadin-date-picker/vaadin-date-picker.js";
 
 import ServerError from "./ServerError";
+import AuthorizationService from "../services/AuthorizationService";
 import { getCurrentDate } from "../utils/getCurrentDate";
 import Loading from "./Loading";
 
@@ -14,7 +15,6 @@ class RegistrationForm extends Component {
     super(props);
 
     this.state = {
-      value: [],
       loading: true,
       error: false,
       success: false,
@@ -81,22 +81,23 @@ class RegistrationForm extends Component {
         this.setState({ data, loading: false });
       })
       .catch((err) => {
-        this.setState({ loading: false, error: true });
+        this.setState({ loading: false, error: false });
         console.error(err);
       });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    let employee = {
-      dateOfBirth: "2005-01-11T06:00:00.000+00:00",
+    let user = {
+      date_of_birth: "2005-01-11T06:00:00.000+00:00",
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       username: this.state.username,
       password: this.state.password,
+      passwordConfirmation: this.state.passwordConfirm,
     };
-    console.log("employee => " + JSON.stringify(employee));
-    EmployeeService.createEmployee(employee).then((res) => {
+    console.log("user => " + JSON.stringify(user));
+    AuthorizationService.registerUser(user).then((res) => {
       this.routingFunction();
     });
   }
@@ -219,13 +220,13 @@ class RegistrationForm extends Component {
                         style={{
                           display: "unset",
                         }}
-                        type="passwordConfirm"
+                        type="password"
                         maxLength="256"
                         name="passwordConfirm"
                         placeholder="Re-enter your password"
                         className="input password"
-                        value={this.state.passsConfirm}
-                        onChange={this.passsConfirm}
+                        value={this.state.passwordConfirm}
+                        onChange={this.passwordConfirm}
                       />
                     </div>
                   </div>

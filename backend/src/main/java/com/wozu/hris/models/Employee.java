@@ -14,11 +14,8 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
-    @NotNull
     private Date dateOfBirth;
     private Date createdAt;
     private Date updatedAt;
