@@ -2,6 +2,7 @@ package com.wozu.hris.services;
 
 import com.wozu.hris.models.Account;
 import com.wozu.hris.models.ERole;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Role;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
@@ -27,6 +28,8 @@ public class AccountService {
         Set<Role> roles = account.getRoles();
         roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
+        Employee e = new Employee();
+        account.setEmployee(e);
         return aRepo.save(account);
     }
 
@@ -36,6 +39,8 @@ public class AccountService {
         Set<Role> roles = account.getRoles();
         roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
+        Employee e = new Employee();
+        account.setEmployee(e);
         return aRepo.save(account);
     }
     // Promotes Candidate Account to Employee Account
