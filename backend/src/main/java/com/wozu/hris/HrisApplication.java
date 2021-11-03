@@ -10,13 +10,16 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.boot.Banner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class HrisApplication {
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(HrisApplication.class, args);
-
 	}
 
 }
