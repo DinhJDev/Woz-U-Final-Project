@@ -22,3 +22,4 @@ yarn-error.log*
 
 #history
 .history
+backend/spring-shell.log
