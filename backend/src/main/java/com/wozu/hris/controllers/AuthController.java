@@ -36,8 +36,6 @@ public class AuthController {
     @Autowired
     AccountRepository aRepo;
     @Autowired
-    PasswordEncoder encoder;
-    @Autowired
     JwtUtils jwtUtils;
 
 

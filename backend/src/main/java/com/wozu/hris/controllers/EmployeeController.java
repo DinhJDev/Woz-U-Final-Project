@@ -24,7 +24,6 @@ import com.wozu.hris.services.EmployeeService;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/employees/")
-@Component
 public class EmployeeController {
 
     @Autowired
