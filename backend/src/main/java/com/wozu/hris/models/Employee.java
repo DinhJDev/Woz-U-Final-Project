@@ -20,7 +20,6 @@ public class Employee {
     private String lastName;
     @NotNull
     private Date dateOfBirth;
-    private int permissionLevel;
     private Date createdAt;
     private Date updatedAt;
 
@@ -134,14 +133,6 @@ public class Employee {
 
     public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
-    }
-
-    public int getPermissionLevel() {
-        return permissionLevel;
-    }
-
-    public void setPermissionLevel(int permissionLevel) {
-        this.permissionLevel = permissionLevel;
     }
 
     public List<Payroll> getPayrolls() {

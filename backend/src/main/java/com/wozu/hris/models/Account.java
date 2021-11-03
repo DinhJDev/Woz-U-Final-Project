@@ -3,6 +3,8 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="accounts")
@@ -19,9 +21,15 @@ public class Account {
     private Date createdAt;
     private Date updatedAt;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @PrePersist
     protected void onCreate(){
@@ -31,6 +39,10 @@ public class Account {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+    public Account(){
+        this.username = "";
+        this.password = "";
+    };
 
     public Account(String username, String password) {
         this.username = username;
@@ -85,7 +97,13 @@ public class Account {
         this.passwordConfirmation = passwordConfirmation;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public Employee getEmployee() {
         return employee;
