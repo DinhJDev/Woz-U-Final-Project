@@ -23,8 +23,7 @@ import com.wozu.hris.services.EmployeeService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/employees/")
-@Component
+@RequestMapping("/api/employees")
 public class EmployeeController {
 
     @Autowired

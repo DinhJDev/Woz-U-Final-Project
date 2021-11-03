@@ -47,9 +47,8 @@ public class Timesheet {
     @NotNull
     private Long employee_id;
 
-    private Date date;
-    private Time time_start;
-    private Time time_end;
+    private Date start;
+    private Date end;
 
     /*
 
@@ -108,30 +107,29 @@ public class Timesheet {
         this.employee_id = employee_id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStart() {
+        return start;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public Time getTime_start() {
-        return time_start;
+    public Date getEnd() {
+        return end;
     }
 
-    public void setTime_start(Time time_start) {
-        this.time_start = time_start;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
-    public Time getTime_end() {
-        return time_end;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setTime_end(Time time_end) {
-        this.time_end = time_end;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
-
 
     /*
 

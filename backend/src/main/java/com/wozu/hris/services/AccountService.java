@@ -6,9 +6,8 @@ import com.wozu.hris.models.Role;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class AccountService {
     @Autowired
     AccountRepository aRepo;
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder bCryptPasswordEncoder;
     @Autowired
     RoleRepository rRepo;
 
@@ -29,41 +28,21 @@ public class AccountService {
     }
 
     // Register candidate account and hash their password
-    public Account registerCandidateAccount(Account account, BindingResult result) {
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
-            result.rejectValue("username", "Unique", "This username is already in use!");
-        }
-        if(!account.getPassword().equals(account.getPasswordConfirmation())) {
-            result.rejectValue("passwordConfirmation", "Matches", "The confirmation password and password must match!");
-        }
-        if(result.hasErrors()) {
-            return null;
-        } else {
-            account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
-            Set<Role> roles = account.getRoles();
-            roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE));
-            account.setRoles(roles);
-            return aRepo.save(account);
-        }
+    public Account registerCandidateAccount(Account account) {
+        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        Set<Role> roles = account.getRoles();
+        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        account.setRoles(roles);
+        return aRepo.save(account);
     }
 
     // Register candidate account and hash their password
-    public Account registerEmployeeAccount(Account account, BindingResult result) {
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
-            result.rejectValue("username", "Unique", "This username is already in use!");
-        }
-        if(!account.getPassword().equals(account.getPasswordConfirmation())) {
-            result.rejectValue("passwordConfirmation", "Matches", "The confirmation password and password must match!");
-        }
-        if(result.hasErrors()) {
-            return null;
-        } else {
-            account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
-            Set<Role> roles = account.getRoles();
-            roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE));
-            account.setRoles(roles);
-            return aRepo.save(account);
-        }
+    public Account registerEmployeeAccount(Account account) {
+        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        Set<Role> roles = account.getRoles();
+        roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        account.setRoles(roles);
+        return aRepo.save(account);
     }
     // Promotes Candidate Account to Employee Account
     public Account promoteCandidateAccount(Account account) {
@@ -73,7 +52,7 @@ public class AccountService {
                 // Account already has Employee Role.
                 return null;
             } else {
-                roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE));
+                roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
                 account.setRoles(roles);
                 return aRepo.save(account);
             }
@@ -90,7 +69,7 @@ public class AccountService {
                 // Account already has Employee Role.
                 return null;
             } else {
-                roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE));
+                roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
                 account.setRoles(roles);
                 return aRepo.save(account);
             }
@@ -116,23 +95,15 @@ public class AccountService {
     }
 
     // Authenticate/Login account
-    public Account authenticate(Account account, BindingResult result) {
-        if(result.hasErrors()) {
-            return null;
-        }
+    public Account authenticate(Account account) {
         Optional<Account> potentialAccount = aRepo.findByUsername(account.getUsername());
         if(!potentialAccount.isPresent()) {
-            result.rejectValue("email", "Unique", "Unknown username!");
             return null;
         }
         Account acc = potentialAccount.get();
         if(!bCryptPasswordEncoder.matches(account.getPassword(), acc.getPassword())) {
-            result.rejectValue("password", "Matches", "Invalid Password!");
-        }
-        if(result.hasErrors()) {
             return null;
-        } else {
-            return acc;
         }
+        return acc;
     }
 }

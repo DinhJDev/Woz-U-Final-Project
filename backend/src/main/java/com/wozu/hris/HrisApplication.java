@@ -9,12 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 public class HrisApplication {
 
-	@Bean
-	@Primary
-	public BCryptPasswordEncoder getpce(){
-		return new BCryptPasswordEncoder();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(HrisApplication.class, args);
 	}
