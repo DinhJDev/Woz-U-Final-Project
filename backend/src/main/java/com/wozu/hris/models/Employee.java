@@ -21,6 +21,10 @@ public class Employee {
     private Date updatedAt;
     private Boolean isClockedIn;
 
+    public Employee() {
+        this.isClockedIn = false;
+    }
+
     @OneToOne(mappedBy = "employee")
     private Account account;
 
