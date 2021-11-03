@@ -19,6 +19,7 @@ public class Employee {
     private Date dateOfBirth;
     private Date createdAt;
     private Date updatedAt;
+    private Boolean isClockedIn;
 
     @OneToOne(mappedBy = "employee")
     private Account account;
@@ -186,5 +187,13 @@ public class Employee {
 
     public void setDepartment(List<DepartmentEmployee> department) {
         this.department = department;
+    }
+
+    public Boolean getClockedIn() {
+        return isClockedIn;
+    }
+
+    public void setClockedIn(Boolean clockedIn) {
+        isClockedIn = clockedIn;
     }
 }

@@ -23,6 +23,9 @@ function LoginAlt() {
           style={{ maxWidth: "480px" }}
         >
           <div className="split-content feature-single-hero-left">
+            <div className="icon-password">
+              <i className="bx bx-lock" style={{ fontSize: "28px" }}></i>
+            </div>
             <h1
               style={{
                 opacity: 1,
@@ -55,9 +58,6 @@ function LoginAlt() {
               method="post"
               className="utility-page-form "
             >
-              <div className="icon-password">
-                <i className="bx bx-lock" style={{ fontSize: "28px" }}></i>
-              </div>
               <div className="bottom-content password-input-content">
                 <label className="label">Username</label>
                 <input

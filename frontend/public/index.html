@@ -25,6 +25,72 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>McMillianHRIS</title>
+
+    <dom-module
+      id="custom-input-field-style"
+      theme-for="vaadin-text-field vaadin-date-picker-overlay vaadin-date-picker"
+    >
+      <template>
+        <style>
+          :host([theme~="custom-input-field-style"]) [part="input-field"] {
+            display: flex;
+            width: 100% !important;
+            padding: 0.7em 0.8em;
+            margin-bottom: 13px;
+            font-size: 14px;
+            line-height: 1.56;
+            border-radius: 12px;
+            color: unset;
+            font-family: var(--default-font);
+            background-color: var(--white-alpha-36);
+            border: 1px solid var(--border-shade);
+            margin-bottom: 18px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05);
+            font-size: 18px;
+          }
+          :host([focused]:not([readonly])) [part="label"],
+          :host([theme~="custom-input-field-style"]) [part="label"] {
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 1.667em;
+            color: var(--text-muted);
+            font-family: var(--default-font);
+            -webkit-font-smoothing: antialiased;
+          }
+
+          :host([theme~="custom-input-field-style"]) [part="overlay"] {
+            border-radius: 12px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05);
+          }
+
+          :host([theme~="custom-input-field-style"]) [part="year-number"],
+          :host([theme~="custom-input-field-style"]) [part="year-separator"],
+          :host([theme~="custom-input-field-style"]) [part="weekday"],
+          :host([theme~="custom-input-field-style"]) [part="date"] {
+            cursor: pointer !important;
+          }
+          :host([has-label])::before {
+            margin-top: 0;
+          }
+          :host([has-label]) {
+            padding-top: 0;
+          }
+          :host([theme~="custom-input-field-style"])
+            [part="toggle-button"]::before {
+            display: none;
+          }
+          :host([theme~="custom-input-field-style"]) [part="toggle-button"] {
+            background-color: #acb6c0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%221.7em%22%20height%3D%221.7em%22%20preserveAspectRatio%3D%22xMidYMid%20meet%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M7%2011h2v2H7zm0%204h2v2H7zm4-4h2v2h-2zm0%204h2v2h-2zm4-4h2v2h-2zm0%204h2v2h-2z%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M5%2022h14c1.103%200%202-.897%202-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103%200-2%20.897-2%202v14c0%201.103.897%202%202%202zM19%208l.001%2012H5V8h14z%22%20fill%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E");
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%221.7em%22%20height%3D%221.7em%22%20preserveAspectRatio%3D%22xMidYMid%20meet%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M7%2011h2v2H7zm0%204h2v2H7zm4-4h2v2h-2zm0%204h2v2h-2zm4-4h2v2h-2zm0%204h2v2h-2z%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M5%2022h14c1.103%200%202-.897%202-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103%200-2%20.897-2%202v14c0%201.103.897%202%202%202zM19%208l.001%2012H5V8h14z%22%20fill%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E");
+          }
+        </style>
+      </template>
+    </dom-module>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
