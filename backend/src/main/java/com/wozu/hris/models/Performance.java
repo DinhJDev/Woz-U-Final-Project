@@ -32,7 +32,7 @@ public class Performance {
         this.updatedAt = new Date();
     }
 
-    public Performance(String comment, Employee reviewee, Employee reviewer) {
+    public Performance(String comment, Employee reviewer, Employee reviewee) {
         this.comment = comment;
         this.reviewer = reviewer;
         this.reviewee = reviewee;
