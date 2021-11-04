@@ -8,4 +8,6 @@ import java.util.List;
     @Repository
 public interface PerformanceRepository extends CrudRepository<Performance, Long> {
     List<Performance> findAll();
+
+    List<Performance> findAllByRevieweeId(Long id);
 }

@@ -54,7 +54,7 @@ public class AccountService {
     // Promotes Candidate Account to Employee Account
     public Account promoteCandidateAccount(Account account) {
         Set<Role> roles = account.getRoles();
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
             if (roles.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE))){
                 // Account already has Employee Role.
                 return null;
@@ -71,7 +71,7 @@ public class AccountService {
     // Promotes Employee Account to HR Account
     public Account promoteEmployeeAccount(Account account) {
         Set<Role> roles = account.getRoles();
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
             if (roles.contains(rRepo.findByName(ERole.ROLE_CANDIDATE))){
                 // Account already has Employee Role.
                 return null;
@@ -88,7 +88,7 @@ public class AccountService {
 
     // Find account by username
     public Optional<Account> findByUsername(String username) {
-        return aRepo.findByUsername(username);
+        return aRepo.findByUsernameIgnoreCase(username);
     }
 
     // Find account by id
@@ -103,7 +103,7 @@ public class AccountService {
 
     // Authenticate/Login account
     public Account authenticate(Account account) {
-        Optional<Account> potentialAccount = aRepo.findByUsername(account.getUsername());
+        Optional<Account> potentialAccount = aRepo.findByUsernameIgnoreCase(account.getUsername());
         if(!potentialAccount.isPresent()) {
             return null;
         }
