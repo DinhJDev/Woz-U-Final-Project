@@ -96,13 +96,6 @@
   font-size: 18px;
 }
 
-.full-form-fail {
-  display: none;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #ffdede;
-}
-
 .content-embed:before,
 .content-embed:after {
   content: " ";
@@ -183,50 +176,58 @@ input:is([type="hidden"], [type="image"], [type="file"]) {
   }
 }
 
-.datepicker-input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
+@keyframes hideAnimation {
+  to {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
+.auth-message-box {
   cursor: pointer;
-  box-sizing: border-box;
-}
-.datepicker-input::-webkit-calendar-picker-indicator {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-}
-
-#button,
-[part="year-number"],
-[part="year-separator"],
-[part="weekday"],
-[part="date"] {
-  cursor: pointer !important;
-}
-
-div#vaadin-date-picker-text-field-input-0,
-.vaadin-text-field-container [part="input-field"] {
-  display: block;
-  width: 100%;
-  padding: 0.92em 0.8em;
-  margin-bottom: 13px;
-  font-size: 14px;
-  line-height: 1.56;
+  display: inline;
+  padding: 18px 40px;
+  border-style: solid;
+  border-width: 1px;
   border-radius: 12px;
-  font-family: var(--default-font);
-  background-color: var(--white-alpha-36);
-  border: 1px solid var(--border-shade);
+  animation: hideAnimation 0s ease-in-out 3s;
+  animation-fill-mode: forwards;
+  color: rgba(var(--level-color), 1);
+  border-color: rgba(var(--level-color), 1);
+  background-color: rgba(var(--level-color), 0.25);
+  box-shadow: 0 2px 4px 0 rgba(74, 58, 255, 0.12);
+  -webkit-transition: color 300ms ease, border-color 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease,
+    -webkit-transform 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, box-shadow 300ms ease,
+    background-color 300ms ease, -webkit-transform 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, transform 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, transform 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease,
+    -webkit-transform 300ms ease;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
-[part="overlay"] {
-  border-radius: 12px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05);
+.level-200 {
+  --level-color: var(--level-200-rgb);
+}
+
+.level-400 {
+  --level-color: var(--level-400-rgb);
+}
+
+.level-500 {
+  --level-color: var(--level-500-rgb);
+}
+
+.level-neutral {
+  --level-color: var(--level-neutral-rgb);
 }

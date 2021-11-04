@@ -19,6 +19,11 @@ VARIABLES
   --blue-sky: #85c8ff;
   --dodgerblue: dodgerblue;
 
+  --level-200-rgb: 187, 250, 187;
+  --level-400-rgb: 255, 184, 108;
+  --level-500-rgb: 238, 85, 131;
+  --level-neutral-rgb: 173, 204, 255;
+
   --sleak-bold: hsla(45, 5%, 86%, 100%);
   --sleak-medium: hsla(40, 5%, 89%, 100%);
   --pink-light: hsl(292, 57%, 97%);

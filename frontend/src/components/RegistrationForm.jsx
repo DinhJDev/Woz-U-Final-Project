@@ -1,6 +1,4 @@
-import EmployeeService from "../services/EmployeeService";
-import React from "react";
-import { Component } from "react";
+import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 
 import "@vaadin/vaadin-date-picker/vaadin-date-picker.js";
@@ -10,6 +8,11 @@ import AuthorizationService from "../services/AuthorizationService";
 import { getCurrentDate } from "../utils/getCurrentDate";
 import Loading from "./Loading";
 
+import ErrorLevel200 from "./messageBoxes/ErrorLevel200";
+import ErrorLevel400 from "./messageBoxes/ErrorLevel400";
+import ErrorLevel500 from "./messageBoxes/ErrorLevel500";
+import NeutralLevel from "./messageBoxes/NeutralLevel";
+
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +21,7 @@ class RegistrationForm extends Component {
       loading: true,
       error: false,
       success: false,
+      submitted: false,
       firstName: "",
       lastName: "",
       dateOfBirth: "",
@@ -25,6 +29,7 @@ class RegistrationForm extends Component {
       password: "",
       passwordConfirm: "",
       response: "",
+      errorcode: "",
     };
 
     this.firstName = this.firstName.bind(this);
@@ -35,47 +40,38 @@ class RegistrationForm extends Component {
     this.password = this.password.bind(this);
   }
 
-  routingFunction = (param) => {
-    if (
-      this.state.firstName.length > 0 &&
-      this.state.lastName.length > 0 &&
-      this.state.dateOfBirth.length > 0 &&
-      this.state.passwordConfirm.length > 0 &&
-      this.state.username.length > 0 &&
-      this.state.password.length > 0
-    ) {
-      this.props.history.push("/");
-    } else {
-      return false;
-    }
-  };
-
   firstName = (event) => {
     this.setState({ firstName: event.target.value });
+    this.setState({ submitted: false });
   };
 
   lastName = (event) => {
     this.setState({ lastName: event.target.value });
+    this.setState({ submitted: false });
   };
 
   dateOfBirth = (event) => {
     this.setState({ dateOfBirth: event.target.value });
+    this.setState({ submitted: false });
   };
 
   username = (event) => {
     this.setState({ username: event.target.value });
+    this.setState({ submitted: false });
   };
 
   password = (event) => {
     this.setState({ password: event.target.value });
+    this.setState({ submitted: false });
   };
 
   passwordConfirm = (event) => {
     this.setState({ passwordConfirm: event.target.value });
+    this.setState({ submitted: false });
   };
 
   componentDidMount() {
-    EmployeeService.getEmployees()
+    AuthorizationService.getServer()
       .then((res) => {
         const data = res.data.data;
         this.setState({ data, loading: false });
@@ -83,11 +79,23 @@ class RegistrationForm extends Component {
       .catch((err) => {
         this.setState({ loading: false, error: false });
         console.error(err);
+        console.error(err.response);
       });
+  }
+
+  validateForm() {
+    return (
+      this.state.firstName.length > 0 &&
+      this.state.lastName.length > 0 &&
+      this.state.passwordConfirm.length > 0 &&
+      this.state.username.length > 0 &&
+      this.state.password.length > 0
+    );
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    this.setState({ submitted: true });
     let user = {
       date_of_birth: "2005-01-11T06:00:00.000+00:00",
       firstName: this.state.firstName,
@@ -97,9 +105,42 @@ class RegistrationForm extends Component {
       passwordConfirmation: this.state.passwordConfirm,
     };
     console.log("user => " + JSON.stringify(user));
-    AuthorizationService.registerUser(user).then((res) => {
-      this.routingFunction();
-    });
+    AuthorizationService.registerUser(user)
+      .then((res) => {
+        this.routingFunction();
+        console.log(res.headers);
+      })
+      .catch((err) => {
+        if (err.response) {
+          this.setState({ errorcode: err.response.status });
+          this.setState({ response: err });
+          console.log(this.state.response);
+        }
+      });
+  }
+
+  routingFunction = (param) => {
+    if (this.validateForm) {
+      this.props.history.push("/");
+    }
+  };
+
+  errorMessageBox() {
+    if (this.validateForm() && this.state.submitted) {
+      if (this.state.errorcode <= 200 && this.state.errorcode > 100) {
+        return <ErrorLevel200>{this.state.response.toString()}</ErrorLevel200>;
+      }
+      if (this.state.errorcode <= 400 && this.state.errorcode > 200) {
+        return <ErrorLevel400>{this.state.response.toString()}</ErrorLevel400>;
+      }
+      if (this.state.errorcode <= 500 && this.state.errorcode > 400) {
+        return <ErrorLevel500>{this.state.response.toString()}</ErrorLevel500>;
+      }
+    } else {
+      if (this.state.errorcode <= 400 && this.state.errorcode > 200) {
+        return <NeutralLevel>Please fill in all fields</NeutralLevel>;
+      }
+    }
   }
 
   render() {
@@ -230,7 +271,15 @@ class RegistrationForm extends Component {
                       />
                     </div>
                   </div>
-                  <div className="button-wrapper password">
+                  <div
+                    className="button-wrapper password"
+                    style={{
+                      display: "flex",
+                      gridColumnGap: "18px",
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <button
                       to="/"
                       size="lg"
@@ -244,10 +293,9 @@ class RegistrationForm extends Component {
                     >
                       Register
                     </button>
+
+                    {this.errorMessageBox()}
                   </div>
-                </div>
-                <div className="full-form-fail">
-                  <div>Incorrect password. Please try again.</div>
                 </div>
               </form>
             </div>
