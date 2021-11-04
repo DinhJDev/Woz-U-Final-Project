@@ -22,4 +22,6 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
     Timesheet findTopByEmployeeOrderByIdDesc(Employee employee);
 
     List<Timesheet> findTop3ByEmployee(Employee employee);
+
+    List <Timesheet> findAllByEmployeeId(Long id);
 }
