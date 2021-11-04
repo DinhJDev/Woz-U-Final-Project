@@ -1,6 +1,7 @@
 package com.wozu.hris.controllers;
 
 import com.wozu.hris.models.Account;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.payload.request.LoginRequest;
 import com.wozu.hris.payload.request.SignupRequest;
 import com.wozu.hris.payload.response.JwtResponse;
@@ -53,7 +54,8 @@ public class AuthController {
                     .body(new MessageResponse("Error: The confirmation password and password must match!"));
         }
         Account account = new Account(signupRequest.getUsername(), signupRequest.getPassword());
-        aService.registerCandidateAccount(account);
+        Employee employee = new Employee(signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDateOfBirth());
+        aService.registerCandidateAccount(account, employee);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

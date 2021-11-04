@@ -32,6 +32,14 @@ public class AccountService {
         account.setEmployee(e);
         return aRepo.save(account);
     }
+    public Account registerCandidateAccount(Account account, Employee employee) {
+        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        Set<Role> roles = account.getRoles();
+        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        account.setRoles(roles);
+        account.setEmployee(employee);
+        return aRepo.save(account);
+    }
 
     // Register candidate account and hash their password
     public Account registerEmployeeAccount(Account account) {

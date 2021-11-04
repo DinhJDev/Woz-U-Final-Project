@@ -11,6 +11,7 @@ import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.TimesheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,6 +31,7 @@ public class TimesheetController {
     @Autowired
     AccountService aService;
 
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
     @GetMapping("/")
     public List<Timesheet> timesheetList(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
@@ -38,7 +40,7 @@ public class TimesheetController {
 
         return tRepo.findTop3ByEmployee(employee);
     }
-
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
         Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
@@ -53,6 +55,7 @@ public class TimesheetController {
         employee.setClockedIn(true);                                            // Sets isClockedIn to true
         return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
     }
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
     @PutMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
