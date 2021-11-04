@@ -1,5 +1,5 @@
 .footer {
-  padding: 84px 3%;
+  padding: 56px 3%;
   border-top: 1px solid var(--border-shade);
   background-color: var(--white-alpha-75);
   padding-top: 80px;
@@ -84,7 +84,7 @@ img {
 
 .footer-column-flat {
   display: flex;
-  padding-right: 40px;
+  padding-right: 24px;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   flex-direction: row;
@@ -165,4 +165,10 @@ img {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+@media screen and (max-width: 780px) {
+  .footer {
+    padding-left: 34px;
+  }
 }

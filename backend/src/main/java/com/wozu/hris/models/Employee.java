@@ -64,6 +64,17 @@ public class Employee {
         this.updatedAt = new Date();
     }
 
+    public Employee() {
+        this.firstName = "";
+        this.lastName = "";
+    }
+
+    public Employee(String firstName, String lastName, Date dateOfBirth) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public Long getId() {
         return id;
     }

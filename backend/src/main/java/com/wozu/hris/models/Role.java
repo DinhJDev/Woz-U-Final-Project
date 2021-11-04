@@ -17,7 +17,7 @@ public class Role {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Account> account = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -35,10 +35,11 @@ public class Role {
         this.name = name;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<Account> getAccount() {
+        return account;
     }
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+
+    public void setAccount(Set<Account> account) {
+        this.account = account;
     }
 }

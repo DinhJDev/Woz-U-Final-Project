@@ -20,7 +20,7 @@ function Loading() {
               >
                 Loading
               </h1>
-              <div class="loading-ring">
+              <div className="loading-ring">
                 <div></div>
                 <div></div>
                 <div></div>

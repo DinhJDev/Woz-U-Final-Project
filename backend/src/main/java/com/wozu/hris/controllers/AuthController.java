@@ -1,6 +1,7 @@
 package com.wozu.hris.controllers;
 
 import com.wozu.hris.models.Account;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.payload.request.LoginRequest;
 import com.wozu.hris.payload.request.SignupRequest;
 import com.wozu.hris.payload.response.JwtResponse;
@@ -15,12 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +39,7 @@ public class AuthController {
     // Allows user input to register account.
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-        if (aRepo.existsByUsername(signupRequest.getUsername())) {
+        if (aRepo.existsByUsernameIgnoreCase(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: User is already taken!"));
@@ -53,7 +50,8 @@ public class AuthController {
                     .body(new MessageResponse("Error: The confirmation password and password must match!"));
         }
         Account account = new Account(signupRequest.getUsername(), signupRequest.getPassword());
-        aService.registerCandidateAccount(account);
+        Employee employee = new Employee(signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDateOfBirth());
+        aService.registerCandidateAccount(account, employee);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
