@@ -48,6 +48,12 @@ public class HrisApplication {
 		return false;
 	}
 
+	public static void outSession(){
+		if(currentUser != null){
+			currentUser = null;
+		}
+	}
+
 }
 
 @ShellComponent
