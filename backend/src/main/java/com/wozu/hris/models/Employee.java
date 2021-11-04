@@ -22,6 +22,7 @@ public class Employee {
     private Date dateOfBirth;
     private Date createdAt;
     private Date updatedAt;
+    private int permissionLevel;
 
     @OneToOne(mappedBy = "employee")
     private Account account;

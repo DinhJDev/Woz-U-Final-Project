@@ -47,17 +47,19 @@ public class Timesheet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long employee_id;
+
+    //private Long employee_id;
 
     private Date start;
     private Date end;
 
-    public Timesheet(Long employee_id){
-        this.employee_id = employee_id;
+    public Timesheet(){}
+
+    public Timesheet(Employee e){
+        this.employee = e;
         LocalTime now = LocalTime.now();
-        this.time_start = Time.valueOf( now );
-        this.time_end = null;
+        this.start = new Date();
+        this.end = null;
     }
 
     /*
@@ -107,14 +109,6 @@ public class Timesheet {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getEmployee_id() {
-        return employee_id;
-    }
-
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
     }
 
     public Date getStart() {

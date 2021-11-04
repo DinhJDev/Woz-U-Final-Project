@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="hris" target="8" />
+      <module name="hris" target="1.8" />
       <module name="Woz-U-Final-Project" target="1.8" />
     </bytecodeTargetLevel>
   </component>
