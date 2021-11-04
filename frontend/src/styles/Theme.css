@@ -106,3 +106,8 @@ body.dark-mode .social-icon i {
 body.dark-mode .icon-password {
   color: var(--granite);
 }
+
+body.dark-mode .loading-ring div {
+  border: 8px solid var(--granite);
+  border-color: var(--granite) transparent transparent transparent;
+}

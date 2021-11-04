@@ -2,6 +2,7 @@ package com.wozu.hris.services;
 
 import com.wozu.hris.models.Account;
 import com.wozu.hris.models.ERole;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Role;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
@@ -27,6 +28,16 @@ public class AccountService {
         Set<Role> roles = account.getRoles();
         roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
+        Employee e = new Employee();
+        account.setEmployee(e);
+        return aRepo.save(account);
+    }
+    public Account registerCandidateAccount(Account account, Employee employee) {
+        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        Set<Role> roles = account.getRoles();
+        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        account.setRoles(roles);
+        account.setEmployee(employee);
         return aRepo.save(account);
     }
 
@@ -36,12 +47,14 @@ public class AccountService {
         Set<Role> roles = account.getRoles();
         roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
+        Employee e = new Employee();
+        account.setEmployee(e);
         return aRepo.save(account);
     }
     // Promotes Candidate Account to Employee Account
     public Account promoteCandidateAccount(Account account) {
         Set<Role> roles = account.getRoles();
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
             if (roles.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE))){
                 // Account already has Employee Role.
                 return null;
@@ -58,7 +71,7 @@ public class AccountService {
     // Promotes Employee Account to HR Account
     public Account promoteEmployeeAccount(Account account) {
         Set<Role> roles = account.getRoles();
-        if(aRepo.findByUsername(account.getUsername()).isPresent()){
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
             if (roles.contains(rRepo.findByName(ERole.ROLE_CANDIDATE))){
                 // Account already has Employee Role.
                 return null;
@@ -75,7 +88,7 @@ public class AccountService {
 
     // Find account by username
     public Optional<Account> findByUsername(String username) {
-        return aRepo.findByUsername(username);
+        return aRepo.findByUsernameIgnoreCase(username);
     }
 
     // Find account by id
@@ -90,7 +103,7 @@ public class AccountService {
 
     // Authenticate/Login account
     public Account authenticate(Account account) {
-        Optional<Account> potentialAccount = aRepo.findByUsername(account.getUsername());
+        Optional<Account> potentialAccount = aRepo.findByUsernameIgnoreCase(account.getUsername());
         if(!potentialAccount.isPresent()) {
             return null;
         }

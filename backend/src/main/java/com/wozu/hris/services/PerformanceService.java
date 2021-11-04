@@ -9,9 +9,15 @@ import java.util.Optional;
 public class PerformanceService {
     @Autowired
     PerformanceRepository performanceRepository;
+
     public List<Performance> allPerformances() {
         return performanceRepository.findAll();
     }
+
+    public List<Performance> allEmployeePerformance(Long id) {
+        return performanceRepository.findAllByRevieweeId(id);
+    }
+
     public Performance createPerformance(Performance e) {
         return performanceRepository.save(e);
     }
