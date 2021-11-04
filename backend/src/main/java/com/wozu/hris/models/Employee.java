@@ -61,6 +61,11 @@ public class Employee {
         this.updatedAt = new Date();
     }
 
+    public Employee() {
+        this.firstName = "";
+        this.lastName = "";
+    }
+
     public Employee(String firstName, String lastName, Date dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -202,9 +207,4 @@ public class Employee {
     public void setClockedIn(Boolean clockedIn) {
         isClockedIn = clockedIn;
     }
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> e6c672039a1daedd8d47d21652e5e4574b9fd941

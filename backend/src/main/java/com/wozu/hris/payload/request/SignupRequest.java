@@ -20,7 +20,6 @@ public class SignupRequest {
     private String firstName;
     @NotBlank
     private String lastName;
-    @NotBlank
     private Date dateOfBirth;
 
     public String getUsername() {
