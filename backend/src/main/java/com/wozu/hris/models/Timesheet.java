@@ -3,6 +3,9 @@ package com.wozu.hris.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Date;
 
 /*
@@ -43,8 +46,21 @@ public class Timesheet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    //private Long employee_id;
+
     private Date start;
     private Date end;
+
+    public Timesheet(){}
+
+    public Timesheet(Employee e){
+        this.employee = e;
+        LocalTime now = LocalTime.now();
+        this.start = new Date();
+        this.end = null;
+    }
 
     /*
 
