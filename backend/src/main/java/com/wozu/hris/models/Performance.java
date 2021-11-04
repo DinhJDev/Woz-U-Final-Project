@@ -31,6 +31,13 @@ public class Performance {
     protected void onUpdate(){
         this.updatedAt = new Date();
     }
+
+    public Performance(String comment, Employee reviewee, Employee reviewer) {
+        this.comment = comment;
+        this.reviewer = reviewer;
+        this.reviewee = reviewee;
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,5 +61,21 @@ public class Performance {
     }
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Employee getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(Employee reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public Employee getReviewee() {
+        return reviewee;
+    }
+
+    public void setReviewee(Employee reviewee) {
+        this.reviewee = reviewee;
     }
 }

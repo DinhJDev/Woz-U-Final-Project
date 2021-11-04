@@ -18,6 +18,16 @@ public class EmployeeService {
     public List<Employee> allEmployees() {
         return employeeRepository.findAll();
     }
+
+    public Employee findByUsername(String username) {
+        Optional<Employee> optionalEmployee = employeeRepository.findByAccountUsernameIgnoreCase(username);
+        if(optionalEmployee.isPresent()) {
+            return optionalEmployee.get();
+        } else {
+            return null;
+        }
+    }
+
     // Creates a employee
     public Employee createEmployee(Employee e) {
         return employeeRepository.save(e);
