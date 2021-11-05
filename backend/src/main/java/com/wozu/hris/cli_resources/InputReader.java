@@ -17,7 +17,7 @@ public class InputReader {
     public InputReader(LineReader lineReader, ShellResult shellResult){
         this.lineReader = lineReader;
         this.shellResult = shellResult;
-        this.mask = null;
+        this.mask = default_mask;
     }
 
     public InputReader(LineReader lineReader, ShellResult shellResult, Character mask){
