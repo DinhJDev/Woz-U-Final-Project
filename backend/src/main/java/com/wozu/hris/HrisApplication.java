@@ -152,6 +152,9 @@ class CandidateCommands{
 	@Autowired
 	InputReader inputReader;
 
+	@Autowired
+	AccountService aService;
+
 	@ShellMethod("Candidate Stuff")
 	@ShellMethodAvailability("candidateAvailability")
 	public String candidateMethod(){
@@ -173,6 +176,9 @@ class EmployeeCommands {
 
 	@Autowired
 	InputReader inputReader;
+
+	@Autowired
+	AccountService aService;
 
 	@ShellMethod("Test result output")
 	@ShellMethodAvailability("employeeAvailability")
@@ -196,6 +202,26 @@ class EmployeeCommands {
 }
 
 @ShellComponent
+@ShellCommandGroup("Manager")
+class ManagerCommands{
+
+	@Autowired
+	ShellResult shellResult;
+
+	@Autowired
+	InputReader inputReader;
+
+	@Autowired
+	AccountService aService;
+
+	public Availability ManagerAvailability(){
+		boolean connected = true;
+		return connected ? Availability.available() : Availability.unavailable("Not connected");
+	}
+
+}
+
+@ShellComponent
 @ShellCommandGroup("HR")
 class HRCommands{
 
@@ -204,6 +230,9 @@ class HRCommands{
 
 	@Autowired
 	InputReader inputReader;
+
+	@Autowired
+	AccountService aService;
 
 	public Availability hrAvailability(){
 		boolean connected = true;
