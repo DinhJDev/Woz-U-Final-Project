@@ -5,6 +5,7 @@ import com.wozu.hris.cli_resources.InputReader;
 import com.wozu.hris.cli_resources.ShellCommands;
 import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.Account;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -85,6 +86,9 @@ class BasicCommands{
 	@Autowired
 	AccountService aService;
 
+	@Autowired
+	ShellCommands shellCommands;
+
 	@ShellMethodAvailability("signOut")
 	public Availability currentSessionOut(){
 		return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Session not in Progress");
@@ -116,11 +120,12 @@ class BasicCommands{
 						options, // HashMap
 						true);
 				if(selection.equalsIgnoreCase("A")){
-					shellResult.printSuccess("Sign In");
+					shellResult.printSuccess("Sign In to Account");
 					String username = inputReader.prompt("Username");
 					String password = inputReader.prompt("Password", null, false);
 					possibleUser = aService.authenticate( new Account(username, password));
 					if(possibleUser != null){
+						shellResult.printSuccess("Successfully Logged In!");
 						HrisApplication.setCurrentUser(possibleUser);
 						CustomPromptProvider.changePrompt("connected");
 					}else{
@@ -129,8 +134,16 @@ class BasicCommands{
 					}
 					//CustomPromptProvider.changePrompt("connected");
 				}else if(selection.equalsIgnoreCase("B")){
-					shellResult.printSuccess("Register");
+					shellResult.printSuccess("Register Account");
 					//CustomPromptProvider.changePrompt("connected");
+					Account user = shellCommands.createAccount();
+					if(user == null){
+						connect();
+					}else{
+						shellResult.printSuccess("Successfully Registered Candidate Account!");
+						HrisApplication.setCurrentUser(user);
+						CustomPromptProvider.changePrompt("connected");
+					}
 				}
 			}
 		}
@@ -154,6 +167,9 @@ class CandidateCommands{
 
 	@Autowired
 	AccountService aService;
+
+	@Autowired
+	ShellCommands shellCommands;
 
 	@ShellMethod("Candidate Stuff")
 	@ShellMethodAvailability("candidateAvailability")
@@ -180,18 +196,21 @@ class EmployeeCommands {
 	@Autowired
 	AccountService aService;
 
+	@Autowired
+	ShellCommands shellCommands;
+
 	@ShellMethod("Test result output")
 	@ShellMethodAvailability("employeeAvailability")
 	public String helloWorld(@ShellOption(value = "Name", defaultValue = "Woz U") String optional){
-		ShellCommands.clearConsole();
+		shellCommands.clearConsole();
 		return shellResult.getSuccessMessage(String.format("Hello World! - %s", optional));
 	}
 
 	@ShellMethod("Test printBanner method")
 	@ShellMethodAvailability("employeeAvailability")
 	public void seeBanner(){
-		ShellCommands.clearConsole();
-		ShellCommands.displayBanner();
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
 	}
 
 	@ShellMethod("Clock in")
@@ -213,6 +232,9 @@ class ManagerCommands{
 
 	@Autowired
 	AccountService aService;
+
+	@Autowired
+	ShellCommands shellCommands;
 
 	public Availability ManagerAvailability(){
 		boolean connected = true;
