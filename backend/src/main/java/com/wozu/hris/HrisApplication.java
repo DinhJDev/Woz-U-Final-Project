@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,8 +38,14 @@ public class HrisApplication {
 	private static boolean active = true;
 
 	public static void main(String[] args) {
-		//SpringApplication.run(HrisApplication.class, args);
-		//app.run(args);
+		// Creating Console Clearing Process
+		try {
+			if (System.getProperty("os.name").contains("Windows"))
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			else
+				Runtime.getRuntime().exec("clear");
+		} catch (IOException | InterruptedException ex) {}
+
 		SpringApplication app = new SpringApplication(HrisApplication.class);
 		app.run(args);
 
@@ -102,12 +109,15 @@ class BasicCommands{
 	@ShellMethodAvailability("currentSessionOut")
 	@ShellMethod("Sign Out Of Session")
 	public void signOut(){
+		HrisApplication.setCurrentUser(null);
+		shellCommands.clearConsole();
 		CustomPromptProvider.changePrompt("disconnected");
 	}
 
 	@ShellMethodAvailability("currentSessionIn")
 	@ShellMethod(key={"c", "connect", "-c", "sign-in", "in"}, value="Connect to HRIS")
 	public void connect(){
+			shellCommands.clearConsole();
 			if(HrisApplication.getCurrentUser() == null) {
 				//Optional<Account> possibleUser;
 				Account possibleUser;
@@ -132,10 +142,8 @@ class BasicCommands{
 						shellResult.printError("Error, try again!");
 						connect();
 					}
-					//CustomPromptProvider.changePrompt("connected");
 				}else if(selection.equalsIgnoreCase("B")){
 					shellResult.printSuccess("Register Account");
-					//CustomPromptProvider.changePrompt("connected");
 					Account user = shellCommands.createAccount();
 					if(user == null){
 						connect();
