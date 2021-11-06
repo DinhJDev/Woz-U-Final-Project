@@ -1,11 +1,14 @@
 package com.wozu.hris.controllers;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wozu.hris.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,11 +31,25 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+    @Autowired
+    EmployeeRepository eRepo;
 
     // get all employees
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees(){
-        return employeeService.allEmployees();
+    public ResponseEntity<List<Employee>> getAllEmployees(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findAll().forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // create employee rest api
