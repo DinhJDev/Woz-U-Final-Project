@@ -31,7 +31,8 @@ public class TimesheetController {
     @Autowired
     AccountService aService;
 
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
+    // Displays last 3 timesheets
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/")
     public List<Timesheet> timesheetList(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
@@ -40,7 +41,15 @@ public class TimesheetController {
 
         return tRepo.findTop3ByEmployee(employee);
     }
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
+
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/{id}")
+    public List<Timesheet> employeeTimesheetList(@PathVariable("id") Long id) {
+        return tRepo.findAllByEmployeeId(id);
+    }
+
+    // Clock-In Request
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
         Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
@@ -55,7 +64,9 @@ public class TimesheetController {
         employee.setClockedIn(true);                                            // Sets isClockedIn to true
         return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
     }
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('HR')")
+
+    // Clock-Out Request
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PutMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);

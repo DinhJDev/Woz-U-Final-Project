@@ -2,16 +2,24 @@ package com.wozu.hris.services;
 import com.wozu.hris.models.Performance;
 import com.wozu.hris.repositories.PerformanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PerformanceService {
     @Autowired
     PerformanceRepository performanceRepository;
+
     public List<Performance> allPerformances() {
         return performanceRepository.findAll();
     }
+
+    public List<Performance> allEmployeePerformance(Long id) {
+        return performanceRepository.findAllByRevieweeId(id);
+    }
+
     public Performance createPerformance(Performance e) {
         return performanceRepository.save(e);
     }

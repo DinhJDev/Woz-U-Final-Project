@@ -61,6 +61,11 @@ public class Employee {
     }
 
     public Employee() {
+<<<<<<< HEAD
+=======
+        this.firstName = "";
+        this.lastName = "";
+>>>>>>> 33296a7f16f488c15af0070ded0b3eac31c08716
     }
 
     public Employee(String firstName, String lastName, Date dateOfBirth) {
@@ -205,4 +210,7 @@ public class Employee {
         isClockedIn = clockedIn;
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 33296a7f16f488c15af0070ded0b3eac31c08716
