@@ -7,10 +7,9 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ServerErrorPage from "./pages/ServerErrorPage";
 import ForbiddenPage from "./pages/ForbiddenPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
+import DashboardPage from "./pages/DashboardPage";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import { isLoggedIn } from "./utils/isLoggedIn";
 
 import "./styles/fonts/RelativeMono.css";
 import "./styles/fonts/Larsseit.css";
@@ -29,10 +28,14 @@ import "./styles/Loading.css";
 
 function App() {
   let returnHomeFromRegistration;
+  let returnHomeFromDashboard;
   let returnHomeFromLogin;
+
+  let isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
 
   returnHomeFromRegistration = isLoggedIn ? HomePage : RegistrationPage;
   returnHomeFromLogin = isLoggedIn ? HomePage : LoginPage;
+  returnHomeFromDashboard = isLoggedIn ? DashboardPage : UnauthorizedPage;
 
   const routes = [
     {
@@ -46,6 +49,10 @@ function App() {
     {
       path: ["/register", "/signup"],
       component: returnHomeFromRegistration,
+    },
+    {
+      path: ["/dashboard"],
+      component: returnHomeFromDashboard,
     },
     {
       path: "/401",

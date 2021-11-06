@@ -53,7 +53,7 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: The confirmation password and password must match!"));
         }
-        Account account = new Account(signupRequest.getUsername(), signupRequest.getPassword());
+        Account account = new Account(signupRequest.getUsername(), signupRequest.getPassword(), signupRequest.getDateOfBirth());
         Employee employee = new Employee(signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDateOfBirth());
         aService.registerCandidateAccount(account, employee);
 

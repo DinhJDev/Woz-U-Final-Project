@@ -1,7 +1,6 @@
 package com.wozu.hris.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -59,6 +58,9 @@ public class Employee {
     @PreUpdate
     protected void onUpdate(){
         this.updatedAt = new Date();
+    }
+
+    public Employee() {
     }
 
     public Employee(String firstName, String lastName, Date dateOfBirth) {
@@ -202,9 +204,5 @@ public class Employee {
     public void setClockedIn(Boolean clockedIn) {
         isClockedIn = clockedIn;
     }
-<<<<<<< HEAD
-}
-=======
 }
 
->>>>>>> e6c672039a1daedd8d47d21652e5e4574b9fd941

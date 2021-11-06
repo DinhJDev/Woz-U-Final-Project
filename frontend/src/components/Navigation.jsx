@@ -1,58 +1,66 @@
 import React from "react";
 
+import { useHistory } from "react-router-dom";
+import { NavHashLink } from "react-router-hash-link";
+
 import Theme from "./Theme";
 import TeamTwo from "../images/TeamTwoLogo.png";
 
-import { NavHashLink } from "react-router-hash-link";
 import MobileMenu from "./MobileMenu";
-
-import { isLoggedIn } from "../utils/isLoggedIn";
-
-function UserNavButton() {
-  return (
-    <a
-      href="/login"
-      style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
-      className="button-primary app-button"
-    >
-      <span
-        className="bx bx-log-out image login-icon"
-        style={{
-          lineHeight: "inherit",
-        }}
-      ></span>
-      Logout
-    </a>
-  );
-}
-
-function GuestNavButton() {
-  return (
-    <a
-      href="/login"
-      style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
-      className="button-primary app-button"
-    >
-      <span
-        className="bx bx-lock image login-icon"
-        style={{
-          lineHeight: "inherit",
-        }}
-      ></span>
-      Login
-    </a>
-  );
-}
-
-function ButtonDisplay() {
-  const loggedInState = isLoggedIn;
-  if (loggedInState) {
-    return <UserNavButton />;
-  }
-  return <GuestNavButton />;
-}
+import AuthorizationService from "../services/AuthorizationService";
 
 function Navigation() {
+  let history = useHistory();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    AuthorizationService.logout();
+    console.log(localStorage);
+    console.log(localStorage.getItem("isLoggedIn"));
+    history.push("/");
+  }
+
+  function ButtonDisplay() {
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      return (
+        <a href="/home">
+          <button
+            onClick={(e) => {
+              console.log("User Data" + AuthorizationService.getCurrentUser());
+              handleSubmit(e);
+            }}
+            style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
+            className="button-primary app-button"
+          >
+            <span
+              className="bx bx-log-out image login-icon"
+              style={{
+                lineHeight: "inherit",
+              }}
+            ></span>
+            Logout
+          </button>
+        </a>
+      );
+    }
+    return (
+      <a href="/login">
+        <button
+          style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
+          className="button-primary app-button"
+        >
+          <span
+            className="bx bx-lock image login-icon"
+            style={{
+              lineHeight: "inherit",
+            }}
+          ></span>
+          Login
+        </button>
+      </a>
+    );
+  }
+
   return (
     <div
       data-collapse="medium"
@@ -112,7 +120,7 @@ function Navigation() {
                 style={{ display: "flex" }}
                 className="login-button app-link-block"
               />
-              <ButtonDisplay loggedInState={isLoggedIn} />
+              <ButtonDisplay />
 
               <MobileMenu />
             </div>
@@ -122,7 +130,7 @@ function Navigation() {
       <div className="app-nav-overlay">
         <nav
           role="navigation"
-          className="mobile-nav-menu w-nav-menu"
+          className="mobile-nav-menu app-h-nav"
           style={{
             transform: "translateX(0px); transition: transform 400ms",
           }}

@@ -13,6 +13,8 @@ import ErrorLevel400 from "./messageBoxes/ErrorLevel400";
 import ErrorLevel500 from "./messageBoxes/ErrorLevel500";
 import NeutralLevel from "./messageBoxes/NeutralLevel";
 
+import formatDate from "../utils/formatDate";
+
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,7 @@ class RegistrationForm extends Component {
       passwordConfirm: "",
       response: "",
       errorcode: "",
+      message: "",
     };
 
     this.firstName = this.firstName.bind(this);
@@ -96,25 +99,33 @@ class RegistrationForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     this.setState({ submitted: true });
+
     let user = {
-      date_of_birth: "2005-01-11T06:00:00.000+00:00",
+      dateOfBirth:
+        formatDate(document.getElementById("date-of-birth").value) +
+        "T06:00:00.000+00:00",
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       username: this.state.username,
       password: this.state.password,
       passwordConfirmation: this.state.passwordConfirm,
     };
-    console.log("user => " + JSON.stringify(user));
-    AuthorizationService.registerUser(user)
+    //console.log("user => " + JSON.stringify(user));
+    AuthorizationService.register(user)
       .then((res) => {
         this.routingFunction();
-        console.log(res.headers);
+        this.setState({ message: res.data.message });
+        console.log(res.data.message);
       })
       .catch((err) => {
         if (err.response) {
-          this.setState({ errorcode: err.response.status });
+          this.setState({
+            errorcode: err.response.status,
+          });
           this.setState({ response: err });
+          this.setState({ message: err.response.data.message });
           console.log(this.state.response);
+          console.log(err.response.data.message);
         }
       });
   }
@@ -138,7 +149,7 @@ class RegistrationForm extends Component {
       }
     } else {
       if (this.state.errorcode <= 400 && this.state.errorcode > 200) {
-        return <NeutralLevel>Please fill in all fields</NeutralLevel>;
+        return <NeutralLevel>Please fill all fields</NeutralLevel>;
       }
     }
   }
@@ -187,7 +198,10 @@ class RegistrationForm extends Component {
             </div>
           </div>
           <div className="side-content-wrapper feature-single">
-            <div className="utility-page-content-password  full-form">
+            <div
+              className="utility-page-content-password  full-form"
+              style={{ marginTop: "28px" }}
+            >
               <form className="utility-page-form ">
                 <div className="bottom-content password-input-content">
                   <label className="label">First name</label>
@@ -214,6 +228,7 @@ class RegistrationForm extends Component {
                   />
 
                   <vaadin-date-picker
+                    id="date-of-birth"
                     theme="custom-input-field-style"
                     className="input password"
                     label="Date of Birth"
