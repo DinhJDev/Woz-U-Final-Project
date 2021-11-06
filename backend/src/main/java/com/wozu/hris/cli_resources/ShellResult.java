@@ -5,6 +5,8 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Map;
+
 public class ShellResult {
     @Value("${shell.out.info}")
     public String infoColor;
@@ -72,4 +74,14 @@ public class ShellResult {
         terminal.writer().println(toPrint);
         terminal.flush();
     }
+
+
+    public void printList(String header, Map<String, String> l){
+        if(l != null){
+
+        }else{
+            printError("Error fetching Role Commands!");
+        }
+    }
+
 }

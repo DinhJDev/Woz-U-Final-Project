@@ -5,6 +5,7 @@ import com.wozu.hris.cli_resources.InputReader;
 import com.wozu.hris.cli_resources.ShellCommands;
 import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.Account;
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class HrisApplication {
 		} catch (IOException | InterruptedException ex) {}
 
 		SpringApplication app = new SpringApplication(HrisApplication.class);
+		app.setLogStartupInfo(false);
 		app.run(args);
 
 	}
@@ -151,6 +153,7 @@ class BasicCommands{
 						shellResult.printSuccess("Successfully Registered Candidate Account!");
 						HrisApplication.setCurrentUser(user);
 						CustomPromptProvider.changePrompt("connected");
+						shellCommands.getCommandGroup(HrisApplication.getCurrentUser().getRoles());
 					}
 				}
 			}

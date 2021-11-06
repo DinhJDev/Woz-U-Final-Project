@@ -2,8 +2,11 @@ package com.wozu.hris.cli_resources;
 
 import com.wozu.hris.HrisApplication;
 import com.wozu.hris.models.Account;
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
+import com.wozu.hris.models.Role;
 import com.wozu.hris.repositories.AccountRepository;
+import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 
 public class ShellCommands {
 
@@ -34,12 +36,15 @@ public class ShellCommands {
 
     private EmployeeService eService;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService){
+    private RoleRepository rRepo;
+
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
         this.aService = aService;
         this.eService = eService;
+        this.rRepo = rRepo;
     }
 
     public void clearConsole(){
@@ -114,6 +119,40 @@ public class ShellCommands {
         accountHolder = aService.registerCandidateAccount(newAccount);
 
         return accountHolder;
+    }
+
+    public Map<String, Map<String, String>> getCommandGroup(Set<Role> role){
+        Map<String, Map<String, String>> listedCommands = new HashMap<>();
+
+        //Commands available to All Roles
+        if(role.contains(rRepo.findByName(ERole.ROLE_CANDIDATE)) | role.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE)) | role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+            Map<String, String> commands = new HashMap<>();
+            commands.put("commandKey", "commandDetails");
+            listedCommands.put("Candidate", commands);
+        }
+
+        //Commands available to Employee+ Roles
+        if(role.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE)) | role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+            Map<String, String> commands = new HashMap<>();
+            commands.put("commandKey2", "commandDetails");
+            listedCommands.put("Employee", commands);
+        }
+
+        //Commands available to Manager+ Roles
+        if(role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+            Map<String, String> commands = new HashMap<>();
+            commands.put("commandKey3", "commandDetails");
+            listedCommands.put("Manager", commands);
+        }
+
+        //Commands available to HR Role
+        if(role.contains(rRepo.findByName(ERole.ROLE_HR))){
+            Map<String, String> commands = new HashMap<>();
+            commands.put("commandKey4", "commandDetails");
+            listedCommands.put("HR", commands);
+        }
+
+        return listedCommands;
     }
 
 }
