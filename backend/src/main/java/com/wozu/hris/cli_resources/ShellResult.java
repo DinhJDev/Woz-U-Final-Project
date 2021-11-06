@@ -5,6 +5,8 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ShellResult {
@@ -76,9 +78,27 @@ public class ShellResult {
     }
 
 
-    public void printList(String header, Map<String, String> l){
+    public void printList(String header, LinkedHashMap<String, Map<String, String>> l){
         if(l != null){
+            System.out.println();
+            printInfo(header);
+            System.out.println();
+            Iterator<Map.Entry<String, Map<String, String>>> parent = l.entrySet().iterator();
+            while(parent.hasNext()){
+                Map.Entry<String, Map<String, String>> list = parent.next();
+                printInfo(String.format("----------[  %s  ]----------", list.getKey()));
+                System.out.println();
+                //printInfo("-------------------------------------");
 
+                Iterator<Map.Entry<String, String>> child = (list.getValue()).entrySet().iterator();
+                while(child.hasNext()){
+                    Map.Entry command = child.next();
+                    printInfo(String.format("   [%s] : %s", command.getKey(), command.getValue()));
+
+                    child.remove();
+                }
+                System.out.println();
+            }
         }else{
             printError("Error fetching Role Commands!");
         }

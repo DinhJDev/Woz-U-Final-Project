@@ -7,7 +7,10 @@ import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.Account;
 import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
+import com.wozu.hris.models.Role;
+import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.services.AccountService;
+import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,11 +22,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.LogManager;
 
 @SpringBootApplication
@@ -35,8 +37,12 @@ public class HrisApplication {
 	@Autowired
 	public static InputReader inputReader;
 
+	@Autowired
+	public static ShellCommands shellCommands;
+
 	private static Account currentUser = null;
 	private static boolean active = true;
+	private static LinkedHashMap<String, Map<String, String>> list = null;
 
 	public static void main(String[] args) {
 		// Creating Console Clearing Process
@@ -80,21 +86,28 @@ public class HrisApplication {
 		currentUser = acc;
 	}
 
+	public static void setCommandList(LinkedHashMap<String, Map<String, String>> l){
+		list = l;
+	}
+
+	public static LinkedHashMap<String, Map<String, String>> getCommandList(){
+		return list;
+	}
 }
 
 @ShellComponent
 @ShellCommandGroup("Basic")
+@Transactional
 class BasicCommands{
 
 	@Autowired
 	ShellResult shellResult;
-
 	@Autowired
 	InputReader inputReader;
-
 	@Autowired
 	AccountService aService;
-
+	@Autowired
+	RoleRepository rRepo;
 	@Autowired
 	ShellCommands shellCommands;
 
@@ -139,7 +152,10 @@ class BasicCommands{
 					if(possibleUser != null){
 						shellResult.printSuccess("Successfully Logged In!");
 						HrisApplication.setCurrentUser(possibleUser);
+						HrisApplication.setCommandList(shellCommands.getCommandGroup(shellCommands.getPermissionLevel(possibleUser.getRoles())));
 						CustomPromptProvider.changePrompt("connected");
+						shellCommands.clearConsole();
+						shellResult.printList("Commands", HrisApplication.getCommandList());
 					}else{
 						shellResult.printError("Error, try again!");
 						connect();
@@ -152,8 +168,10 @@ class BasicCommands{
 					}else{
 						shellResult.printSuccess("Successfully Registered Candidate Account!");
 						HrisApplication.setCurrentUser(user);
+						HrisApplication.setCommandList(shellCommands.getCommandGroup(shellCommands.getPermissionLevel(user.getRoles())));
 						CustomPromptProvider.changePrompt("connected");
-						shellCommands.getCommandGroup(HrisApplication.getCurrentUser().getRoles());
+						shellCommands.clearConsole();
+						shellResult.printList("Commands", HrisApplication.getCommandList());
 					}
 				}
 			}
@@ -163,12 +181,8 @@ class BasicCommands{
 
 @ShellComponent
 @ShellCommandGroup("Candidate")
+@Transactional
 class CandidateCommands{
-
-	public Availability candidateAvailability(){
-		boolean connected = false;
-		return connected ? Availability.available() : Availability.unavailable("Not connected");
-	}
 
 	@Autowired
 	ShellResult shellResult;
@@ -182,6 +196,21 @@ class CandidateCommands{
 	@Autowired
 	ShellCommands shellCommands;
 
+	public Availability candidateAvailability(){
+
+		Account authUser = aService.findAccountById(HrisApplication.getCurrentUser().getId());
+
+		if(authUser == null){
+			return Availability.unavailable("Not Connected!");
+		}
+
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 0){
+			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
+		}
+
+		return Availability.unavailable("Invalid Permission Level");
+	}
+
 	@ShellMethod("Candidate Stuff")
 	@ShellMethodAvailability("candidateAvailability")
 	public String candidateMethod(){
@@ -191,11 +220,21 @@ class CandidateCommands{
 
 @ShellComponent
 @ShellCommandGroup("Employee")
+@Transactional
 class EmployeeCommands {
 
 	public Availability employeeAvailability(){
-		boolean connected = true;
-		return connected ? Availability.available() : Availability.unavailable("Not connected");
+		Account authUser = aService.findAccountById(HrisApplication.getCurrentUser().getId());
+
+		if(authUser == null){
+			return Availability.unavailable("Not Connected!");
+		}
+
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 1){
+			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
+		}
+
+		return Availability.unavailable("Invalid Permission Level");
 	}
 
 	@Autowired
@@ -233,6 +272,7 @@ class EmployeeCommands {
 
 @ShellComponent
 @ShellCommandGroup("Manager")
+@Transactional
 class ManagerCommands{
 
 	@Autowired
@@ -248,14 +288,24 @@ class ManagerCommands{
 	ShellCommands shellCommands;
 
 	public Availability ManagerAvailability(){
-		boolean connected = true;
-		return connected ? Availability.available() : Availability.unavailable("Not connected");
+		Account authUser = aService.findAccountById(HrisApplication.getCurrentUser().getId());
+
+		if(authUser == null){
+			return Availability.unavailable("Not Connected!");
+		}
+
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 2){
+			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
+		}
+
+		return Availability.unavailable("Invalid Permission Level");
 	}
 
 }
 
 @ShellComponent
 @ShellCommandGroup("HR")
+@Transactional
 class HRCommands{
 
 	@Autowired
@@ -267,9 +317,21 @@ class HRCommands{
 	@Autowired
 	AccountService aService;
 
+	@Autowired
+	ShellCommands shellCommands;
+
 	public Availability hrAvailability(){
-		boolean connected = true;
-		return connected ? Availability.available() : Availability.unavailable("Not connected");
+		Account authUser = aService.findAccountById(HrisApplication.getCurrentUser().getId());
+
+		if(authUser == null){
+			return Availability.unavailable("Not Connected!");
+		}
+
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 3){
+			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
+		}
+
+		return Availability.unavailable("Invalid Permission Level");
 	}
 
 	@ShellMethod("Deactivate HRIS")

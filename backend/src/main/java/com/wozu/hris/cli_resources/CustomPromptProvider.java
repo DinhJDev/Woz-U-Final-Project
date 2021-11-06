@@ -23,7 +23,7 @@ public class CustomPromptProvider implements PromptProvider {
     public static void changePrompt(String promptState){
         if(promptState != null){
             if(promptState.equalsIgnoreCase("connected")){
-                prompt = new AttributedString("McMR-HRIS:>",
+                prompt = new AttributedString("McMA-HRIS:>",
                         AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE));
             }else{
                 prompt = new AttributedString("CONNECT:>",

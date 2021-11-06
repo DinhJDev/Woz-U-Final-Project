@@ -121,32 +121,44 @@ public class ShellCommands {
         return accountHolder;
     }
 
-    public Map<String, Map<String, String>> getCommandGroup(Set<Role> role){
-        Map<String, Map<String, String>> listedCommands = new HashMap<>();
+    public int getPermissionLevel(Set<Role> role){
+        int permLvl = 0;
+        for (Iterator<Role> it = role.iterator(); it.hasNext(); ) {
+            Role r = it.next();
+            if(r.getRoleId() > permLvl){
+                permLvl = r.getRoleId();
+            }
+        }
+        return permLvl;
+    }
+
+    public LinkedHashMap<String, Map<String, String>> getCommandGroup(int permLvl){
+        LinkedHashMap<String, Map<String, String>> listedCommands = new LinkedHashMap<>();
+
 
         //Commands available to All Roles
-        if(role.contains(rRepo.findByName(ERole.ROLE_CANDIDATE)) | role.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE)) | role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+        if(permLvl >= ERole.ROLE_CANDIDATE.getID()){
             Map<String, String> commands = new HashMap<>();
             commands.put("commandKey", "commandDetails");
             listedCommands.put("Candidate", commands);
         }
 
         //Commands available to Employee+ Roles
-        if(role.contains(rRepo.findByName(ERole.ROLE_EMPLOYEE)) | role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+        if(permLvl >= ERole.ROLE_EMPLOYEE.getID()){
             Map<String, String> commands = new HashMap<>();
             commands.put("commandKey2", "commandDetails");
             listedCommands.put("Employee", commands);
         }
 
         //Commands available to Manager+ Roles
-        if(role.contains(rRepo.findByName(ERole.ROLE_MANAGER)) | role.contains(rRepo.findByName(ERole.ROLE_HR))){
+        if(permLvl >= ERole.ROLE_MANAGER.getID()){
             Map<String, String> commands = new HashMap<>();
             commands.put("commandKey3", "commandDetails");
             listedCommands.put("Manager", commands);
         }
 
         //Commands available to HR Role
-        if(role.contains(rRepo.findByName(ERole.ROLE_HR))){
+        if(permLvl >= ERole.ROLE_HR.getID()){
             Map<String, String> commands = new HashMap<>();
             commands.put("commandKey4", "commandDetails");
             listedCommands.put("HR", commands);
