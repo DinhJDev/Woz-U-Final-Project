@@ -62,16 +62,7 @@ function Navigation() {
   }
 
   return (
-    <div
-      data-collapse="medium"
-      data-animation="over-right"
-      data-duration="400"
-      data-easing="ease"
-      data-easing2="ease"
-      role="banner"
-      className="header app-nav"
-      style={{ opacity: 1 }}
-    >
+    <div className="header app-nav" style={{ opacity: 1 }}>
       <div className="header-main-wrapper">
         <div
           className="container-default content-container"

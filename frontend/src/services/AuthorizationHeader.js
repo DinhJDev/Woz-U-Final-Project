@@ -1,4 +1,4 @@
-export default function authorizationHeader() {
+export default function AuthorizationHeader() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (user && user.token) {

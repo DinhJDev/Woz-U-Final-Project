@@ -31,6 +31,7 @@ VARIABLES
   --white-alpha-75: rgba(255, 255, 255, 0.6);
   --white-alpha-40: rgba(255, 255, 255, 0.4);
   --white-alpha-36: rgba(255, 255, 255, 0.36);
+  --white-alpha-12: rgba(255, 255, 255, 0.12);
 
   --tooltip-zindex: 10;
   --z-fixed: 100;

@@ -3,39 +3,26 @@ import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import TopBar from "../TopBar";
+import SideBarFooter from "../SidebarFooter";
+import DashboardLogo from "../DashboardLogo";
 
-const AdminDashboard = () => {
+const ManagerDashboard = () => {
   return (
     <section className="dashboard-view-section">
       <Tabs>
         <nav className="dashboard-side-bar">
-          <div className="sidebar-navbar-heading">
-            <div
-              className="sidebar-navbar-menu-button dashboard-nav-button"
-              aria-label="menu"
-              role="button"
-              tabindex="0"
-            ></div>
-            <a
-              href="/"
-              aria-current="page"
-              className="sidebar-navbar-brand dashboard-nav-brand nav-current"
-              aria-label="home"
-            >
-              <h3>McMillianHRIS</h3>
-            </a>
-          </div>
+          <DashboardLogo />
           <TabList className="dashboard-view-tablist">
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-envelope nav__icon"></i> Inbox
+                <i className="bx bx-collection nav__icon"></i> Overview
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-collection nav__icon"></i> Overview
+                <i className="bx bx-envelope nav__icon"></i> Inbox
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
@@ -55,33 +42,19 @@ const AdminDashboard = () => {
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-cog nav__icon"></i> Settings
+                <i className="bx bx-user nav__icon"></i> Account
               </div>
             </Tab>
           </TabList>
 
-          <div className="sidebar-navbar-footer">
-            <div className="nav__link dashboard-tab-title">
-              <a href="/" className="link-home dashboard-nav-link">
-                <i className="bx bx-home nav__icon"></i> Home
-              </a>
-            </div>
-
-            <div className="nav__link dashboard-tab-title">
-              <a href="/" className=" link-home dashboard-nav-link">
-                <i className="bx bx-log-out nav__icon"></i> Logout
-              </a>
-            </div>
-          </div>
-          <div className="sidebar-navbar-footer nav-toggle">
-            <a href="#" className="sidebar-navbar-toggle-button"></a>
-          </div>
+          <SideBarFooter />
         </nav>
         <TopBar />
 
         <TabPanel className="dashboard-view-panel">
-          <h2>View 1</h2>
-          <p>This board is for administrators</p>
+          <div className="board-header">
+            <span>Welcome back! Here is your manager overview</span>
+          </div>
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
@@ -126,4 +99,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default ManagerDashboard;

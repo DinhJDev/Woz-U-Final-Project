@@ -25,6 +25,8 @@ import "./styles/Navigation.css";
 import "./styles/Footer.css";
 import "./styles/Utility.css";
 import "./styles/Loading.css";
+import "./styles/BoardContent.css";
+import "./styles/Table.css";
 
 function App() {
   let returnHomeFromRegistration;

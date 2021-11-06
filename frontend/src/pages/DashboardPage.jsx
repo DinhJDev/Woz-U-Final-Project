@@ -2,10 +2,10 @@ import React, { Component } from "react";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
-import AdminDashboard from "../components/adminBoard/adminDashboard";
-import CandidateDashboard from "../components/candidateBoard/candidateDashboard";
-import ManagerDashboard from "../components/managerBoard/managerDashboard";
-import EmployeeDashboard from "../components/employeeBoard/employeeDashboard";
+import AdminDashboard from "../components/Dashboards/AdminDashboard";
+import CandidateDashboard from "../components/Dashboards/CandidateDashboard";
+import ManagerDashboard from "../components/Dashboards/ManagerDashboard";
+import EmployeeDashboard from "../components/Dashboards/EmployeeDashboard";
 import AuthorizationService from "../services/AuthorizationService";
 
 class DashboardView extends Component {
@@ -13,6 +13,7 @@ class DashboardView extends Component {
     super(props);
     this.state = {
       showAdministratorBoard: false,
+      showManagerBoard: false,
       showEmployeeBoard: false,
       showCandidateBoard: false,
       currentUser: undefined,
@@ -26,6 +27,7 @@ class DashboardView extends Component {
       this.setState({
         currentUser: AuthorizationService.getCurrentUser(),
         showAdministratorBoard: user.roles.includes("ROLE_HR"),
+        showManagerBoard: user.roles.includes("ROLE_MANAGER"),
         showEmployeeBoard: user.roles.includes("ROLE_EMPLOYEE"),
         showCandidateBoard: user.roles.includes("ROLE_CANDIDATE"),
       });
