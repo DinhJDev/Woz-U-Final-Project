@@ -1,5 +1,7 @@
 package com.wozu.hris.payload.request;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -20,6 +22,12 @@ public class SignupRequest {
     private String firstName;
     @NotBlank
     private String lastName;
+<<<<<<< HEAD
+
+    // @NotBlank
+    @DateTimeFormat(pattern="YYYY-MM-DD HH:MM:SS")
+=======
+>>>>>>> 33296a7f16f488c15af0070ded0b3eac31c08716
     private Date dateOfBirth;
 
     public String getUsername() {

@@ -12,6 +12,9 @@ public class Account {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
     @NotNull
     private String username;
     @NotNull
@@ -30,6 +33,12 @@ public class Account {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    public Account(String username, String password, Date dateOfBirth) {
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+    }
 
     @PrePersist
     protected void onCreate(){
@@ -55,6 +64,30 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getUsername() {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts/accounts";
-
+// clean up the redundancy in naming
 class AccountService {
   getAccount() {
     return axios.get(ACCOUNT_API_BASE_URL);

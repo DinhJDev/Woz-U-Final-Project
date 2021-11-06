@@ -59,16 +59,22 @@ class Login extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({ submitted: true });
+
     let user = {
       username: this.state.username,
       password: this.state.password,
     };
+
     console.log("user => " + JSON.stringify(user));
-    AuthorizationService.authenticateUser(user)
+    console.log(localStorage);
+
+    AuthorizationService.login(this.state.username, this.state.password)
       .then((res) => {
         this.routingFunction();
         console.log(res.headers);
+        console.log(res.data);
+        console.log(res);
+        console.log(localStorage);
       })
       .catch((err) => {
         if (err.response) {
@@ -77,6 +83,7 @@ class Login extends Component {
           console.log(err.response);
         }
       });
+    this.setState({ submitted: true });
   }
 
   routingFunction = (param) => {

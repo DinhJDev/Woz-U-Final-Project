@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import "./styles/Index.css";
+import "./styles/Dashboard.css";
+import "./styles/TopBar.css";
 
 ReactDOM.render(
   <React.StrictMode>
