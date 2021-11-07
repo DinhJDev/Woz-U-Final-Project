@@ -1,5 +1,8 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -26,6 +29,7 @@ public class Account {
 
     @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
     @JoinColumn(name = "employee_id")
+    @JsonManagedReference
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.LAZY)
