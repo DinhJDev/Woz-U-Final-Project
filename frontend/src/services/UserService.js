@@ -1,36 +1,36 @@
 import axios from "axios";
-import authorizationHeader from "./AuthorizationHeader";
+import AuthorizationHeader from "./AuthorizationHeader";
 
 const ROLE_API_BASE_URL = "http://localhost:8080/api/auth";
 
-class RoleAuthorization {
+class UserService {
   getPublicContent() {
     return axios.get(ROLE_API_BASE_URL + "");
   }
 
-  getCandidateBoard() {
-    return axios.get(ROLE_API_BASE_URL + "/candidate", {
-      headers: authorizationHeader(),
+  async getCandidateBoard() {
+    return axios.get(ROLE_API_BASE_URL + "/candidateboard", {
+      headers: await AuthorizationHeader(),
     });
   }
 
-  getEmployeeBoard() {
-    return axios.get(ROLE_API_BASE_URL + "/employees", {
-      headers: authorizationHeader(),
+  async getEmployeeBoard() {
+    return axios.get(ROLE_API_BASE_URL + "/employeeboard", {
+      headers: await AuthorizationHeader(),
     });
   }
 
-  getManagerBoard() {
-    return axios.get(ROLE_API_BASE_URL + "/manager", {
-      headers: authorizationHeader(),
+  async getManagerBoard() {
+    return axios.get(ROLE_API_BASE_URL + "/managerboard", {
+      headers: await AuthorizationHeader(),
     });
   }
 
-  getAdministratorBoard() {
-    return axios.get(ROLE_API_BASE_URL + "/administrator", {
-      headers: authorizationHeader(),
+  async getAdministratorBoard() {
+    return axios.get(ROLE_API_BASE_URL + "/adminboard", {
+      headers: await AuthorizationHeader(),
     });
   }
 }
 
-export default RoleAuthorization;
+export default new UserService();

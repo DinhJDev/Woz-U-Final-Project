@@ -34,6 +34,9 @@ function CandidateOverview() {
       <div className="white-box two-third">
         <div className="box-padding">
           <div className="chart-embed">
+            <span className="content-tag pink-tag">Candidates Data</span>
+            <br />
+            <br />
             <RandomChart />
           </div>
         </div>
@@ -41,9 +44,11 @@ function CandidateOverview() {
       <div className="white-box third">
         <div className="box-padding">
           <div className="chart-embed">
+            <span className="content-tag pink-tag">Employee Breakdown</span>
+            <br />
+            <br />
             <RandomDonutChart />
           </div>
-          <div className="center-label">Random donut chart</div>
         </div>
       </div>
     </div>

@@ -206,8 +206,4 @@ public class Employee {
     public void setClockedIn(Boolean clockedIn) {
         isClockedIn = clockedIn;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9acfcba6be4a64e1cc64c15d8fe45febcd8a4764

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import Profile from "../Profile";
+import Profile from "../DashboardContent/Profile";
 
 import TopBar from "../TopBar";
 import SideBarFooter from "../SidebarFooter";

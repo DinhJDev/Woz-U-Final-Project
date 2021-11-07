@@ -77,9 +77,5 @@ public class Performance {
 
     public void setReviewee(Employee reviewee) {
         this.reviewee = reviewee;
-<<<<<<< HEAD
-}}
-=======
     }
 }
->>>>>>> 9acfcba6be4a64e1cc64c15d8fe45febcd8a4764

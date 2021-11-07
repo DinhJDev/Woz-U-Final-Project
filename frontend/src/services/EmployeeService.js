@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import AuthorizationHeader from "./AuthorizationHeader";
 const EMPLOYEE_API_BASE_URL = "http://localhost:8080/api/employees";
 
 class EmployeeService {
@@ -8,23 +9,27 @@ class EmployeeService {
   }
 
   async getAllEmployees() {
-    return axios.get(EMPLOYEE_API_BASE_URL + "/employees");
+    return axios.get(EMPLOYEE_API_BASE_URL + "/employees", {
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  createEmployee(employee) {
-    return axios.post(EMPLOYEE_API_BASE_URL, employee);
+  async createEmployee(employee) {
+    return axios.post(EMPLOYEE_API_BASE_URL + "/employees", employee);
   }
 
-  getEmployeeById(employeeId) {
-    return axios.get(EMPLOYEE_API_BASE_URL + "/" + employeeId);
+  async getEmployeeById(employeeId) {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId, {
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  updateEmployee(employee, employeeId) {
-    return axios.put(EMPLOYEE_API_BASE_URL + "/" + employeeId, employee);
+  async updateEmployee(employeeId) {
+    return axios.put(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
   }
 
-  deleteEmployee(employeeId) {
-    return axios.delete(EMPLOYEE_API_BASE_URL + "/" + employeeId);
+  async deleteEmployee(employeeId) {
+    return axios.delete(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
   }
 }
 

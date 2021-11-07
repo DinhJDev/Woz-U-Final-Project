@@ -9,6 +9,7 @@ import java.util.Map;
 import com.wozu.hris.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.services.EmployeeService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -35,6 +36,7 @@ public class EmployeeController {
     EmployeeRepository eRepo;
 
     // get all employees
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
     @GetMapping("/employees")
     public ResponseEntity<List<Employee>> getAllEmployees(){
         try {

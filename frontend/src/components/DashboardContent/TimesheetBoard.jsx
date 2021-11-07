@@ -3,8 +3,7 @@ function TimesheetBoard() {
   return (
     <div className="dash-row">
       <div className="white-box full-width">
-        <div className="box-padding w-richtext">
-          <h4>This is a table</h4>
+        <div className="box-padding box-richtext">
           <ReactTable />
         </div>
       </div>

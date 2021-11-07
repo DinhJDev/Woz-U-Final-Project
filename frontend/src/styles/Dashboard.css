@@ -18,8 +18,7 @@
   transition: 0.4s;
   padding: 30px 1rem 0px;
   background-color: var(--white-alpha-75);
-  /*
-  box-shadow: rgba(22, 8, 43, 0.1) 1px 0px 0px;*/
+  box-shadow: rgba(22, 8, 43, 0.1) 1px 0px 0px;
 }
 
 .sticky-inner {

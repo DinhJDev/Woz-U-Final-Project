@@ -110,7 +110,7 @@ class RegistrationForm extends Component {
       password: this.state.password,
       passwordConfirmation: this.state.passwordConfirm,
     };
-    //console.log("user => " + JSON.stringify(user));
+
     AuthorizationService.register(user)
       .then((res) => {
         this.routingFunction();

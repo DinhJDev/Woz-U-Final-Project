@@ -20,6 +20,11 @@ class Login extends Component {
       error: false,
       success: false,
       submitted: false,
+      showAdministratorBoard: false,
+      showManagerBoard: false,
+      showEmployeeBoard: false,
+      showCandidateBoard: false,
+      currentUser: undefined,
       username: "",
       password: "",
       response: "",
@@ -40,8 +45,8 @@ class Login extends Component {
     this.setState({ submitted: false });
   };
 
-  componentDidMount() {
-    AuthorizationService.getServer()
+  async componentDidMount() {
+    await AuthorizationService.getServer()
       .then((res) => {
         const data = res.data.data;
         console.error("loaded");
@@ -51,6 +56,17 @@ class Login extends Component {
         this.setState({ loading: false, error: false });
         console.error(err);
       });
+    const user = await AuthorizationService.getCurrentUser();
+    console.log(user);
+    if (user) {
+      this.setState({
+        currentUser: AuthorizationService.getCurrentUser(),
+        showAdministratorBoard: user.roles.includes("ROLE_HR"),
+        showManagerBoard: user.roles.includes("ROLE_MANAGER"),
+        showEmployeeBoard: user.roles.includes("ROLE_EMPLOYEE"),
+        showCandidateBoard: user.roles.includes("ROLE_CANDIDATE"),
+      });
+    }
   }
 
   validateForm() {
@@ -87,8 +103,17 @@ class Login extends Component {
   }
 
   routingFunction = (param) => {
+    const pageLink = this.state.showAdministratorBoard
+      ? "/adminboard"
+      : this.state.showManagerBoard
+      ? "/managerboard"
+      : this.state.showEmployeeBoard
+      ? "/employeeboard"
+      : this.state.showCandidateBoard
+      ? "/candidateboard"
+      : "/";
     if (this.validateForm) {
-      this.props.history.push("/");
+      this.props.history.push(pageLink);
     }
   };
 

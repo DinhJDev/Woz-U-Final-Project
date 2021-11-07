@@ -9,6 +9,10 @@ table {
   border-collapse: collapse;
 }
 
+table * {
+  font-weight: 400;
+}
+
 .table {
   width: 100%;
   max-width: 100%;
@@ -41,6 +45,7 @@ tr {
 
 th {
   text-align: inherit;
+  font-family: Thicccboi !important;
 }
 
 th {
@@ -289,7 +294,7 @@ div.mdb-datatable div.mdb-datatable-filter input {
   border: 1px solid #ced4da;
   -webkit-appearance: none;
   appearance: none;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -425,7 +430,7 @@ li.page-item {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
-  border-radius: 0.2rem;
+  border-radius: 0.5rem;
 }
 
 li.page-item:last-child {
@@ -467,7 +472,7 @@ li.page-item:last-child {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
-  border-radius: 0.2rem;
+  border-radius: 0.5rem;
 }
 
 .row-expand-button {
@@ -496,6 +501,7 @@ li.page-item:last-child {
 }
 
 .add-data-button {
+  margin-bottom: 12px;
   display: flex;
   cursor: pointer;
   padding: 0.475rem 0.975rem;
@@ -510,5 +516,5 @@ li.page-item:last-child {
   appearance: none;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   font-size: 0.975rem;
-  border-radius: 0.2rem;
+  border-radius: 0.5rem;
 }

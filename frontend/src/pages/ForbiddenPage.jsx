@@ -7,12 +7,12 @@ import Forbidden from "../components/Forbidden";
 
 function ForbiddenPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <Forbidden />
       <Footer />
-    </div>
+    </>
   );
 }
 

@@ -38,13 +38,9 @@ class TopBar extends Component {
             <nav role="navigation" className="nav-menu app-nav-menu"></nav>
           </div>
           <div className="split-content header-left">
-            <Theme
-              style={{ display: "flex" }}
-              className="login-button app-link-block"
-            />
             <button
               onClick={(e) => {}}
-              style={{ display: "flex", marginLeft: "12px", opacity: 1 }}
+              style={{ opacity: 1, marginRight: "12px", marginTop: "4px" }}
               className="button-primary app-button profile-white-button"
             >
               <span
@@ -53,8 +49,14 @@ class TopBar extends Component {
                   lineHeight: "inherit",
                 }}
               ></span>
-              {this.state.currentUser.username}
+              <span style={{ fontFamily: "Thicccboi", lineHeight: "initial" }}>
+                {this.state.currentUser.username}
+              </span>
             </button>
+            <Theme
+              style={{ display: "flex", marginLeft: "12px" }}
+              className="login-button app-link-block"
+            />
           </div>
         </div>
       </div>

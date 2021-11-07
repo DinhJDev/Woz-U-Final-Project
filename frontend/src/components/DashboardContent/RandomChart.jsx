@@ -57,9 +57,9 @@ export default class RandomChart extends Component {
   }
   render() {
     return (
-      <div>
+      <>
         <canvas id="myChart" ref={this.chartRef} />
-      </div>
+      </>
     );
   }
 }

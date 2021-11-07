@@ -9,6 +9,7 @@ import TimesheetBoard from "../DashboardContent/TimesheetBoard";
 import DashboardLogo from "../DashboardLogo";
 import MultiTableTabs from "../DashboardContent/MultiTableTabs";
 import ListEmployees from "../ListEmployees";
+import Profile from "../DashboardContent/Profile";
 
 const AdminDashboard = () => {
   return (
@@ -59,6 +60,7 @@ const AdminDashboard = () => {
           <div className="board-header">
             <span>Welcome back! Here is your administrator overview</span>
           </div>
+          <CandidateOverview />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel"></TabPanel>
@@ -69,7 +71,9 @@ const AdminDashboard = () => {
           <ListEmployees />
         </TabPanel>
 
-        <TabPanel className="dashboard-view-panel"></TabPanel>
+        <TabPanel className="dashboard-view-panel">
+          <Profile />
+        </TabPanel>
       </Tabs>
     </section>
   );

@@ -23,12 +23,9 @@ public class SignupRequest {
     private String firstName;
     @NotBlank
     private String lastName;
-<<<<<<< HEAD
-=======
 
     @NotNull
     @DateTimeFormat(pattern="YYYY-MM-DD HH:MM:SS")
->>>>>>> 9acfcba6be4a64e1cc64c15d8fe45febcd8a4764
     private Date dateOfBirth;
 
     public String getUsername() {
