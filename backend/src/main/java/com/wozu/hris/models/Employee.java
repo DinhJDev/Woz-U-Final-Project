@@ -14,16 +14,13 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
-    @NotNull
     private Date dateOfBirth;
     private Date createdAt;
     private Date updatedAt;
-    private int permissionLevel;
-
+    private Boolean isClockedIn;
+  
     @OneToOne(mappedBy = "employee")
     private Account account;
 
@@ -207,7 +204,13 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-        this.benefit = benefit;
-        this.permissionLevel = 1; //or whatever level employees should have by default
+        this.benefit = benefit; //or whatever level employees should have by default
+    }
+    public Boolean getClockedIn() {
+        return isClockedIn;
+    }
+
+    public void setClockedIn(Boolean clockedIn) {
+        isClockedIn = clockedIn;
     }
 }

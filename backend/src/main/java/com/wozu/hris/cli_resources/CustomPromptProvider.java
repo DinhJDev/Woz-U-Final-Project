@@ -12,18 +12,18 @@ import org.jline.utils.AttributedStyle;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomPromptProvider implements PromptProvider {
-    private AttributedString prompt = new AttributedString("McMA-HRIS:>",
-            AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE));
+    private static AttributedString prompt = new AttributedString("CONNECT:>",
+            AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
 
     @Override
     public AttributedString getPrompt() {
         return prompt;
     }
 
-    public void changePrompt(String promptState){
+    public static void changePrompt(String promptState){
         if(promptState != null){
             if(promptState.equalsIgnoreCase("connected")){
-                prompt = new AttributedString("McMR-HRIS:>",
+                prompt = new AttributedString("McMA-HRIS:>",
                         AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE));
             }else{
                 prompt = new AttributedString("CONNECT:>",
