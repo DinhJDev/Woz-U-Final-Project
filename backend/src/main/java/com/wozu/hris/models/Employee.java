@@ -1,5 +1,8 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -21,6 +24,7 @@ public class Employee {
     private Boolean isClockedIn;
 
     @OneToOne(mappedBy = "employee")
+    @JsonBackReference
     private Account account;
 
     @OneToMany(mappedBy = "employee")
