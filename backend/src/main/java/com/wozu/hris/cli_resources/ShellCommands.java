@@ -121,6 +121,27 @@ public class ShellCommands {
         return accountHolder;
     }
 
+    public boolean promoteAccount(String type, String t){
+        return promoteAccount(type, t, null);
+    }
+
+    public boolean promoteAccount(String type, String t, String role){
+        boolean result = false;
+        Account targetAccount = type.equalsIgnoreCase("Username") ? aService.findByUsername(t).get() : aService.findAccountById(Long.parseLong(t));
+
+        if(role != null){
+            if(role == "Employee"){
+                result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
+            }else if(role == "Manager"){
+                result = aService.promoteEmployeeAccount(targetAccount) != null ? true : false;
+            }
+        }else{
+            result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
+        }
+
+        return result;
+    }
+
     public int getPermissionLevel(Set<Role> role){
         int permLvl = 0;
         for (Iterator<Role> it = role.iterator(); it.hasNext(); ) {
@@ -146,21 +167,23 @@ public class ShellCommands {
         //Commands available to Employee+ Roles
         if(permLvl >= ERole.ROLE_EMPLOYEE.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("commandKey2", "commandDetails");
+            commands.put("cIn", "Clock In");
+            commands.put("cOut", "Clock Out");
             listedCommands.put("Employee", commands);
         }
 
         //Commands available to Manager+ Roles
         if(permLvl >= ERole.ROLE_MANAGER.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("commandKey3", "commandDetails");
+            commands.put("promote", "Promote Candidate Account to Employee");
             listedCommands.put("Manager", commands);
         }
 
         //Commands available to HR Role
         if(permLvl >= ERole.ROLE_HR.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("commandKey4", "commandDetails");
+            commands.put("hPromote", "Advanced Promotion");
+            commands.put("deactivate", "Deactivate current Interface");
             listedCommands.put("HR", commands);
         }
 

@@ -54,7 +54,6 @@ public class Timesheet {
 
     public Timesheet(Employee e){
         this.employee = e;
-        LocalTime now = LocalTime.now();
         this.start = new Date();
         this.end = null;
     }

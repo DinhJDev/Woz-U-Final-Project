@@ -4,12 +4,11 @@ import com.wozu.hris.cli_resources.CustomPromptProvider;
 import com.wozu.hris.cli_resources.InputReader;
 import com.wozu.hris.cli_resources.ShellCommands;
 import com.wozu.hris.cli_resources.ShellResult;
-import com.wozu.hris.models.Account;
-import com.wozu.hris.models.ERole;
-import com.wozu.hris.models.Employee;
-import com.wozu.hris.models.Role;
+import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.RoleRepository;
+import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.services.AccountService;
+import com.wozu.hris.services.TimesheetService;
 import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -30,15 +29,6 @@ import java.util.logging.LogManager;
 
 @SpringBootApplication
 public class HrisApplication {
-
-	@Autowired
-	public static ShellResult shellResult;
-
-	@Autowired
-	public static InputReader inputReader;
-
-	@Autowired
-	public static ShellCommands shellCommands;
 
 	private static Account currentUser = null;
 	private static boolean active = true;
@@ -125,6 +115,7 @@ class BasicCommands{
 	@ShellMethod("Sign Out Of Session")
 	public void signOut(){
 		HrisApplication.setCurrentUser(null);
+		HrisApplication.setCommandList(null);
 		shellCommands.clearConsole();
 		CustomPromptProvider.changePrompt("disconnected");
 	}
@@ -155,6 +146,7 @@ class BasicCommands{
 						HrisApplication.setCommandList(shellCommands.getCommandGroup(shellCommands.getPermissionLevel(possibleUser.getRoles())));
 						CustomPromptProvider.changePrompt("connected");
 						shellCommands.clearConsole();
+						shellCommands.displayBanner();
 						shellResult.printList("Commands", HrisApplication.getCommandList());
 					}else{
 						shellResult.printError("Error, try again!");
@@ -171,6 +163,7 @@ class BasicCommands{
 						HrisApplication.setCommandList(shellCommands.getCommandGroup(shellCommands.getPermissionLevel(user.getRoles())));
 						CustomPromptProvider.changePrompt("connected");
 						shellCommands.clearConsole();
+						shellCommands.displayBanner();
 						shellResult.printList("Commands", HrisApplication.getCommandList());
 					}
 				}
@@ -204,7 +197,7 @@ class CandidateCommands{
 			return Availability.unavailable("Not Connected!");
 		}
 
-		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 0){
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= ERole.ROLE_CANDIDATE.getID()){
 			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
 		}
 
@@ -230,7 +223,7 @@ class EmployeeCommands {
 			return Availability.unavailable("Not Connected!");
 		}
 
-		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 1){
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= ERole.ROLE_EMPLOYEE.getID()){
 			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
 		}
 
@@ -249,24 +242,60 @@ class EmployeeCommands {
 	@Autowired
 	ShellCommands shellCommands;
 
-	@ShellMethod("Test result output")
-	@ShellMethodAvailability("employeeAvailability")
-	public String helloWorld(@ShellOption(value = "Name", defaultValue = "Woz U") String optional){
-		shellCommands.clearConsole();
-		return shellResult.getSuccessMessage(String.format("Hello World! - %s", optional));
-	}
+	@Autowired
+	TimesheetService tService;
 
-	@ShellMethod("Test printBanner method")
-	@ShellMethodAvailability("employeeAvailability")
-	public void seeBanner(){
-		shellCommands.clearConsole();
-		shellCommands.displayBanner();
-	}
+	@Autowired
+	TimesheetRepository tRepo;
 
-	@ShellMethod("Clock in")
+	@ShellMethod(key="cIn", value="Clock in")
 	@ShellMethodAvailability("employeeAvailability")
 	public void clockIn(){
+		Account currentUser = HrisApplication.getCurrentUser();
+		Employee currentEmp = currentUser.getEmployee();
 
+		if(!currentEmp.getClockedIn()){
+			Timesheet timesheet = new Timesheet();
+			timesheet.setStart(new Date());
+			timesheet.setEmployee(currentEmp);
+			tService.createTimesheet(timesheet);
+
+			currentEmp.setClockedIn(true);
+
+			shellCommands.clearConsole();
+			shellResult.printSuccess("Clocked in Successfully");
+			shellCommands.displayBanner();
+			shellResult.printList("Commands", HrisApplication.getCommandList());
+
+		}else{
+			shellResult.printError("Current User is already clocked in!");
+		}
+	}
+
+	@ShellMethod(key="cOut", value="Clock out")
+	@ShellMethodAvailability("employeeAvailability")
+	public void clockOut(){
+		Account currentUser = HrisApplication.getCurrentUser();
+		Employee currentEmp = currentUser.getEmployee();
+
+		if(currentEmp.getClockedIn()){
+			Timesheet timesheet = tRepo.findTopByEmployeeOrderByIdDesc(currentEmp);
+
+			if(timesheet != null){
+				timesheet.setEnd(new Date());
+				currentEmp.setClockedIn(false);
+
+				shellCommands.clearConsole();
+				shellResult.printSuccess("Clocked out Successfully!");
+				shellCommands.displayBanner();
+				shellResult.printList("Commands", HrisApplication.getCommandList());
+			}else{
+				shellResult.printError("Error finding latest Timesheet");
+			}
+		}else{
+			shellResult.printError("Current User is not clocked in!");
+
+		}
 	}
 }
 
@@ -294,11 +323,37 @@ class ManagerCommands{
 			return Availability.unavailable("Not Connected!");
 		}
 
-		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 2){
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= ERole.ROLE_MANAGER.getID()){
 			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
 		}
 
 		return Availability.unavailable("Invalid Permission Level");
+	}
+
+	@ShellMethod(key="promote", value="Promote Candidate Account to Employee")
+	public void promoCandidate(){
+		shellResult.printInfo("Promote Candidate Account");
+		String type = null;
+		String target = null;
+		Map<String, String> options = new HashMap<>();
+		options.put("A", "Username");
+		options.put("B", "Account ID");
+		do{
+			type = inputReader.listInput("Find by",
+					"Please select an option [] provided above.",
+					options,
+					true);
+		}while(type == null);
+
+		do{
+			target = inputReader.prompt(String.format("Input %s", type));
+		}while(target == null);
+
+		if(shellCommands.promoteAccount(type, target)){
+			shellResult.printSuccess("Account Promoted Successfully!");
+		}else{
+			shellResult.printError("Failed to Promote Account!");
+		}
 	}
 
 }
@@ -327,17 +382,57 @@ class HRCommands{
 			return Availability.unavailable("Not Connected!");
 		}
 
-		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= 3){
+		if(shellCommands.getPermissionLevel(authUser.getRoles()) >= ERole.ROLE_HR.getID()){
 			return HrisApplication.getSession() ? Availability.available() : Availability.unavailable("Not Connected");
 		}
 
 		return Availability.unavailable("Invalid Permission Level");
 	}
 
-	@ShellMethod("Deactivate HRIS")
+	@ShellMethod("Deactivate CLI")
 	@ShellMethodAvailability("hrAvailability")
 	public void deactivate(){
 		HrisApplication.deactivate();
+	}
+
+	@ShellMethod(key="hPromote", value="Advanced Promotion")
+	@ShellMethodAvailability("hrAvailability")
+	public void hPromote(){
+		shellResult.printInfo("Promote Account");
+		String type = null;
+		String target = null;
+		String role = null;
+		Map<String, String> options = new HashMap<>();
+		Map<String, String> roles = new HashMap<>();
+		options.put("A", "Username");
+		options.put("B", "Account ID");
+
+		roles.put("A", "Employee");
+		roles.put("B", "Manager");
+
+		do{
+			type = inputReader.listInput("Find by",
+					"Please select an option [] provided above.",
+					options,
+					true);
+		}while(type == null);
+
+		do{
+			target = inputReader.prompt(String.format("Input %s", type));
+		}while(target == null);
+
+		do{
+			role = inputReader.listInput("New Role",
+					"Please select an option [] provided above.",
+					roles,
+					true);
+		}while(role == null);
+
+		if(shellCommands.promoteAccount(type, target, role)){
+			shellResult.printSuccess("Account Promoted Successfully!");
+		}else{
+			shellResult.printError("Failed to Promote Account!");
+		}
 	}
 
 }
