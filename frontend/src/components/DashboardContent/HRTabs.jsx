@@ -23,6 +23,7 @@ function HRTabs() {
           </div>
         </div>
       </TabPanel>
+
       <TabPanel>
         <div className="white-box full-width zero-margin-box">
           <div className="box-padding">
@@ -30,9 +31,11 @@ function HRTabs() {
           </div>
         </div>
       </TabPanel>
+
       <TabPanel>
         <EmployeesTable />
       </TabPanel>
+
       <TabPanel>
         <div className="white-box full-width zero-margin-box">
           <div className="box-padding">
@@ -40,6 +43,7 @@ function HRTabs() {
           </div>
         </div>
       </TabPanel>
+      
       <TabPanel>
         <AccountsTable />
       </TabPanel>

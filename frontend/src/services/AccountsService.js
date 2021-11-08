@@ -1,26 +1,18 @@
 import axios from "axios";
 
-const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts/";
+const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts";
 // clean up the redundancy in naming
 class AccountsService {
-  getAccount() {
-    return axios.get(ACCOUNT_API_BASE_URL);
-  }
-
-  createAccount(account) {
-    return axios.post(ACCOUNT_API_BASE_URL, account);
+  getAllAccounts() {
+    return axios.get(ACCOUNT_API_BASE_URL + "/accounts/");
   }
 
   getAccountById(accountId) {
-    return axios.get(ACCOUNT_API_BASE_URL + "/" + accountId);
+    return axios.get(ACCOUNT_API_BASE_URL + "/accounts/" + accountId);
   }
 
-  updateAccount(account, accountId) {
-    return axios.put(ACCOUNT_API_BASE_URL + "/" + accountId, account);
-  }
-
-  deleteAccount(account) {
-    return axios.delete(ACCOUNT_API_BASE_URL + "/" + accountId);
+  deleteAccount(accountId) {
+    return axios.delete(ACCOUNT_API_BASE_URL + "/accounts/" + accountId);
   }
 }
 

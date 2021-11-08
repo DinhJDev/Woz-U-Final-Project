@@ -67,9 +67,7 @@ const EmployeeDashboard = () => {
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <div className="board-header">
-            <span>User Profile</span>
-          </div>
+          <h2>View 5</h2>
           <Profile />
         </TabPanel>
       </Tabs>
