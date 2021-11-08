@@ -16,33 +16,35 @@ const ManagerDashboard = () => {
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-collection nav__icon"></i> Overview
+                <i className="bx bx-collection nav__icon"></i>{" "}
+                <span>Overview</span>
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-envelope nav__icon"></i> Inbox
+                <i className="bx bx-envelope nav__icon"></i> <span>Inbox</span>
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-wrench nav__icon"></i> Management
-              </div>
-            </Tab>
-
-            <Tab className="dashboard-tab-item">
-              <div className="nav__link  dashboard-tab-title">
-                {" "}
-                <i className="bx bx-time-five nav__icon"></i> Tracking
+                <i className="bx bx-wrench nav__icon"></i> <span>Team</span>
               </div>
             </Tab>
 
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-user nav__icon"></i> Account
+                <i className="bx bx-time-five nav__icon"></i>{" "}
+                <span>Tracking</span>
+              </div>
+            </Tab>
+
+            <Tab className="dashboard-tab-item">
+              <div className="nav__link  dashboard-tab-title">
+                {" "}
+                <i className="bx bx-user nav__icon"></i> <span>Account</span>
               </div>
             </Tab>
           </TabList>

@@ -16,6 +16,7 @@ import AuthorizationService from "./services/AuthorizationService";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./styles/fonts/RelativeMono.css";
+import "./styles/fonts/DMMono.css";
 import "./styles/fonts/Larsseit.css";
 import "./styles/fonts/Thicccboi.css";
 

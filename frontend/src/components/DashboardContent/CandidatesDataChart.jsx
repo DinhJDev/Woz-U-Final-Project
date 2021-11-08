@@ -2,16 +2,13 @@ import React, { Component } from "react";
 import Chart from "chart.js/auto";
 import moment from "moment";
 
-export default class RandomChart extends Component {
+export default class CandidatesDataChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       mydata: "",
       currentUser: [],
-      employees: [],
-      employeecolumns: [],
-      employeerows: [],
       totalCandidates: [],
       acceptedCandidates: [],
       pendingCandidates: [],

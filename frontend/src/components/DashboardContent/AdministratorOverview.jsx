@@ -1,9 +1,11 @@
 import RandomChart from "./RandomChart";
 import RandomDonutChart from "./RandomDonutChart";
+import CandidatesDataChart from "./CandidatesDataChart";
+import DepartmentsBreakdownChart from "./DepartmentBreakdownChart";
 import Clock from "./Clock";
 import ClockInClockOut from "./ClockInClockOut";
 
-function CandidateOverview() {
+function AdministratorOverview() {
   return (
     <div className="dash-row">
       <div className="white-box third">
@@ -27,7 +29,7 @@ function CandidateOverview() {
             <span className="content-tag blue-tag">Candidates Data</span>
             <br />
             <br />
-            <RandomChart />
+            <CandidatesDataChart />
           </div>
         </div>
       </div>
@@ -37,7 +39,7 @@ function CandidateOverview() {
             <span className="content-tag green-tag">Departments Breakdown</span>
             <br />
             <br />
-            <RandomDonutChart />
+            <DepartmentsBreakdownChart />
           </div>
         </div>
       </div>
@@ -45,4 +47,4 @@ function CandidateOverview() {
   );
 }
 
-export default CandidateOverview;
+export default AdministratorOverview;

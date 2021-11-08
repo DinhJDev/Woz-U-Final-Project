@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/timesheet")
 public class TimesheetController {
@@ -49,7 +49,6 @@ public class TimesheetController {
     }
 
     // Clock-In Request
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
         Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
@@ -66,8 +65,8 @@ public class TimesheetController {
     }
 
     // Clock-Out Request
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
-    @PutMapping("/clockout")
+    // Clock-Out Request
+    @PostMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Optional<Account> account = aService.findByUsername(username);          // Utilizes JwtToken to obtain username & gets Employee
@@ -81,6 +80,7 @@ public class TimesheetController {
 
         Timesheet latestTimesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);     // Grabs the latest timesheet, updates, and saves it
         latestTimesheet.setEnd(new Date());
+        tService.updateTimesheet(latestTimesheet.getId(), latestTimesheet);
         employee.setClockedIn(false);                                                   // Sets isClockedIn to false
         return ResponseEntity.ok(new MessageResponse("User successfully clocked out at " + latestTimesheet.getEnd()));
     }

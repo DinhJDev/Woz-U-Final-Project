@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts/accounts";
+const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts/";
 // clean up the redundancy in naming
-class AccountService {
+class AccountsService {
   getAccount() {
     return axios.get(ACCOUNT_API_BASE_URL);
   }
@@ -24,4 +24,4 @@ class AccountService {
   }
 }
 
-export default new AccountService();
+export default new AccountsService();

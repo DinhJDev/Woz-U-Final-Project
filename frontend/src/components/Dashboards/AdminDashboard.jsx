@@ -4,12 +4,14 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import TopBar from "../TopBar";
 import SideBarFooter from "../SidebarFooter";
-import CandidateOverview from "../DashboardContent/CandidateOverview";
 import TimesheetBoard from "../DashboardContent/TimesheetBoard";
+import AdministratorOverview from "../DashboardContent/AdministratorOverview";
 import DashboardLogo from "../DashboardLogo";
-import MultiTableTabs from "../DashboardContent/MultiTableTabs";
-import ListEmployees from "../ListEmployees";
+import CompanyTabs from "../DashboardContent/CompanyTabs";
+import EmployeesTable from "../EmployeesTable";
 import Profile from "../DashboardContent/Profile";
+import HRTabs from "../DashboardContent/HRTabs";
+import PerformanceReviews from "../DashboardContent/PerformanceReviews";
 
 const AdminDashboard = () => {
   return (
@@ -21,33 +23,35 @@ const AdminDashboard = () => {
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-collection nav__icon"></i> Overview
+                <i className="bx bx-collection nav__icon"></i>{" "}
+                <span>Overview</span>
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
               <div className="nav__link dashboard-tab-title">
                 {" "}
-                <i className="bx bx-envelope nav__icon"></i> Inbox
+                <i className="bx bx-envelope nav__icon"></i> <span>Inbox</span>
               </div>
             </Tab>
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-wrench nav__icon"></i> Management
-              </div>
-            </Tab>
-
-            <Tab className="dashboard-tab-item">
-              <div className="nav__link  dashboard-tab-title">
-                {" "}
-                <i className="bx bx-time-five nav__icon"></i> Tracking
+                <i className="bx bx-buildings nav__icon"></i>{" "}
+                <span>Company</span>
               </div>
             </Tab>
 
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-user nav__icon"></i> Account
+                <i className="bx bx-task nav__icon"></i> <span>HR</span>
+              </div>
+            </Tab>
+
+            <Tab className="dashboard-tab-item">
+              <div className="nav__link  dashboard-tab-title">
+                {" "}
+                <i className="bx bx-user nav__icon"></i> <span>Account</span>
               </div>
             </Tab>
           </TabList>
@@ -60,18 +64,32 @@ const AdminDashboard = () => {
           <div className="board-header">
             <span>Welcome back! Here is your administrator overview</span>
           </div>
-          <CandidateOverview />
-        </TabPanel>
-
-        <TabPanel className="dashboard-view-panel"></TabPanel>
-        <TabPanel className="dashboard-view-panel">
-          <MultiTableTabs />
-        </TabPanel>
-        <TabPanel className="dashboard-view-panel">
-          <ListEmployees />
+          <AdministratorOverview />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
+          <div className="board-header">
+            <span>Performance Reviews</span>
+          </div>
+          <PerformanceReviews />
+        </TabPanel>
+        <TabPanel className="dashboard-view-panel">
+          <div className="board-header">
+            <span>Company Info</span>
+          </div>
+          <CompanyTabs />
+        </TabPanel>
+        <TabPanel className="dashboard-view-panel">
+          <div className="board-header">
+            <span>Human Resources</span>
+          </div>
+          <HRTabs />
+        </TabPanel>
+
+        <TabPanel className="dashboard-view-panel">
+          <div className="board-header">
+            <span>User Profile</span>
+          </div>
           <Profile />
         </TabPanel>
       </Tabs>

@@ -3,7 +3,7 @@ import TableExample from "./TableExample";
 import ReactTable from "./ReactTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-function MultiTableTabs() {
+function CompanyTabs() {
   return (
     <Tabs className="tabs-medium-width">
       <TabList className="multi-table-tab-list">
@@ -53,4 +53,4 @@ function MultiTableTabs() {
   );
 }
 
-export default MultiTableTabs;
+export default CompanyTabs;

@@ -8,7 +8,7 @@ import SideBarFooter from "../SidebarFooter";
 import CandidateOverview from "../DashboardContent/CandidateOverview";
 import TimesheetBoard from "../DashboardContent/TimesheetBoard";
 import DashboardLogo from "../DashboardLogo";
-import MultiTableTabs from "../DashboardContent/MultiTableTabs";
+import CompanyTabs from "../DashboardContent/CompanyTabs";
 
 const CandidateDashboard = () => {
   return (
@@ -66,14 +66,14 @@ const CandidateDashboard = () => {
           <TimesheetBoard />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
-          <MultiTableTabs />
+          <CompanyTabs />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
-          <MultiTableTabs />
+          <CompanyTabs />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <MultiTableTabs />
+          <CompanyTabs />
         </TabPanel>
       </Tabs>
     </section>

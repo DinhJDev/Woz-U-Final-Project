@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Chart from "chart.js/auto";
 
-export default class RandomDonutChart extends Component {
+export default class DepartmentsBreakdownChart extends Component {
   chartRef = React.createRef();
 
   componentDidMount() {
