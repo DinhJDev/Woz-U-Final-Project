@@ -110,4 +110,9 @@ public class AccountService {
         }
         return acc;
     }
+
+    // Delete an employee
+    public void deleteAccount(Long id) {
+        this.aRepo.deleteById(id);
+    }
 }

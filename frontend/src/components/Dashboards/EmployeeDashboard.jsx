@@ -1,4 +1,5 @@
 import React from "react";
+import Profile from "../DashboardContent/Profile"
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
@@ -87,12 +88,7 @@ const EmployeeDashboard = () => {
 
         <TabPanel className="dashboard-view-panel">
           <h2>View 5</h2>
-          <p>
-            Eget nisi est sit amet facilisis.Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Nec feugiat nisl pretium fusce id. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
+          <Profile />
         </TabPanel>
       </Tabs>
     </section>

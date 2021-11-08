@@ -1,5 +1,5 @@
 import { MDBDataTableV5 } from "mdbreact";
-import EmployeeService from "../../services/EmployeeService";
+import AccountsService from "../../services/AccountsService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
 
@@ -10,11 +10,20 @@ class AccountsTable extends Component {
     this.state = {
       mydata: "",
       currentUser: [],
-      employees: [],
-      employeecolumns: [
+      accounts: [],
+      accountsColumns: [
         {
-          label: "ID",
-          field: "id",
+          label: "Account ID",
+          field: "account_id",
+          width: "100%",
+          attributes: {
+            "aria-controls": "DataTable",
+            "aria-label": "Name",
+          },
+        },
+        {                                                           // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
+          label: "Employee ID",
+          field: "employee_id",
           width: "100%",
           attributes: {
             "aria-controls": "DataTable",
@@ -22,32 +31,13 @@ class AccountsTable extends Component {
           },
         },
         {
-          label: "First Name",
-          field: "firstName",
+          label: "Username",
+          field: "username",
           width: "100%",
           attributes: {
             "aria-controls": "DataTable",
             "aria-label": "Name",
           },
-        },
-        {
-          label: "Last Name",
-          field: "lastName",
-          width: "100%",
-          attributes: {
-            "aria-controls": "DataTable",
-            "aria-label": "Name",
-          },
-        },
-        {
-          label: "Department",
-          field: "department",
-          width: "100%",
-        },
-        {
-          label: "Role",
-          field: "role",
-          width: "100%",
         },
         {
           label: "Created",
@@ -60,83 +50,39 @@ class AccountsTable extends Component {
           width: "100%",
         },
       ],
-      employeerows: [
-        {
-          name: "Tiger Nixon",
-          position: "System Architect",
-          office: "Edinburgh",
-          age: "61",
-          date: "2011/04/25",
-          salary: "$320",
-        },
-        {
-          name: "Garrett Winters",
-          position: "Accountant",
-          office: "Tokyo",
-          age: "63",
-          date: "2011/07/25",
-          salary: "$170",
-        },
-        {
-          name: "Ashton Cox",
-          position: "Junior Technical Author",
-          office: "San Francisco",
-          age: "66",
-          date: "2009/01/12",
-          salary: "$86",
-        },
-        {
-          name: "Cedric Kelly",
-          position: "Senior Javascript Developer",
-          office: "Edinburgh",
-          age: "22",
-          date: "2012/03/29",
-          salary: "$433",
-        },
-        {
-          name: "Airi Satou",
-          position: "Accountant",
-          office: "Tokyo",
-          age: "33",
-          date: "2008/11/28",
-          salary: "$162",
-        },
-      ],
     };
-    this.addEmployee = this.addEmployee.bind(this);
-    this.editEmployee = this.editEmployee.bind(this);
-    this.deleteEmployee = this.deleteEmployee.bind(this);
+   // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
+   // this.getAccountById = this.getAccountById.bind(this);
+   // this.deleteAccount = this.deleteAccount.bind(this);
   }
 
-  deleteEmployee(id) {
-    EmployeeService.deleteEmployee(id).then((res) => {
+  deleteAccount(id) {
+    AccountsService.deleteAccount(id).then((res) => {   // Using AccountsService to access the deleteAccount API
       this.setState({
-        employees: this.state.employees.filter(
-          (employee) => employee.id !== id
+        accounts: this.state.accounts.filter(
+          (account) => account.id !== id
         ),
       });
     });
   }
 
   async componentDidMount() {
-    await EmployeeService.getAllEmployees()
+    await AccountsService.getAllAccounts()   
       .then((res) => {
-        const data = JSON.stringify(res.data);
+        const data = JSON.stringify(res.data);    // res.data is the literal data being returned from the API
         const parse = JSON.parse(data);
-        const employeeList = [];
-        parse.forEach((employee) => {
-          employeeList.push({
-            id: employee.id,
-            firstName: employee.firstName,
-            lastName: employee.lastName,
-            department: employee.department,
-            role: employee.role,
-            createdAt: unformatDate(employee.createdAt),
-            updatedAt: unformatDate(employee.createdAt),
+        const AccountsList = [];
+        parse.forEach((account) => {  // For each account we get, we are pushing into the AccountsList array
+          AccountsList.push({                          // These are the "attributes" that get pushed in. 
+            account_id: account.id,
+            employee_id: account.employee_id,                                         
+            username: account.username,
+            createdAt: unformatDate(account.createdAt),    // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
+            updatedAt: unformatDate(account.createdAt),
           });
         });
-        this.setState({ employees: employeeList });
-        console.log(employeeList);
+        this.setState({ accounts: AccountsList });
+        console.log(AccountsList);
         console.log(parse);
       })
       .catch((err) => {
@@ -146,47 +92,13 @@ class AccountsTable extends Component {
       });
   }
 
-  openAddEmployeeModal() {
-    console.log("this will open add modal");
-  }
-
-  openViewEmployeeModal() {
-    console.log("this will open view modal");
-  }
-
-  viewEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  editEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  addEmployee() {
-    this.props.history.push("/employees");
-  }
-
   createTable() {
-    const employeeData = {
+    const accountsData = {
       columns: [
-        ...this.state.employeecolumns,
-        {
-          label: "",
-          field: "badge",
-        },
+        ...this.state.accountsColumns
       ],
       rows: [
-        ...this.state.employees.map((employee, index) => ({
-          ...employee,
-          badge: (
-            <button
-              className="row-expand-button bx bx-expand"
-              onClick={(e) => {
-                this.openAddEmployeeModal();
-              }}
-            ></button>
-          ),
-        })),
+        ...this.state.accounts
       ],
     };
 
@@ -195,7 +107,7 @@ class AccountsTable extends Component {
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
-          data={employeeData}
+          data={accountsData}
         ></MDBDataTableV5>
       </>
     );

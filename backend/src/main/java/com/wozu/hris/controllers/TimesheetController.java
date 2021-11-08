@@ -4,7 +4,6 @@ import com.wozu.hris.models.Account;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Timesheet;
 import com.wozu.hris.payload.response.MessageResponse;
-import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.security.jwt.JwtUtils;
 import com.wozu.hris.services.AccountService;
@@ -69,10 +68,6 @@ public class TimesheetController {
     }
 
     // Clock-Out Request
-<<<<<<< HEAD
-    // Clock-Out Request
-=======
->>>>>>> a6f7a57275fbe44028cb3d8b3ae7e1529a27850d
     @PostMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
