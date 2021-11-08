@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,8 +19,13 @@ public class DepartmentEmployee {
     private Department department;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="employee_id")
     private Employee employee;
+
+    public DepartmentEmployee(){
+
+    }
 
     public DepartmentEmployee(Department department, Employee employee) {
         this.department = department;

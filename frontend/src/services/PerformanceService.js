@@ -10,16 +10,23 @@ class PerformanceService {
     });
   }
 
-  createPerformance(performance) {
+  async createPerformance(performance) {
     return axios.post(PERFORMANCE_API_BASE_URL + "/create", performance);
   }
 
-  getPerformanceById(performanceId) {
-    return axios.get(PERFORMANCE_API_BASE_URL + "/performance" + performanceId);
+  async getPerformanceById(performanceId) {
+    return axios.get(
+      PERFORMANCE_API_BASE_URL + "/performance" + performanceId,
+      {
+        headers: await AuthorizationHeader(),
+      }
+    );
   }
 
   getEmployeePerformanceById(employeeId) {
-    return axios.get(PERFORMANCE_API_BASE_URL + "/employee/" + employeeId);
+    return axios.get(PERFORMANCE_API_BASE_URL + "/employee/" + employeeId, {
+      headers: await AuthorizationHeader(),
+    });
   }
 
   updatePerformance(performanceId) {
