@@ -23,17 +23,17 @@ class PerformanceService {
     );
   }
 
-  getEmployeePerformanceById(employeeId) {
+  async getEmployeePerformanceById(employeeId) {
     return axios.get(PERFORMANCE_API_BASE_URL + "/employee/" + employeeId, {
       headers: await AuthorizationHeader(),
     });
   }
 
-  updatePerformance(performanceId) {
+  async updatePerformance(performanceId) {
     return axios.put(PERFORMANCE_API_BASE_URL + "/" + performanceId);
   }
 
-  deletePerformance(performanceId) {
+  async deletePerformance(performanceId) {
     return axios.delete(PERFORMANCE_API_BASE_URL + "/" + performanceId);
   }
 }
