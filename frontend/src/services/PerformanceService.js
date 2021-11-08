@@ -15,7 +15,7 @@ class PerformanceService {
   }
 
   getPerformanceById(performanceId) {
-    return axios.get(PERFORMANCE_API_BASE_URL + "/" + performanceId);
+    return axios.get(PERFORMANCE_API_BASE_URL + "/performance" + performanceId);
   }
 
   getEmployeePerformanceById(employeeId) {

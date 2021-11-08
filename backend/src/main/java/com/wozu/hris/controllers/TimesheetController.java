@@ -67,6 +67,7 @@ public class TimesheetController {
         return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
     }
 
+
     // Clock-Out Request
     @PostMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
@@ -83,8 +84,7 @@ public class TimesheetController {
         Timesheet latestTimesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);     // Grabs the latest timesheet, updates, and saves it
         latestTimesheet.setEnd(new Date());
         tService.updateTimesheet(latestTimesheet.getId(), latestTimesheet);
-        employee.setClockedIn(false); // Sets isClockedIn to false
-        eService.updateEmployee(employee.getId(), employee);
+        employee.setClockedIn(false);                                                   // Sets isClockedIn to false
         return ResponseEntity.ok(new MessageResponse("User successfully clocked out at " + latestTimesheet.getEnd()));
     }
 }

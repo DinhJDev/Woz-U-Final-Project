@@ -12,20 +12,12 @@ function CompanyTabs() {
         <Tab className="multi-table-tab-item">Performances</Tab>
         <Tab className="multi-table-tab-item">Payroll</Tab>
         <Tab className="multi-table-tab-item">Payrates</Tab>
-        <Tab className="multi-table-tab-item">Positions</Tab>
       </TabList>
 
       <TabPanel>
         <div className="white-box white-box full-width zero-margin-box scrollable-wrap">
           <div className="box-padding">
             <BenefitsTable />
-          </div>
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <div className="white-box white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <ReactTable />
           </div>
         </div>
       </TabPanel>

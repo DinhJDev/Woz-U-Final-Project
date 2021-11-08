@@ -1,4 +1,6 @@
 package com.wozu.hris.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +19,7 @@ public class Training {
     @NotNull
     private String trainingName;
     private String description;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
