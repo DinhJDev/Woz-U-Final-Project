@@ -15,11 +15,7 @@ function CompanyTabs() {
       </TabList>
 
       <TabPanel>
-        <div className="white-box white-box full-width zero-margin-box scrollable-wrap">
-          <div className="box-padding">
-            <BenefitsTable />
-          </div>
-        </div>
+        <BenefitsTable />
       </TabPanel>
       <TabPanel>
         <div className="white-box white-box full-width zero-margin-box">
