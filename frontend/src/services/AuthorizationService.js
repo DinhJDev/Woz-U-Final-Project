@@ -4,7 +4,7 @@ const AUTH_API_BASE_URL = "http://localhost:8080/api/auth";
 
 class AuthorizationService {
   async getServer() {
-    return axios.post(AUTH_API_BASE_URL);
+    return axios.get(AUTH_API_BASE_URL);
   }
 
   async login(username, password) {

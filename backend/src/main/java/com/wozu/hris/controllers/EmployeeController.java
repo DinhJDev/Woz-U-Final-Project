@@ -1,6 +1,5 @@
 package com.wozu.hris.controllers;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +60,7 @@ public class EmployeeController {
     }
 
     // get employee by id rest api
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id){
         Employee employee = employeeService.findEmployee(id);

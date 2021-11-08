@@ -76,7 +76,7 @@ public class Timesheet {
     */
 
     @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name="employee_id")
+    @JoinColumn(name="employee_id")
     private Employee employee;
 
     /*

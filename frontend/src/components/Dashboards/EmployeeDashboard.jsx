@@ -5,6 +5,8 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import TopBar from "../TopBar";
 import SideBarFooter from "../SidebarFooter";
 import DashboardLogo from "../DashboardLogo";
+import PerformanceReviews from "../../components/DashboardContent/PerformanceReviews";
+import Profile from "../DashboardContent/Profile";
 
 const EmployeeDashboard = () => {
   return (
@@ -28,14 +30,7 @@ const EmployeeDashboard = () => {
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-wrench nav__icon"></i> Management
-              </div>
-            </Tab>
-
-            <Tab className="dashboard-tab-item">
-              <div className="nav__link  dashboard-tab-title">
-                {" "}
-                <i className="bx bx-time-five nav__icon"></i> Tracking
+                <i className="bx bx-wrench nav__icon"></i> Tracking
               </div>
             </Tab>
 
@@ -55,44 +50,27 @@ const EmployeeDashboard = () => {
           <div className="board-header">
             <span>Welcome back! Here is your employee overview</span>
           </div>
+          Employee overview here
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <h2>View 2</h2>
-          <p>
-            Nec feugiat nisl pretium fusce id. Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Eget nisi est sit amet facilisis. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
+          <div className="board-header">
+            <span>Performance Reviews</span>
+          </div>
+          <PerformanceReviews />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
-          <h2>View 3</h2>
-          <p>
-            Eget nisi est sit amet facilisis.Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Nec feugiat nisl pretium fusce id. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
-        </TabPanel>
-        <TabPanel className="dashboard-view-panel">
-          <h2>View 4</h2>
-          <p>
-            Aisi est sit amet facilisis. arcu non sodales neque sodales ut etiam
-            sit. Eget nisi est sit amet facilisis. Nec feugiat nisl pretium
-            fusce id. Tincidunt arcu non sodales neque sodales ut etiam sit.
-            Eget nisi est sit amet facilisis.
-          </p>
+          <div className="board-header">
+            <span>Timesheets</span>
+          </div>
+          Employe timesheets table here
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <h2>View 5</h2>
-          <p>
-            Eget nisi est sit amet facilisis.Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Nec feugiat nisl pretium fusce id. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
+          <div className="board-header">
+            <span>User Profile</span>
+          </div>
+          <Profile />
         </TabPanel>
       </Tabs>
     </section>

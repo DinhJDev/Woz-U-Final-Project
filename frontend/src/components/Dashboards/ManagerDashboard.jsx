@@ -5,6 +5,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import TopBar from "../TopBar";
 import SideBarFooter from "../SidebarFooter";
 import DashboardLogo from "../DashboardLogo";
+import ManagerOverview from "../DashboardContent/ManagerOverview";
+import Profile from "../DashboardContent/Profile";
+import PerformanceReviews from "../DashboardContent/PerformanceReviews";
 
 const ManagerDashboard = () => {
   return (
@@ -36,14 +39,6 @@ const ManagerDashboard = () => {
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
                 {" "}
-                <i className="bx bx-time-five nav__icon"></i>{" "}
-                <span>Tracking</span>
-              </div>
-            </Tab>
-
-            <Tab className="dashboard-tab-item">
-              <div className="nav__link  dashboard-tab-title">
-                {" "}
                 <i className="bx bx-user nav__icon"></i> <span>Account</span>
               </div>
             </Tab>
@@ -57,44 +52,27 @@ const ManagerDashboard = () => {
           <div className="board-header">
             <span>Welcome back! Here is your manager overview</span>
           </div>
+          <ManagerOverview />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <h2>View 2</h2>
-          <p>
-            Nec feugiat nisl pretium fusce id. Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Eget nisi est sit amet facilisis. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
+          <div className="board-header">
+            <span>Performance Reviews</span>
+          </div>
+          <PerformanceReviews />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
-          <h2>View 3</h2>
-          <p>
-            Eget nisi est sit amet facilisis.Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Nec feugiat nisl pretium fusce id. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
-        </TabPanel>
-        <TabPanel className="dashboard-view-panel">
-          <h2>View 4</h2>
-          <p>
-            Aisi est sit amet facilisis. arcu non sodales neque sodales ut etiam
-            sit. Eget nisi est sit amet facilisis. Nec feugiat nisl pretium
-            fusce id. Tincidunt arcu non sodales neque sodales ut etiam sit.
-            Eget nisi est sit amet facilisis.
-          </p>
+          <div className="board-header">
+            <span>Team Management</span>
+          </div>
+          Team Management Tab (view team table, and performance review table)
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
-          <h2>View 5</h2>
-          <p>
-            Eget nisi est sit amet facilisis.Tincidunt arcu non sodales neque
-            sodales ut etiam sit. Nec feugiat nisl pretium fusce id. Tincidunt
-            arcu non sodales neque sodales ut etiam sit. Eget nisi est sit amet
-            facilisis.
-          </p>
+          <div className="board-header">
+            <span>User Profile</span>
+          </div>
+          <Profile />
         </TabPanel>
       </Tabs>
     </section>
