@@ -8,6 +8,7 @@ import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.security.jwt.JwtUtils;
 import com.wozu.hris.services.AccountService;
+import com.wozu.hris.services.EmployeeService;
 import com.wozu.hris.services.TimesheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,8 @@ public class TimesheetController {
     JwtUtils jwtUtils;
     @Autowired
     AccountService aService;
+    @Autowired
+    EmployeeService eService;
 
     // Displays last 3 timesheets
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
@@ -49,7 +52,6 @@ public class TimesheetController {
     }
 
     // Clock-In Request
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
         Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
@@ -62,12 +64,12 @@ public class TimesheetController {
         timesheet.setEmployee(employee);
         tService.createTimesheet(timesheet);                                    // Updates Attributes & Saves
         employee.setClockedIn(true);                                            // Sets isClockedIn to true
+        eService.updateEmployee(employee.getId(), employee);
         return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
     }
 
     // Clock-Out Request
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
-    @PutMapping("/clockout")
+    @PostMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Optional<Account> account = aService.findByUsername(username);          // Utilizes JwtToken to obtain username & gets Employee
@@ -81,7 +83,9 @@ public class TimesheetController {
 
         Timesheet latestTimesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);     // Grabs the latest timesheet, updates, and saves it
         latestTimesheet.setEnd(new Date());
-        employee.setClockedIn(false);                                                   // Sets isClockedIn to false
+        tService.updateTimesheet(latestTimesheet.getId(), latestTimesheet);
+        employee.setClockedIn(false); // Sets isClockedIn to false
+        eService.updateEmployee(employee.getId(), employee);
         return ResponseEntity.ok(new MessageResponse("User successfully clocked out at " + latestTimesheet.getEnd()));
     }
 }

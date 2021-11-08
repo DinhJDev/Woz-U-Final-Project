@@ -24,7 +24,6 @@ public class Employee {
     private Boolean isClockedIn;
 
     @OneToOne(mappedBy = "employee")
-    @JsonBackReference
     private Account account;
 
     @OneToMany(mappedBy = "employee")

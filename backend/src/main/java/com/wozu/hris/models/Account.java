@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -15,13 +16,12 @@ public class Account {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
     @NotNull
     private String username;
     @NotNull
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     @Transient
     private String passwordConfirmation;
     private Date createdAt;
@@ -29,7 +29,7 @@ public class Account {
 
     @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
     @JoinColumn(name = "employee_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -41,7 +41,6 @@ public class Account {
     public Account(String username, String password, Date dateOfBirth) {
         this.username = username;
         this.password = password;
-        this.dateOfBirth = dateOfBirth;
     }
 
     @PrePersist
@@ -68,30 +67,6 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public String getUsername() {
