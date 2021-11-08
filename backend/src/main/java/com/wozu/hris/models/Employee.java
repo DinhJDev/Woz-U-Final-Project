@@ -14,16 +14,13 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private String firstName;
-    @NotNull
     private String lastName;
-    @NotNull
     private Date dateOfBirth;
-    private int permissionLevel;
     private Date createdAt;
     private Date updatedAt;
-
+    private Boolean isClockedIn;
+  
     @OneToOne(mappedBy = "employee")
     private Account account;
 
@@ -62,6 +59,17 @@ public class Employee {
     @PreUpdate
     protected void onUpdate(){
         this.updatedAt = new Date();
+    }
+
+    public Employee() {
+        this.firstName = "";
+        this.lastName = "";
+    }
+
+    public Employee(String firstName, String lastName, Date dateOfBirth) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Long getId() {
@@ -136,14 +144,6 @@ public class Employee {
         this.employeeTrainings = employeeTrainings;
     }
 
-    public int getPermissionLevel() {
-        return permissionLevel;
-    }
-
-    public void setPermissionLevel(int permissionLevel) {
-        this.permissionLevel = permissionLevel;
-    }
-
     public List<Payroll> getPayrolls() {
         return payrolls;
     }
@@ -198,5 +198,19 @@ public class Employee {
 
     public void setDepartment(List<DepartmentEmployee> department) {
         this.department = department;
+    }
+
+    public Employee (String firstName, String lastName, Date dateOfBirth, Benefit benefit){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.benefit = benefit; //or whatever level employees should have by default
+    }
+    public Boolean getClockedIn() {
+        return isClockedIn;
+    }
+
+    public void setClockedIn(Boolean clockedIn) {
+        isClockedIn = clockedIn;
     }
 }

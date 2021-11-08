@@ -79,4 +79,10 @@ public class Candidate {
         this.updatedAt = updatedAt;
     }
 
+    public Candidate (String firstName, String lastName, Date dateOfBirth){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+    }
+
 }

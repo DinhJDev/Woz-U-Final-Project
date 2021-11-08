@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 application.properties
+spring-shell.log
 
 ### STS ###
 .apt_generated

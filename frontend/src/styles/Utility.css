@@ -1,6 +1,6 @@
 .utility-tag {
-  padding: 5px 8px 3px 8px;
-  line-height: 1;
+  padding: 6px 8px 3px 8px;
+  line-height: 1em;
   display: inline-block;
   border-radius: 4px;
   color: var(--white-eade);
@@ -25,12 +25,12 @@
   display: flex;
   width: 100%;
   max-width: 680px;
-  padding: 48px 50px;
+  padding: 32px 34px;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   flex-direction: column;
   border-radius: 18px;
-  background-color: rgba(255, 255, 255, 0.65);
+  background-color: var(--white-alpha-36);
   box-shadow: 0 6px 54px 0 rgba(163, 166, 255, 0.13),
     0 24px 94px 0 rgba(12, 12, 12, 0.04);
   -webkit-transition: background-color 300ms ease;
@@ -65,6 +65,7 @@
 
 .icon-password {
   display: flex;
+  max-width: fit-content;
   color: var(--white-eade);
   justify-content: center;
   align-items: center;
@@ -93,13 +94,6 @@
   margin-bottom: 18px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05);
   font-size: 18px;
-}
-
-.full-form-fail {
-  display: none;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #ffdede;
 }
 
 .content-embed:before,
@@ -180,4 +174,60 @@ input:is([type="hidden"], [type="image"], [type="file"]) {
   .container-default.feature-single {
     position: relative;
   }
+}
+
+@keyframes hideAnimation {
+  to {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
+.auth-message-box {
+  cursor: pointer;
+  display: inline;
+  padding: 18px 40px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 12px;
+  animation: hideAnimation 0s ease-in-out 3s;
+  animation-fill-mode: forwards;
+  color: rgba(var(--level-color), 1);
+  border-color: rgba(var(--level-color), 1);
+  background-color: rgba(var(--level-color), 0.25);
+  box-shadow: 0 2px 4px 0 rgba(74, 58, 255, 0.12);
+  -webkit-transition: color 300ms ease, border-color 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease,
+    -webkit-transform 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, box-shadow 300ms ease,
+    background-color 300ms ease, -webkit-transform 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, transform 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease;
+  transition: color 300ms ease, border-color 300ms ease, transform 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease,
+    -webkit-transform 300ms ease;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.level-200 {
+  --level-color: var(--level-200-rgb);
+}
+
+.level-400 {
+  --level-color: var(--level-400-rgb);
+}
+
+.level-500 {
+  --level-color: var(--level-500-rgb);
+}
+
+.level-neutral {
+  --level-color: var(--level-neutral-rgb);
 }

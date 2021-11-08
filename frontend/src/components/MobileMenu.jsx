@@ -37,7 +37,7 @@ function MobileMenu() {
 
   return (
     <button
-      style={{ WebkitUserSelect: "text" }}
+      style={{ WebkitUserSelect: "text", height: "61px" }}
       aria-label="menu"
       role="button"
       aria-controls="app-nav-overlay-0"
