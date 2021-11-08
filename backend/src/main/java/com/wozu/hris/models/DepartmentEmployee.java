@@ -19,4 +19,42 @@ public class DepartmentEmployee {
     @ManyToOne
     @JoinColumn(name="employee_id")
     private Employee employee;
+
+    public DepartmentEmployee(Department department, Employee employee) {
+        this.department = department;
+        this.employee = employee;
+        this.position = null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }
