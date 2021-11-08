@@ -59,7 +59,7 @@ public class InputReader {
                 }
             }
 
-            answer = lineReader.readLine(String.format("%s: ", prompt));
+            answer = lineReader.readLine(String.format("%s: ", prompt)).toUpperCase();
         } while (!containsString(possibleAnswers, answer, ignoreCase) && "" != answer);
         return answer;
     }

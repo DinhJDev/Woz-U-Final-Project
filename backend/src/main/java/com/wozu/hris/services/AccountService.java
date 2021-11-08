@@ -86,6 +86,25 @@ public class AccountService {
         }
     }
 
+    // Promotes Manager Account to HR Account
+    public Account promoteManagerAccount(Account account){
+        System.out.println(account);
+        Set<Role> roles = account.getRoles();
+        System.out.println(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent());
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
+            if(roles.contains(rRepo.findByName(ERole.ROLE_HR))){
+                return null;
+            }else{
+                System.out.println("Check");
+                roles.add(rRepo.findByName(ERole.ROLE_HR).orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
+                account.setRoles(roles);
+                return aRepo.save(account);
+            }
+        }else{
+            return null;
+        }
+    }
+
     // Find account by username
     public Optional<Account> findByUsername(String username) {
         return aRepo.findByUsernameIgnoreCase(username);

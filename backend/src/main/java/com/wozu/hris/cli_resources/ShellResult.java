@@ -78,7 +78,8 @@ public class ShellResult {
     }
 
 
-    public void printList(String header, LinkedHashMap<String, Map<String, String>> l){
+    public void printList(String header, LinkedHashMap<String, Map<String, String>> Olist){
+        LinkedHashMap<String, Map<String, String>> l = Olist;
         if(l != null){
             System.out.println();
             printInfo(header);

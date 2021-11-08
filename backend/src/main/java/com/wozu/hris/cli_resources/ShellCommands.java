@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ShellCommands {
@@ -63,10 +65,10 @@ public class ShellCommands {
             BufferedReader read = new BufferedReader(new FileReader(filepath.concat("/src/main/resources/banner.txt")));
             String line;
             while((line = read.readLine()) != null){
-                System.out.println(line);
+                shellResult.printInfo(line);
             }
         }catch(IOException e){
-            System.out.println(e);
+            shellResult.printError(e.toString());
         }
     }
 
@@ -142,6 +144,37 @@ public class ShellCommands {
         return result;
     }
 
+    public boolean promoteAccount(String type, String t, boolean hr){
+        return promoteAccount(type, t, hr, null);
+    }
+
+    public boolean promoteAccount(String type, String t, boolean hr, String role){
+        boolean result = false;
+        Account targetAccount = type.equalsIgnoreCase("Username") ? aService.findByUsername(t).get() : aService.findAccountById(Long.parseLong(t));
+
+        System.out.println(t);
+        System.out.println(targetAccount);
+        System.out.println(role);
+
+        if(hr){
+            if(role != null){
+                if(role == "Employee"){
+                    result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
+                }else if(role == "Manager"){
+                    result = aService.promoteEmployeeAccount(targetAccount) != null ? true : false;
+                }else if(role == "HR"){
+                    result = aService.promoteManagerAccount(targetAccount) != null ? true : false;
+                }
+            }else{
+                result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
+            }
+        }
+
+        System.out.println(result);
+
+        return result;
+    }
+
     public int getPermissionLevel(Set<Role> role){
         int permLvl = 0;
         for (Iterator<Role> it = role.iterator(); it.hasNext(); ) {
@@ -169,6 +202,7 @@ public class ShellCommands {
             Map<String, String> commands = new HashMap<>();
             commands.put("cIn", "Clock In");
             commands.put("cOut", "Clock Out");
+            commands.put("update", "Update Information");
             listedCommands.put("Employee", commands);
         }
 
@@ -188,6 +222,45 @@ public class ShellCommands {
         }
 
         return listedCommands;
+    }
+
+    public void updateItem(String type, String item, Account currentUser) throws ParseException {
+        String newValue;
+        if(item.equalsIgnoreCase("Date Of Birth")){
+            newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
+        }else if(item.equalsIgnoreCase("Benefits")){
+            newValue = "Benefits to be Done later";
+        }else{
+            newValue = inputReader.prompt(String.format("Update %s", item));
+        }
+
+
+        Employee currentEmployee = currentUser.getEmployee();
+
+        if(type.equalsIgnoreCase("Account Information")){
+            if(item.equalsIgnoreCase("Username")){
+                currentUser.setUsername(newValue);
+            }else{
+                currentUser.setPassword(newValue);
+            }
+            aRepo.save(currentUser);
+        }else{
+            if(item.equalsIgnoreCase("First Name")){
+                currentEmployee.setFirstName(newValue);
+            }else if(item.equalsIgnoreCase("Last Name")){
+                currentEmployee.setLastName(newValue);
+            }else if(item.equalsIgnoreCase("Date Of Birth")){
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy", Locale.ENGLISH);
+                    Date newDate = format.parse(newValue);
+                    currentEmployee.setDateOfBirth(newDate);
+                }catch(ParseException e){}
+            }else{
+                // Benefits to be done later.
+            }
+            eService.updateEmployee(currentEmployee.getId(), currentEmployee);
+        }
+
     }
 
 }
