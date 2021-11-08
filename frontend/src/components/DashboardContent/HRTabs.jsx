@@ -43,7 +43,7 @@ function HRTabs() {
           </div>
         </div>
       </TabPanel>
-      
+
       <TabPanel>
         <AccountsTable />
       </TabPanel>

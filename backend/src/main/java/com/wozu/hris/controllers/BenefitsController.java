@@ -14,11 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+@RestController
+@RequestMapping("/api/benefits")
 public class BenefitsController {
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
-    @RestController
-    @RequestMapping("/api/benefits")
-    public class BenefitController {
 
         @Autowired
         BenefitService benefitService;
@@ -81,5 +80,4 @@ public class BenefitsController {
             response.put("deleted", Boolean.TRUE);
             return  ResponseEntity.ok(response);
         }
-    }
 }

@@ -4,9 +4,8 @@ import AuthorizationHeader from "./AuthorizationHeader";
 const BENEFIT_API_BASE_URL = "http://localhost:8080/api/benefits";
 
 class BenefitService {
-
   async getAllBenefits() {
-    return axios.get(BENEFIT_API_BASE_URL, {
+    return axios.get(BENEFIT_API_BASE_URL + "/benefits", {
       headers: await AuthorizationHeader(),
     });
   }
@@ -17,7 +16,7 @@ class BenefitService {
 
   async getBenefitById(benefitId) {
     return axios.get(BENEFIT_API_BASE_URL + "/benefits/" + benefitId, {
-      headers: await AuthorizationHeader()
+      headers: await AuthorizationHeader(),
     });
   }
 

@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -16,10 +18,12 @@ public class Performance {
     private String comment;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="reviewer_id")
     private Employee reviewer;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="reviewee_id")
     private Employee reviewee;
 
@@ -30,6 +34,10 @@ public class Performance {
     @PreUpdate
     protected void onUpdate(){
         this.updatedAt = new Date();
+    }
+
+    public Performance(){
+
     }
 
     public Performance(String comment, Employee reviewer, Employee reviewee) {

@@ -24,17 +24,8 @@ class PerformanceReviews extends Component {
           },
         },
         {
-          label: "Reviewer",
-          field: "reviewerid",
-          width: "100%",
-          attributes: {
-            "aria-controls": "DataTable",
-            "aria-label": "Name",
-          },
-        },
-        {
           label: "Comments",
-          field: "department",
+          field: "comment",
           width: "100%",
         },
         {
@@ -70,15 +61,14 @@ class PerformanceReviews extends Component {
         parse.forEach((review) => {
           reviewsList.push({
             id: review.id,
-            reviewerid: review.reviewer,
-            comments: review.comment,
+            comment: review.comment,
             createdAt: unformatDate(review.createdAt),
             updatedAt: unformatDate(review.createdAt),
           });
         });
         this.setState({ reviews: reviewsList });
         console.log(reviewsList);
-        console.log(parse);
+        console.log(data);
       })
       .catch((err) => {
         if (err.response) {
