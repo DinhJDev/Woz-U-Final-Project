@@ -1,8 +1,9 @@
 import { MDBDataTableV5 } from "mdbreact";
-import EmployeeService from "../../services/EmployeeService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
 import PerformanceService from "../../services/PerformanceService";
+import EmployeeService from "../../services/EmployeeService";
+import AuthorizationService from "../../services/AuthorizationService";
 
 class PerformanceReviews extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class PerformanceReviews extends Component {
 
     this.state = {
       currentUser: [],
-      employeeData: [],
+      employeeInfo: [],
       reviews: [],
       reviewcolumns: [
         {
@@ -24,7 +25,7 @@ class PerformanceReviews extends Component {
         },
         {
           label: "Reviewer",
-          field: "firstName",
+          field: "reviewerid",
           width: "100%",
           attributes: {
             "aria-controls": "DataTable",
@@ -44,34 +45,39 @@ class PerformanceReviews extends Component {
       ],
     };
   }
-
-  deleteEmployee(id) {
-    EmployeeService.deleteEmployee(id).then((res) => {
-      this.setState({
-        reviews: this.state.reviews.filter((employee) => employee.id !== id),
-      });
-    });
-  }
-
   async componentDidMount() {
-    await EmployeeService.getAllEmployees()
+    const user = await AuthorizationService.getCurrentUser();
+    if (user) {
+      this.setState({
+        currentUser: user,
+      });
+    }
+    const employeeInfo = await EmployeeService.getEmployeeById(
+      this.state.currentUser.id
+    );
+    if (employeeInfo) {
+      this.setState({
+        employeeInfo: employeeInfo.data,
+      });
+    }
+    await PerformanceService.getEmployeePerformanceById(
+      this.state.employeeInfo.id
+    )
       .then((res) => {
         const data = JSON.stringify(res.data);
         const parse = JSON.parse(data);
-        const employeeList = [];
-        parse.forEach((employee) => {
-          employeeList.push({
-            id: employee.id,
-            firstName: employee.firstName,
-            lastName: employee.lastName,
-            department: employee.department,
-            role: employee.role,
-            createdAt: unformatDate(employee.createdAt),
-            updatedAt: unformatDate(employee.createdAt),
+        const reviewsList = [];
+        parse.forEach((review) => {
+          reviewsList.push({
+            id: review.id,
+            reviewerid: review.reviewer,
+            comments: review.comment,
+            createdAt: unformatDate(review.createdAt),
+            updatedAt: unformatDate(review.createdAt),
           });
         });
-        this.setState({ reviews: employeeList });
-        console.log(employeeList);
+        this.setState({ reviews: reviewsList });
+        console.log(reviewsList);
         console.log(parse);
       })
       .catch((err) => {
@@ -82,7 +88,7 @@ class PerformanceReviews extends Component {
   }
 
   createTable() {
-    const employeeData = {
+    const reviewsData = {
       columns: [...this.state.reviewcolumns],
       rows: [...this.state.reviews],
     };
@@ -92,7 +98,7 @@ class PerformanceReviews extends Component {
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
-          data={employeeData}
+          data={reviewsData}
         ></MDBDataTableV5>
       </>
     );
