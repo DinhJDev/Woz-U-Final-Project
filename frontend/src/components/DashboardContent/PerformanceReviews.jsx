@@ -2,16 +2,17 @@ import { MDBDataTableV5 } from "mdbreact";
 import EmployeeService from "../../services/EmployeeService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
+import PerformanceService from "../../services/PerformanceService";
 
 class PerformanceReviews extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mydata: "",
       currentUser: [],
-      employees: [],
-      employeecolumns: [
+      employeeData: [],
+      reviews: [],
+      reviewcolumns: [
         {
           label: "ID",
           field: "id",
@@ -42,17 +43,12 @@ class PerformanceReviews extends Component {
         },
       ],
     };
-    this.addEmployee = this.addEmployee.bind(this);
-    this.editEmployee = this.editEmployee.bind(this);
-    this.deleteEmployee = this.deleteEmployee.bind(this);
   }
 
   deleteEmployee(id) {
     EmployeeService.deleteEmployee(id).then((res) => {
       this.setState({
-        employees: this.state.employees.filter(
-          (employee) => employee.id !== id
-        ),
+        reviews: this.state.reviews.filter((employee) => employee.id !== id),
       });
     });
   }
@@ -74,7 +70,7 @@ class PerformanceReviews extends Component {
             updatedAt: unformatDate(employee.createdAt),
           });
         });
-        this.setState({ employees: employeeList });
+        this.setState({ reviews: employeeList });
         console.log(employeeList);
         console.log(parse);
       })
@@ -85,30 +81,10 @@ class PerformanceReviews extends Component {
       });
   }
 
-  openAddEmployeeModal() {
-    console.log("this will open add modal");
-  }
-
-  openViewEmployeeModal() {
-    console.log("this will open view modal");
-  }
-
-  viewEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  editEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  addEmployee() {
-    this.props.history.push("/employees");
-  }
-
   createTable() {
     const employeeData = {
-      columns: [...this.state.employeecolumns],
-      rows: [...this.state.employees],
+      columns: [...this.state.reviewcolumns],
+      rows: [...this.state.reviews],
     };
 
     return (
