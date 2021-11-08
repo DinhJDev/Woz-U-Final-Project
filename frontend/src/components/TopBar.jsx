@@ -92,7 +92,7 @@ class TopBar extends Component {
                   marginTop: "2px",
                 }}
               >
-                {employeeInfo
+                {employeeInfo.firstName
                   ? employeeInfo.firstName + ` ` + employeeInfo.lastName
                   : currentUser.username}
               </span>

@@ -38,7 +38,7 @@ class Profile extends Component {
         <div className="box-padding">
           <div className="card-team-page-content-top">
             <h1 className="title card-team-page-name">
-              {employeeInfo
+              {employeeInfo.firstName
                 ? employeeInfo.firstName + `\t` + employeeInfo.lastName
                 : currentUser.username}
             </h1>
@@ -69,17 +69,3 @@ class Profile extends Component {
 }
 
 export default Profile;
-
-/**
- *         <div
-          style={{
-            transform:
-              "translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg)",
-            opacity: 1,
-            transformStyle: "preserve-3d",
-          }}
-          className="image-wrapper team-cover"
-        >
-          <div className="image team-cover"></div>
-        </div>
- */
