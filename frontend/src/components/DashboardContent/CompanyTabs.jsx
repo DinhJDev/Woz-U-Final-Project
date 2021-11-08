@@ -1,6 +1,7 @@
 import React from "react";
 import TableExample from "./TableExample";
 import ReactTable from "./ReactTable";
+import BenefitsTable from "./BenefitsTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 function CompanyTabs() {
@@ -17,7 +18,7 @@ function CompanyTabs() {
       <TabPanel>
         <div className="white-box white-box full-width zero-margin-box scrollable-wrap">
           <div className="box-padding">
-            <ReactTable />
+            <BenefitsTable />
           </div>
         </div>
       </TabPanel>

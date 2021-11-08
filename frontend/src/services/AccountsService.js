@@ -3,15 +3,15 @@ import axios from "axios";
 const ACCOUNT_API_BASE_URL = "http://localhost:8080/api/accounts";
 // clean up the redundancy in naming
 class AccountsService {
-  getAllAccounts() {
+  async getAllAccounts() {
     return axios.get(ACCOUNT_API_BASE_URL + "/accounts/");
   }
 
-  getAccountById(accountId) {
+  async getAccountById(accountId) {
     return axios.get(ACCOUNT_API_BASE_URL + "/accounts/" + accountId);
   }
 
-  deleteAccount(accountId) {
+  async deleteAccount(accountId) {
     return axios.delete(ACCOUNT_API_BASE_URL + "/accounts/" + accountId);
   }
 }
