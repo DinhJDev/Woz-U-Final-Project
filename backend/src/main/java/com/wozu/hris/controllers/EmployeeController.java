@@ -53,14 +53,14 @@ public class EmployeeController {
     // get employee by id rest api
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id){
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id){
         Employee employee = employeeService.findEmployee(id);
         return ResponseEntity.ok(employee);
     }
 
     // update employee rest api
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails){
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee employeeDetails){
         Employee employee = employeeService.findEmployee(id);
 
         employee.setFirstName(employeeDetails.getFirstName());

@@ -61,6 +61,13 @@ public class Department {
         return updatedAt;
     }
 
+    public Employee getManager() {
+        return manager;
+    }
+
+    public List<DepartmentEmployee> getEmployees() {
+        return employees;
+    }
 
     //setters
 
@@ -79,5 +86,13 @@ public class Department {
 
     public void setUpdatedAt(Date u) {
         this.updatedAt = u;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    public void setEmployees(List<DepartmentEmployee> employees) {
+        this.employees = employees;
     }
 }
