@@ -78,7 +78,7 @@ class AccountsTable extends Component {
             employee_id: account.employee_id,                                         
             username: account.username,
             createdAt: unformatDate(account.createdAt),    // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
-            updatedAt: unformatDate(account.createdAt),
+            updatedAt: unformatDate(account.updatedAt),
           });
         });
         this.setState({ accounts: AccountsList });
