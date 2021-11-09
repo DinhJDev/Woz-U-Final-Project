@@ -27,11 +27,7 @@ function HRTabs() {
       </TabPanel>
 
       <TabPanel>
-        <div className="white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <PositionsTable />
-          </div>
-        </div>
+        <PositionsTable />
       </TabPanel>
 
       <TabPanel>
