@@ -1,7 +1,10 @@
 import React from "react";
-import TableExample from "./TableExample";
 import ReactTable from "./ReactTable";
 import BenefitsTable from "./BenefitsTable";
+import PerformancesTable from "./PerformancesTable";
+import PayrollsTable from "./PayrollsTable";
+import PayratesTable from "./PayratesTable";
+import TrainingsTable from "./TrainingsTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 function CompanyTabs() {
@@ -12,31 +15,23 @@ function CompanyTabs() {
         <Tab className="multi-table-tab-item">Performances</Tab>
         <Tab className="multi-table-tab-item">Payroll</Tab>
         <Tab className="multi-table-tab-item">Payrates</Tab>
+        <Tab className="multi-table-tab-item">Trainings</Tab>
       </TabList>
 
       <TabPanel>
         <BenefitsTable />
       </TabPanel>
       <TabPanel>
-        <div className="white-box white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <ReactTable />
-          </div>
-        </div>
+        <PerformancesTable />
       </TabPanel>
       <TabPanel>
-        <div className="white-box white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <ReactTable />
-          </div>
-        </div>
+        <PayrollsTable />
       </TabPanel>
       <TabPanel>
-        <div className="white-box white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <ReactTable />
-          </div>
-        </div>
+        <PayratesTable />
+      </TabPanel>
+      <TabPanel>
+        <TrainingsTable />
       </TabPanel>
     </Tabs>
   );

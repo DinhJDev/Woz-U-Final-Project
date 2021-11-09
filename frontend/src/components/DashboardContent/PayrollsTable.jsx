@@ -1,16 +1,16 @@
 import { MDBDataTableV5 } from "mdbreact";
-import PayratesService from "../../services/PayratesService";
+import PayrollsService from "../../services/PayrollsService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
 
-class PayratesTable extends Component {
+class PayrollsTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       currentUser: [],
-      payrates: [],
-      payratesColumns: [
+      payrolls: [],
+      payrollsColumns: [
         {
           label: "ID",
           field: "id",
@@ -26,18 +26,13 @@ class PayratesTable extends Component {
           width: "100%",
         },
         {
-          label: "Hourly Rate",
-          field: "hourly_rate",
+          label: "Amount",
+          field: "amount",
           width: "100%",
         },
         {
-          label: "Salary",
-          field: "salary",
-          width: "100%",
-        },
-        {
-          label: "Effective Date",
-          field: "effective_date",
+          label: "Date",
+          field: "date",
           width: "100%",
         },
         {
@@ -55,32 +50,31 @@ class PayratesTable extends Component {
   }
 
   deleteAccount(id) {
-    PayratesService.deletePayrate(id).then((res) => {
+    PayrollsService.deletePayroll(id).then((res) => {
       this.setState({
-        payrates: this.state.payrates.filter((payrate) => payrate.id !== id),
+        payrolls: this.state.payrolls.filter((payroll) => payroll.id !== id),
       });
     });
   }
 
   async componentDidMount() {
-    await PayratesService.getAllPayrates()
+    await PayrollsService.getAllPayrolls()
       .then((res) => {
         const data = JSON.stringify(res.data);
         const parse = JSON.parse(data);
-        const payratesList = [];
-        parse.forEach((payrate) => {
-          payratesList.push({
-            id: payrate.id,
-            employee_id: payrate.employeeId,
-            hourly_rate: payrate.hourlyRate,
-            salary: payrate.salary,
-            effective_date: unformatDate(payrate.effectiveDate),
-            createdAt: unformatDate(payrate.createdAt),
-            updatedAt: unformatDate(payrate.updatedAt),
+        const payrollsList = [];
+        parse.forEach((payroll) => {
+          payrollsList.push({
+            id: payroll.id,
+            employee_id: payroll.employeeId,
+            amount: payroll.amount,
+            date: payroll.date,
+            createdAt: unformatDate(payroll.createdAt),
+            updatedAt: unformatDate(payroll.updatedAt),
           });
         });
-        this.setState({ payrates: payratesList });
-        console.log(payratesList);
+        this.setState({ payroll: payrollsList });
+        console.log(payrollsList);
         console.log(parse);
       })
       .catch((err) => {
@@ -91,9 +85,9 @@ class PayratesTable extends Component {
   }
 
   createTable() {
-    const payratesData = {
-      columns: [...this.state.payratesColumns],
-      rows: [...this.state.payrates],
+    const payrollsData = {
+      columns: [...this.state.payrollsColumns],
+      rows: [...this.state.payrolls],
     };
 
     return (
@@ -101,7 +95,7 @@ class PayratesTable extends Component {
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
-          data={payratesData}
+          data={payrollsData}
         ></MDBDataTableV5>
       </>
     );
@@ -116,4 +110,4 @@ class PayratesTable extends Component {
   }
 }
 
-export default PayratesTable;
+export default PayrollsTable;

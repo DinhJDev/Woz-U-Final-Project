@@ -725,7 +725,7 @@ mark {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 48%;
-  height: 86%;
+  height: 78%;
   margin: 0 auto;
   position: fixed;
   border-radius: 18px;
@@ -775,7 +775,7 @@ mark {
 }
 
 .input-group {
-  width: 32%;
+  width: 48%;
   float: left;
 }
 

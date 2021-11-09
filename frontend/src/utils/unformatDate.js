@@ -1,5 +1,8 @@
 function unformatDate(someDate) {
-  const newDate = new Date(someDate).toLocaleDateString();
+  const newDate =
+    someDate == null
+      ? new Date().toLocaleDateString()
+      : new Date(someDate).toLocaleDateString();
   return newDate;
 }
 

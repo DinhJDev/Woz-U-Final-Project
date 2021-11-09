@@ -1,5 +1,4 @@
-import AuthorizationHeader from "../services/AuthorizationHeader";
-import UserService from "../services/UserService";
+import BenefitService from "../services/BenefitService";
 import { MDBDataTableV5 } from "mdbreact";
 import EmployeeService from "../services/EmployeeService";
 import React, { Component } from "react";
@@ -16,7 +15,6 @@ class EmployeesTable extends Component {
     super(props);
 
     this.state = {
-      mydata: "",
       chosenEmployee: [],
       currentUser: [],
       employees: [],
@@ -69,9 +67,9 @@ class EmployeesTable extends Component {
           width: "100%",
         },
       ],
+      benefits: [],
       trainingsList: [],
       departmentsList: [],
-      benefitsList: [],
       showViewModal: false,
     };
     this.addEmployee = this.addEmployee.bind(this);
@@ -130,6 +128,20 @@ class EmployeesTable extends Component {
   }
 
   async componentDidMount() {
+    await BenefitService.getAllBenefits().then((res) => {
+      const benefitList = [];
+      res.data.forEach((benefit) => {
+        benefitList.push({
+          benefit_id: benefit.id,
+          name: benefit.name,
+          description: benefit.description,
+          createdAt: unformatDate(benefit.createdAt),
+          updatedAt: unformatDate(benefit.updatedAt),
+        });
+      });
+      this.setState({ benefits: benefitList });
+      console.log(benefitList);
+    });
     await EmployeeService.getAllEmployees()
       .then((res) => {
         const data = JSON.stringify(res.data);
@@ -196,7 +208,7 @@ class EmployeesTable extends Component {
   }
 
   createModal() {
-    const { chosenEmployee } = this.state;
+    const { chosenEmployee, benefits } = this.state;
 
     return (
       <>
@@ -277,33 +289,18 @@ class EmployeesTable extends Component {
                 </form>
 
                 <form className="input-group">
-                  <h4>Benefits</h4>
-                  <div className="input-container">
-                    <input
-                      type="radio"
-                      name="radio-example"
-                      id="radio-button-1"
-                    />
-                    <label for="radio-button-1">A</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="radio"
-                      name="radio-example"
-                      id="radio-button-2"
-                    />
-                    <label for="radio-button-2">B</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="radio"
-                      name="radio-example"
-                      id="radio-button-3"
-                    />
-                    <label for="radio-button-3">C</label>
-                  </div>
+                  <h4> Benefits </h4>
+                  {benefits &&
+                    benefits.map((benefit) => (
+                      <div className="input-container">
+                        <input
+                          type="radio"
+                          name="radio-example"
+                          id="radio-button-1"
+                        />
+                        <label for="radio-button-1">{benefit.name}</label>
+                      </div>
+                    ))}
                 </form>
 
                 <button

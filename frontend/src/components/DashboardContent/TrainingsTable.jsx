@@ -1,16 +1,17 @@
 import { MDBDataTableV5 } from "mdbreact";
-import PayratesService from "../../services/PayratesService";
+import PayrollsService from "../../services/PayrollsService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
+import TrainingsService from "../../services/TrainingsService";
 
-class PayratesTable extends Component {
+class TrainingsTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       currentUser: [],
-      payrates: [],
-      payratesColumns: [
+      trainings: [],
+      trainingsColumns: [
         {
           label: "ID",
           field: "id",
@@ -21,23 +22,13 @@ class PayratesTable extends Component {
           },
         },
         {
-          label: "Employee ID",
-          field: "employee_id",
+          label: "Training",
+          field: "training_name",
           width: "100%",
         },
         {
-          label: "Hourly Rate",
-          field: "hourly_rate",
-          width: "100%",
-        },
-        {
-          label: "Salary",
-          field: "salary",
-          width: "100%",
-        },
-        {
-          label: "Effective Date",
-          field: "effective_date",
+          label: "Description",
+          field: "description",
           width: "100%",
         },
         {
@@ -55,32 +46,32 @@ class PayratesTable extends Component {
   }
 
   deleteAccount(id) {
-    PayratesService.deletePayrate(id).then((res) => {
+    TrainingsService.deleteTraining(id).then((res) => {
       this.setState({
-        payrates: this.state.payrates.filter((payrate) => payrate.id !== id),
+        trainings: this.state.trainings.filter(
+          (training) => training.id !== id
+        ),
       });
     });
   }
 
   async componentDidMount() {
-    await PayratesService.getAllPayrates()
+    await TrainingsService.getAllTrainings()
       .then((res) => {
         const data = JSON.stringify(res.data);
         const parse = JSON.parse(data);
-        const payratesList = [];
-        parse.forEach((payrate) => {
-          payratesList.push({
-            id: payrate.id,
-            employee_id: payrate.employeeId,
-            hourly_rate: payrate.hourlyRate,
-            salary: payrate.salary,
-            effective_date: unformatDate(payrate.effectiveDate),
-            createdAt: unformatDate(payrate.createdAt),
-            updatedAt: unformatDate(payrate.updatedAt),
+        const trainingsList = [];
+        parse.forEach((training) => {
+          trainingsList.push({
+            id: training.id,
+            training_name: training.trainingName,
+            description: training.description,
+            createdAt: unformatDate(training.createdAt),
+            updatedAt: unformatDate(training.updatedAt),
           });
         });
-        this.setState({ payrates: payratesList });
-        console.log(payratesList);
+        this.setState({ trainings: trainingsList });
+        console.log(trainingsList);
         console.log(parse);
       })
       .catch((err) => {
@@ -91,9 +82,9 @@ class PayratesTable extends Component {
   }
 
   createTable() {
-    const payratesData = {
-      columns: [...this.state.payratesColumns],
-      rows: [...this.state.payrates],
+    const trainingsData = {
+      columns: [...this.state.trainingsColumns],
+      rows: [...this.state.trainings],
     };
 
     return (
@@ -101,7 +92,7 @@ class PayratesTable extends Component {
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
-          data={payratesData}
+          data={trainingsData}
         ></MDBDataTableV5>
       </>
     );
@@ -116,4 +107,4 @@ class PayratesTable extends Component {
   }
 }
 
-export default PayratesTable;
+export default TrainingsTable;

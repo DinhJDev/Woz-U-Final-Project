@@ -1,9 +1,11 @@
 package com.wozu.hris.controllers;
 
+import com.wozu.hris.models.Benefit;
 import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Performance;
 import com.wozu.hris.payload.request.PerformanceRequest;
+import com.wozu.hris.repositories.PerformanceRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.security.jwt.JwtUtils;
 import com.wozu.hris.services.EmployeeService;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
@@ -28,6 +31,27 @@ public class PerformanceController {
     EmployeeService eService;
     @Autowired
     RoleRepository rRepo;
+    @Autowired
+    PerformanceRepository pRepo;
+
+    // get all performances
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/performances")
+    public ResponseEntity<List<Performance>> getAllPerformances(){
+        try {
+            List<Performance> performances = new ArrayList<Performance>();
+
+            pRepo.findAll().forEach(performances::add);
+
+            if(performances.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(performances, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     // Get employee's performance reviews By id
     @GetMapping("/employee/{id}")

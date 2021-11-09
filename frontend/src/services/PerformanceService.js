@@ -5,7 +5,7 @@ const PERFORMANCE_API_BASE_URL = "http://localhost:8080/api/performance";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
-async function PositionsHeader() {
+async function PerformancesHeader() {
   if (user && user.token) {
     return {
       Authorization: user.token,
@@ -17,8 +17,8 @@ async function PositionsHeader() {
 
 class PerformanceService {
   async getAllPerformances() {
-    return axios.get(PERFORMANCE_API_BASE_URL, {
-      headers: await PositionsHeader(),
+    return axios.get(`${PERFORMANCE_API_BASE_URL}/performances`, {
+      headers: await AuthorizationHeader(),
     });
   }
 
@@ -30,14 +30,14 @@ class PerformanceService {
     return axios.get(
       PERFORMANCE_API_BASE_URL + "/performance" + performanceId,
       {
-        headers: await PositionsHeader(),
+        headers: await PerformancesHeader(),
       }
     );
   }
 
   async getEmployeePerformanceById(employeeId) {
     return axios.get(PERFORMANCE_API_BASE_URL + "/employee/" + employeeId, {
-      headers: await PositionsHeader(),
+      headers: await PerformancesHeader(),
     });
   }
 
