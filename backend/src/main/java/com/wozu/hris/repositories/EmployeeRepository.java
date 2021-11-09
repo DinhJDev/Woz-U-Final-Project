@@ -1,6 +1,7 @@
 package com.wozu.hris.repositories;
 
 import com.wozu.hris.models.Department;
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByAccountUsernameIgnoreCase(String username);
 
     List<Employee> findByDepartmentEmployeeDepartment(Department department);
+
+    List<Employee> findByAccountRolesContaining(ERole eRole);
 }
