@@ -3,8 +3,10 @@ import TableExample from "./TableExample";
 import ReactTable from "./ReactTable";
 import EmployeesTable from "../EmployeesTable";
 import AccountsTable from "./AccountsTable";
+import PositionsTable from "./PositionTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+
 function HRTabs() {
   return (
     <Tabs className="tabs-medium-width">
@@ -27,7 +29,7 @@ function HRTabs() {
       <TabPanel>
         <div className="white-box full-width zero-margin-box">
           <div className="box-padding">
-            <ReactTable />
+            <PositionsTable />
           </div>
         </div>
       </TabPanel>

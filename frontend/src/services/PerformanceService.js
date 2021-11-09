@@ -2,22 +2,10 @@ import axios from "axios";
 
 const PERFORMANCE_API_BASE_URL = "http://localhost:8080/api/performance";
 
-const user = JSON.parse(localStorage.getItem("user"));
-
-async function PerformanceHeader() {
-  if (user && user.token) {
-    return {
-      Authorization: user.token,
-    };
-  } else {
-    return {};
-  }
-}
-
 class PerformanceService {
   async getAllPerformances() {
     return axios.get(PERFORMANCE_API_BASE_URL, {
-      headers: await PerformanceHeader(),
+      headers: await AuthorizationHeader(),
     });
   }
 
@@ -29,14 +17,14 @@ class PerformanceService {
     return axios.get(
       PERFORMANCE_API_BASE_URL + "/performance" + performanceId,
       {
-        headers: await PerformanceHeader(),
+        headers: await AuthorizationHeader(),
       }
     );
   }
 
   async getEmployeePerformanceById(employeeId) {
     return axios.get(PERFORMANCE_API_BASE_URL + "/employee/" + employeeId, {
-      headers: await PerformanceHeader(),
+      headers: await AuthorizationHeader(),
     });
   }
 
