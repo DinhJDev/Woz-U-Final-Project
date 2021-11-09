@@ -54,7 +54,6 @@ public class Timesheet {
 
     public Timesheet(Employee e){
         this.employee = e;
-        LocalTime now = LocalTime.now();
         this.start = new Date();
         this.end = null;
     }
@@ -89,7 +88,7 @@ public class Timesheet {
     */
 
     @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name="employee_id")
+    @JoinColumn(name="employee_id")
     private Employee employee;
 
     /*
