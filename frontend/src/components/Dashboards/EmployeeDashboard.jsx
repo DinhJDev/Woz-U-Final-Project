@@ -7,6 +7,7 @@ import SideBarFooter from "../SidebarFooter";
 import DashboardLogo from "../DashboardLogo";
 import PerformanceReviews from "../../components/DashboardContent/PerformanceReviews";
 import Profile from "../DashboardContent/Profile";
+import EmployeeOverview from "../DashboardContent/EmployeeOverview";
 
 const EmployeeDashboard = () => {
   return (
@@ -50,7 +51,7 @@ const EmployeeDashboard = () => {
           <div className="board-header">
             <span>Welcome back! Here is your employee overview</span>
           </div>
-          Employee overview here
+          <EmployeeOverview />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">

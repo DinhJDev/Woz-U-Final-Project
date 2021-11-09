@@ -21,9 +21,10 @@ class AccountsTable extends Component {
             "aria-label": "Name",
           },
         },
-        {                                                           // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
-          label: "Employee ID",
-          field: "employee_id",
+        {
+          // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
+          label: "Roles",
+          field: "roles",
           width: "100%",
           attributes: {
             "aria-controls": "DataTable",
@@ -51,38 +52,40 @@ class AccountsTable extends Component {
         },
       ],
     };
-   // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
-   // this.getAccountById = this.getAccountById.bind(this);
-   // this.deleteAccount = this.deleteAccount.bind(this);
+    // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
+    // this.getAccountById = this.getAccountById.bind(this);
+    // this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   deleteAccount(id) {
-    AccountsService.deleteAccount(id).then((res) => {   // Using AccountsService to access the deleteAccount API
+    AccountsService.deleteAccount(id).then((res) => {
+      // Using AccountsService to access the deleteAccount API
       this.setState({
-        accounts: this.state.accounts.filter(
-          (account) => account.id !== id
-        ),
+        accounts: this.state.accounts.filter((account) => account.id !== id),
       });
     });
   }
 
   async componentDidMount() {
-    await AccountsService.getAllAccounts()   
+    await AccountsService.getAllAccounts()
       .then((res) => {
-        const data = JSON.stringify(res.data);    // res.data is the literal data being returned from the API
+        const data = JSON.stringify(res.data); // res.data is the literal data being returned from the API
         const parse = JSON.parse(data);
-        const AccountsList = [];
-        parse.forEach((account) => {  // For each account we get, we are pushing into the AccountsList array
-          AccountsList.push({                          // These are the "attributes" that get pushed in. 
+        const accountsList = [];
+        parse.forEach((account) => {
+          let roles = account.roles.map((roles) => roles.name);
+          // For each account we get, we are pushing into the AccountsList array
+          accountsList.push({
+            // These are the "attributes" that get pushed in.
             account_id: account.id,
-            employee_id: account.employee_id,                                         
+            roles: roles,
             username: account.username,
-            createdAt: unformatDate(account.createdAt),    // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
+            createdAt: unformatDate(account.createdAt), // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
             updatedAt: unformatDate(account.updatedAt),
           });
         });
-        this.setState({ accounts: AccountsList });
-        console.log(AccountsList);
+        this.setState({ accounts: accountsList });
+        console.log(accountsList);
         console.log(parse);
       })
       .catch((err) => {
@@ -94,12 +97,8 @@ class AccountsTable extends Component {
 
   createTable() {
     const accountsData = {
-      columns: [
-        ...this.state.accountsColumns
-      ],
-      rows: [
-        ...this.state.accounts
-      ],
+      columns: [...this.state.accountsColumns],
+      rows: [...this.state.accounts],
     };
 
     return (

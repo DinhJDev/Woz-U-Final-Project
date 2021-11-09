@@ -49,13 +49,13 @@ class EmployeesTable extends Component {
           },
         },
         {
-          label: "Department",
-          field: "department",
+          label: "Departments",
+          field: "departments",
           width: "100%",
         },
         {
-          label: "Role",
-          field: "role",
+          label: "Payrate",
+          field: "payrate",
           width: "100%",
         },
         {
@@ -67,48 +67,6 @@ class EmployeesTable extends Component {
           label: "Updated",
           field: "updatedAt",
           width: "100%",
-        },
-      ],
-      employeeRows: [
-        {
-          name: "Tiger Nixon",
-          position: "System Architect",
-          office: "Edinburgh",
-          age: "61",
-          date: "2011/04/25",
-          salary: "$320",
-        },
-        {
-          name: "Garrett Winters",
-          position: "Accountant",
-          office: "Tokyo",
-          age: "63",
-          date: "2011/07/25",
-          salary: "$170",
-        },
-        {
-          name: "Ashton Cox",
-          position: "Junior Technical Author",
-          office: "San Francisco",
-          age: "66",
-          date: "2009/01/12",
-          salary: "$86",
-        },
-        {
-          name: "Cedric Kelly",
-          position: "Senior Javascript Developer",
-          office: "Edinburgh",
-          age: "22",
-          date: "2012/03/29",
-          salary: "$433",
-        },
-        {
-          name: "Airi Satou",
-          position: "Accountant",
-          office: "Tokyo",
-          age: "33",
-          date: "2008/11/28",
-          salary: "$162",
         },
       ],
       trainingsList: [],
@@ -178,14 +136,17 @@ class EmployeesTable extends Component {
         const parse = JSON.parse(data);
         const employeeList = [];
         parse.forEach((employee) => {
+          let department = employee.department.map(
+            (department) => department.department
+          );
           employeeList.push({
             id: employee.id,
             firstName: employee.firstName,
             lastName: employee.lastName,
-            department: employee.department,
-            role: employee.role,
+            departments: department,
+            payrate: employee.payrate,
             createdAt: unformatDate(employee.createdAt),
-            updatedAt: unformatDate(employee.createdAt),
+            updatedAt: unformatDate(employee.updatedAt),
           });
         });
         this.setState({ employees: employeeList });
@@ -255,108 +216,106 @@ class EmployeesTable extends Component {
               </TabList>
 
               <TabPanel>
-                <form>
-                  <form className="input-group">
-                    <h4>Trainings</h4>
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-1"
-                      />
-                      <label for="checkbox-button-1">A</label>
-                    </div>
+                <form className="input-group">
+                  <h4>Trainings</h4>
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-1"
+                    />
+                    <label for="checkbox-button-1">A</label>
+                  </div>
 
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-2"
-                      />
-                      <label for="checkbox-button-2">B</label>
-                    </div>
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-2"
+                    />
+                    <label for="checkbox-button-2">B</label>
+                  </div>
 
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-3"
-                      />
-                      <label for="checkbox-button-3">C</label>
-                    </div>
-                  </form>
-
-                  <form className="input-group">
-                    <h4>Departments</h4>
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-1"
-                      />
-                      <label for="checkbox-button-1">A</label>
-                    </div>
-
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-2"
-                      />
-                      <label for="checkbox-button-2">B</label>
-                    </div>
-
-                    <div className="input-container">
-                      <input
-                        type="checkbox"
-                        name="checkbox-example"
-                        id="checkbox-button-3"
-                      />
-                      <label for="checkbox-button-3">C</label>
-                    </div>
-                  </form>
-
-                  <form className="input-group">
-                    <h4>Benefits</h4>
-                    <div className="input-container">
-                      <input
-                        type="radio"
-                        name="radio-example"
-                        id="radio-button-1"
-                      />
-                      <label for="radio-button-1">A</label>
-                    </div>
-
-                    <div className="input-container">
-                      <input
-                        type="radio"
-                        name="radio-example"
-                        id="radio-button-2"
-                      />
-                      <label for="radio-button-2">B</label>
-                    </div>
-
-                    <div className="input-container">
-                      <input
-                        type="radio"
-                        name="radio-example"
-                        id="radio-button-3"
-                      />
-                      <label for="radio-button-3">C</label>
-                    </div>
-                  </form>
-
-                  <button
-                    to="/"
-                    size="lg"
-                    type="submit"
-                    value="Login"
-                    data-wait="Login"
-                    className="add-data-button middle-button"
-                  >
-                    Submit
-                  </button>
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-3"
+                    />
+                    <label for="checkbox-button-3">C</label>
+                  </div>
                 </form>
+
+                <form className="input-group">
+                  <h4>Departments</h4>
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-1"
+                    />
+                    <label for="checkbox-button-1">A</label>
+                  </div>
+
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-2"
+                    />
+                    <label for="checkbox-button-2">B</label>
+                  </div>
+
+                  <div className="input-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox-example"
+                      id="checkbox-button-3"
+                    />
+                    <label for="checkbox-button-3">C</label>
+                  </div>
+                </form>
+
+                <form className="input-group">
+                  <h4>Benefits</h4>
+                  <div className="input-container">
+                    <input
+                      type="radio"
+                      name="radio-example"
+                      id="radio-button-1"
+                    />
+                    <label for="radio-button-1">A</label>
+                  </div>
+
+                  <div className="input-container">
+                    <input
+                      type="radio"
+                      name="radio-example"
+                      id="radio-button-2"
+                    />
+                    <label for="radio-button-2">B</label>
+                  </div>
+
+                  <div className="input-container">
+                    <input
+                      type="radio"
+                      name="radio-example"
+                      id="radio-button-3"
+                    />
+                    <label for="radio-button-3">C</label>
+                  </div>
+                </form>
+
+                <button
+                  to="/"
+                  size="lg"
+                  type="submit"
+                  value="Login"
+                  data-wait="Login"
+                  className="add-data-button middle-button"
+                >
+                  Submit
+                </button>
               </TabPanel>
               <TabPanel>
                 <div className="white-box white-box full-width zero-margin-box">

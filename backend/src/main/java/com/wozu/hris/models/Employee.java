@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -49,6 +50,7 @@ public class Employee {
     private List<Performance> performances;
 
     @OneToOne(mappedBy = "manager")
+    @JsonIgnore
     private Department mDepartment;
 
     @OneToMany(mappedBy = "employee")

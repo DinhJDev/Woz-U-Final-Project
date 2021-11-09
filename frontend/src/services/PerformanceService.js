@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import AuthorizationHeader from "./AuthorizationHeader";
 const PERFORMANCE_API_BASE_URL = "http://localhost:8080/api/performance";
 
 const user = JSON.parse(localStorage.getItem("user"));

@@ -42,8 +42,6 @@ public class AccountsController {
         }
     }
 
-
-
     // get account by id rest api
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/accounts/{id}")
@@ -51,8 +49,6 @@ public class AccountsController {
         Account account = accountService.findAccountById(id);
         return ResponseEntity.ok(account);
     }
-
-
 
     // delete account rest api
     @DeleteMapping("/accounts/{id}")

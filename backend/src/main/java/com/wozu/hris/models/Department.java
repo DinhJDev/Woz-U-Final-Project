@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -37,9 +39,11 @@ public class Department {
     //relationships
     @OneToOne
     @JoinColumn(name = "manager_id")
+    @JsonIgnore
     private Employee manager;
 
     @OneToMany(mappedBy = "department")
+    @JsonIgnore
     private List<DepartmentEmployee> employees;
 
     //getters
