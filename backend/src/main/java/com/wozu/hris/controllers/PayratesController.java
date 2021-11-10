@@ -1,6 +1,7 @@
 package com.wozu.hris.controllers;
 
 import com.wozu.hris.models.Payrate;
+import com.wozu.hris.payload.response.MessageResponse;
 import com.wozu.hris.repositories.PayrateRepository;
 import com.wozu.hris.services.PayrateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,13 @@ public class PayratesController {
     PayrateService payrateService;
     @Autowired
     PayrateRepository payrateRepository;
+
+    // create payrate
+    @PostMapping
+    public ResponseEntity<?> createPayrate(@RequestBody Payrate payrate) {
+        payrateService.createPayrate(payrate);
+        return ResponseEntity.ok(new MessageResponse("Payrate for employee " + payrate.getEmployee().getId()));
+    }
 
     // get all payrates rest api
     @PreAuthorize("hasRole('HR')")
