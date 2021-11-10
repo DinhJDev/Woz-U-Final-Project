@@ -29,7 +29,8 @@ class PositionsTable extends Component {
             "aria-label": "Name",
           },
         },
-        {                                                           // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
+        {
+          // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
           label: "Created",
           field: "createdAt",
           width: "100%",
@@ -50,9 +51,9 @@ class PositionsTable extends Component {
         },
       ],
     };
-   // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
-   // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
-   // this.deleteAccount = this.deleteAccount.bind(this);
+    // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
+    // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
+    // this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   positionName = (event) => {
@@ -60,7 +61,8 @@ class PositionsTable extends Component {
   };    // linked to line 179. and 17
 
   deletePosition(id) {
-    PositionService.deletePosition(id).then((res) => {   // Using PositionService to access the deletePosition API
+    PositionService.deletePosition(id).then((res) => {
+      // Using PositionService to access the deletePosition API
       this.setState({
         positions: this.state.positions.filter(
           (position) => position.id !== id
@@ -70,16 +72,19 @@ class PositionsTable extends Component {
   }
 
   async componentDidMount() {
-    await PositionService.getAllPositions()   
+    await PositionService.getAllPositions()
       .then((res) => {
-        const data = JSON.stringify(res.data);    // res.data is the literal data being returned from the API
+        const data = JSON.stringify(res.data); // res.data is the literal data being returned from the API
         const parse = JSON.parse(data);
         const PositionsList = [];
-        parse.forEach((positions) => {  // For each position we get, we are pushing into the PositionsList array
-          PositionsList.push({                          // These are the "attributes" that get pushed in. Unique to each table.
+        parse.forEach((positions) => {
+          // For each position we get, we are pushing into the PositionsList array
+          PositionsList.push({
+            // These are the "attributes" that get pushed in. Unique to each table.
             position_id: positions.id,
-           name: positions.name,                                        
-            createdAt: unformatDate(positions.createdAt),    // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
+            name: positions.name,
+            description: positions.description,
+            createdAt: unformatDate(positions.createdAt), // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
             updatedAt: unformatDate(positions.updatedAt),
           });
         });
@@ -138,10 +143,22 @@ closeCreatePositionModal(){
   createTable() {
     const positionsData = {
       columns: [
-        ...this.state.positionsColumns
+        ...this.state.positionsColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
       ],
       rows: [
-        ...this.state.positions
+        ...this.state.positions.map((position, index) => ({
+          ...position,
+          expand: <button className="row-expand-button bx bx-expand"></button>,
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
       ],
     };
 
@@ -210,9 +227,3 @@ createModal() {
 }
 
 export default PositionsTable;
-
-
-//   Line 198 is also new. This has to be here because if deleted it will also make it so the button shows nothing.
-
-
-

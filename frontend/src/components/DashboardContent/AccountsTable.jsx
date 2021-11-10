@@ -74,12 +74,16 @@ class AccountsTable extends Component {
         const parse = JSON.parse(data);
         const accountsList = [];
         parse.forEach((account) => {
-          let roles = account.roles.map((roles) => roles.name);
+          let roles = account.roles.map(
+            (roles) =>
+              roles.name.charAt(5) +
+              roles.name.replace("ROLE_", "").substring(1).toLowerCase()
+          );
           // For each account we get, we are pushing into the AccountsList array
           accountsList.push({
             // These are the "attributes" that get pushed in.
             account_id: account.id,
-            roles: roles,
+            roles: roles.length == 1 ? roles : roles.join(" & "),
             username: account.username,
             createdAt: unformatDate(account.createdAt), // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
             updatedAt: unformatDate(account.updatedAt),
@@ -98,8 +102,24 @@ class AccountsTable extends Component {
 
   createTable() {
     const accountsData = {
-      columns: [...this.state.accountsColumns],
-      rows: [...this.state.accounts],
+      columns: [
+        ...this.state.accountsColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
+      ],
+      rows: [
+        ...this.state.accounts.map((account, index) => ({
+          ...account,
+          expand: <button className="row-expand-button bx bx-expand"></button>,
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
+      ],
     };
 
     return (

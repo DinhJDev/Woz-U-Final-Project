@@ -84,7 +84,8 @@ public class TimesheetController {
         Timesheet latestTimesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);     // Grabs the latest timesheet, updates, and saves it
         latestTimesheet.setEnd(new Date());
         tService.updateTimesheet(latestTimesheet.getId(), latestTimesheet);
-        employee.setClockedIn(false);                                                   // Sets isClockedIn to false
+        employee.setClockedIn(false);
+        eService.updateEmployee(employee.getId(), employee);// Sets isClockedIn to false
         return ResponseEntity.ok(new MessageResponse("User successfully clocked out at " + latestTimesheet.getEnd()));
     }
 }

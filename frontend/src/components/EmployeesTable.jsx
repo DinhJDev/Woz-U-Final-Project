@@ -6,6 +6,11 @@ import unformatDate from "../utils/unformatDate";
 import Modal from "react-bootstrap/Modal";
 import { ModalBody } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import TrainingsService from "../services/TrainingsService";
+import AuthorizationService from "../services/AuthorizationService";
+import PerformanceService from "../services/PerformanceService";
+import DepartmentService from "../services/DepartmentService";
+import PayrateService from "../services/PayratesService";
 
 import "@vaadin/vaadin-checkbox/vaadin-checkbox.js";
 import "@vaadin/vaadin-list-box/src/vaadin-list-box.js";
@@ -15,8 +20,16 @@ class EmployeesTable extends Component {
     super(props);
 
     this.state = {
+      positionName: "",
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: "",
+      performanceComments: "",
+      dateOfBirth: "",
       chosenEmployee: [],
       currentUser: [],
+      employeeInfo: [],
       employees: [],
       employeeColumns: [
         {
@@ -67,18 +80,28 @@ class EmployeesTable extends Component {
           width: "100%",
         },
       ],
-      benefits: [],
+      benefitsList: [],
       trainingsList: [],
       departmentsList: [],
+      updatedBenefits: [],
+      updatedTrainings: [],
+      updatedDepartments: [],
       showViewModal: false,
     };
-    this.addEmployee = this.addEmployee.bind(this);
-    this.editEmployee = this.editEmployee.bind(this);
+    this.createPerformanceReview = this.createPerformanceReview.bind(this);
+    this.performanceComments = this.performanceComments.bind(this);
+    this.positionName = this.positionName.bind(this);
     this.deleteEmployee = this.deleteEmployee.bind(this);
-    this.openAddEmployeeModal = this.openAddEmployeeModal.bind(this);
-    this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
     this.openViewEmployeeModal = this.openViewEmployeeModal.bind(this);
   }
+
+  performanceComments = (event) => {
+    this.setState({ performanceComments: event.target.value });
+  };
+
+  positionName = (event) => {
+    this.setState({ positionName: event.target.value });
+  };
 
   async openViewEmployeeModal(id) {
     this.setState({
@@ -90,31 +113,56 @@ class EmployeesTable extends Component {
         chosenEmployee: chosenEmployee.data,
       });
     }
-    console.log(chosenEmployee);
+    console.log(this.state.chosenEmployee.id);
+  }
+
+  async getCurrentBenefit(id) {
+    const chosenBenefit = await BenefitService.getBenefitById(id);
+    if (chosenBenefit.data) {
+      console.log(chosenBenefit.data);
+      return chosenBenefit.data;
+    }
+  }
+
+  async updateEmployee(department, training, benefit, e) {
+    e.preventDefault();
+    const employee = {
+      department: [department],
+      employeeTrainings: [training],
+      benefit: benefit,
+    };
+    EmployeeService.updateEmployee(employee);
+  }
+
+  async createPerformanceReview(revieweeId, reviewerId, e) {
+    e.preventDefault();
+    const performance = {
+      comment: this.state.performanceComments,
+      reviewee: this.state.chosenEmployee.id,
+    };
+    console.log(this.state.chosenEmployee.id.toString());
+    console.log(this.state.performanceComments);
+    PerformanceService.createPerformance(performance)
+      .then((res) => {
+        if (res.data) {
+          console.timeLog(res.data);
+        }
+      })
+      .catch((err) => {
+        if (err.data) {
+          console.log(err.data);
+        }
+      });
+  }
+
+  validateForm() {
+    return this.state.positionName.length > 0;
   }
 
   closeViewEmployeeModal() {
     this.setState({
       showViewModal: false,
     });
-  }
-
-  openAddEmployeeModal(id) {
-    console.log("ID is: " + id);
-  }
-
-  closeAddEmployeeModal() {}
-
-  addEmployee() {
-    this.props.history.push("/employees");
-  }
-
-  viewEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  editEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
   }
 
   deleteEmployee(id) {
@@ -128,6 +176,39 @@ class EmployeesTable extends Component {
   }
 
   async componentDidMount() {
+    const user = await AuthorizationService.getCurrentUser();
+    if (user) {
+      this.setState({
+        currentUser: user,
+      });
+    }
+    const employeeInfo = await EmployeeService.getEmployeeById(
+      this.state.currentUser.id
+    );
+    if (employeeInfo) {
+      this.setState({
+        employeeInfo: employeeInfo.data,
+      });
+    }
+    await TrainingsService.getAllTrainings().then((res) => {
+      const trainingsList = [];
+      res.data.forEach((training) => {
+        trainingsList.push({
+          training_id: training.id,
+          trainingName: training.trainingName,
+        });
+      });
+      this.setState({ trainingsList: trainingsList });
+      console.log(trainingsList);
+    });
+    await DepartmentService.getAllDepartment().then((res) => {
+      const departentList = [];
+      res.data.forEach((department) => {
+        departentList.push({
+          department_id: department.id,
+        });
+      });
+    });
     await BenefitService.getAllBenefits().then((res) => {
       const benefitList = [];
       res.data.forEach((benefit) => {
@@ -135,11 +216,9 @@ class EmployeesTable extends Component {
           benefit_id: benefit.id,
           name: benefit.name,
           description: benefit.description,
-          createdAt: unformatDate(benefit.createdAt),
-          updatedAt: unformatDate(benefit.updatedAt),
         });
       });
-      this.setState({ benefits: benefitList });
+      this.setState({ benefitsList: benefitList });
       console.log(benefitList);
     });
     await EmployeeService.getAllEmployees()
@@ -178,26 +257,29 @@ class EmployeesTable extends Component {
         ...this.state.employeeColumns,
         {
           label: "",
-          field: "badge",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
         },
       ],
       rows: [
         ...this.state.employees.map((employee, index) => ({
           ...employee,
-          badge: (
+          expand: (
             <button
               className="row-expand-button bx bx-expand"
               onClick={() => this.openViewEmployeeModal(employee.id)}
             ></button>
           ),
+          delete: <button className="row-expand-button bx bx-trash"></button>,
         })),
       ],
     };
 
     return (
       <>
-        <button className="add-data-button">Add Employee</button>
-
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
@@ -207,8 +289,9 @@ class EmployeesTable extends Component {
     );
   }
 
-  createModal() {
-    const { chosenEmployee, benefits } = this.state;
+  updateModal() {
+    const { chosenEmployee, benefitsList, trainingsList, employeeInfo } =
+      this.state;
 
     return (
       <>
@@ -223,75 +306,32 @@ class EmployeesTable extends Component {
             <h2>{chosenEmployee.firstName + `\n` + chosenEmployee.lastName}</h2>
             <Tabs className="tabs-medium-width">
               <TabList className="multi-table-tab-list">
-                <Tab className="multi-table-tab-item">View</Tab>
                 <Tab className="multi-table-tab-item">Edit</Tab>
+                <Tab className="multi-table-tab-item">Review</Tab>
               </TabList>
 
               <TabPanel>
                 <form className="input-group">
-                  <h4>Trainings</h4>
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-1"
-                    />
-                    <label for="checkbox-button-1">A</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-2"
-                    />
-                    <label for="checkbox-button-2">B</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-3"
-                    />
-                    <label for="checkbox-button-3">C</label>
-                  </div>
-                </form>
-
-                <form className="input-group">
-                  <h4>Departments</h4>
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-1"
-                    />
-                    <label for="checkbox-button-1">A</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-2"
-                    />
-                    <label for="checkbox-button-2">B</label>
-                  </div>
-
-                  <div className="input-container">
-                    <input
-                      type="checkbox"
-                      name="checkbox-example"
-                      id="checkbox-button-3"
-                    />
-                    <label for="checkbox-button-3">C</label>
-                  </div>
+                  <h4> Trainings </h4>
+                  {trainingsList &&
+                    trainingsList.map((training) => (
+                      <div className="input-container">
+                        <input
+                          type="radio"
+                          name="radio-example"
+                          id="radio-button-1"
+                        />
+                        <label for="radio-button-1">
+                          {training.trainingName}
+                        </label>
+                      </div>
+                    ))}
                 </form>
 
                 <form className="input-group">
                   <h4> Benefits </h4>
-                  {benefits &&
-                    benefits.map((benefit) => (
+                  {benefitsList &&
+                    benefitsList.map((benefit) => (
                       <div className="input-container">
                         <input
                           type="radio"
@@ -301,6 +341,13 @@ class EmployeesTable extends Component {
                         <label for="radio-button-1">{benefit.name}</label>
                       </div>
                     ))}
+
+                  <select id="dnd" multiple>
+                    {benefitsList &&
+                      benefitsList.map((benefit) => (
+                        <option value={benefit.id}>{benefit.name}</option>
+                      ))}
+                  </select>
                 </form>
 
                 <button
@@ -311,13 +358,39 @@ class EmployeesTable extends Component {
                   data-wait="Login"
                   className="add-data-button middle-button"
                 >
-                  Submit
+                  Update
                 </button>
               </TabPanel>
               <TabPanel>
-                <div className="white-box white-box full-width zero-margin-box">
-                  <div className="box-padding"></div>
-                </div>
+                <form>
+                  <h4>Performance Review</h4>
+                  <textarea
+                    type="checkbox"
+                    name="checkbox-example"
+                    id="checkbox-button-1"
+                    className="input password"
+                    onChange={(e) => {
+                      this.performanceComments(e);
+                    }}
+                  ></textarea>
+                  <button
+                    to="/"
+                    size="lg"
+                    maxHeight="300px"
+                    type="submit"
+                    onClick={(e) => {
+                      this.createPerformanceReview(
+                        chosenEmployee.id,
+                        employeeInfo.id,
+                        e
+                      );
+                      this.closeViewEmployeeModal();
+                    }}
+                    className="add-data-button middle-button"
+                  >
+                    Submit
+                  </button>
+                </form>
               </TabPanel>
             </Tabs>
             <button
@@ -339,7 +412,7 @@ class EmployeesTable extends Component {
       <>
         <div className="white-box white-box full-width zero-margin-box">
           <div className="box-padding">{this.createTable()}</div>
-          {this.createModal()}
+          {this.updateModal()}
         </div>
       </>
     );

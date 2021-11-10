@@ -720,11 +720,11 @@ mark {
 
 .modal-main {
   padding: 2.64rem;
-  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 48%;
+  width: 100%;
+  max-width: 568px;
   height: 78%;
   margin: 0 auto;
   position: fixed;

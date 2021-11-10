@@ -11,7 +11,7 @@ class PositionService {
   }
 
   async createPosition(position) {
-    return axios.post(POSITION_API_BASE_URL + "/positions", position); // comma means we are passing something into the position endpoint
+    return axios.post(POSITION_API_BASE_URL + "/positions", position);
   }
 
   async getPositionById(positionId) {

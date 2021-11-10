@@ -92,8 +92,29 @@ class PayratesTable extends Component {
 
   createTable() {
     const payratesData = {
-      columns: [...this.state.payratesColumns],
-      rows: [...this.state.payrates],
+      columns: [
+        ...this.state.payratesColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
+      ],
+      rows: [
+        ...this.state.payrates.map((payrate, index) => ({
+          ...payrate,
+          expand: (
+            <button
+              className="row-expand-button bx bx-expand"
+              onClick={() => {}} //passing the payrate item id sot hat the modal has access to it's attributes
+            ></button>
+          ),
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
+      ],
     };
 
     return (

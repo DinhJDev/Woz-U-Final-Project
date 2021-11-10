@@ -1,5 +1,6 @@
 package com.wozu.hris.controllers;
 
+import com.wozu.hris.models.Benefit;
 import com.wozu.hris.models.Training;
 import com.wozu.hris.repositories.TrainingRepository;
 import com.wozu.hris.services.TrainingService;
@@ -51,6 +52,20 @@ public class TrainingsController {
     public ResponseEntity<Training> getTrainingById(@PathVariable Long id){
         Training training = trainingService.findTraining(id);
         return ResponseEntity.ok(training);
+    }
+
+    // update training rest api
+    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
+    @PutMapping("/trainings/{id}")
+    public ResponseEntity<Training> updateTraining(@PathVariable Long id, @RequestBody Training trainingDetails){
+        Training training = trainingService.findTraining(id);
+
+        training.setDescription(trainingDetails.getDescription());
+        training.setTrainingName(trainingDetails.getTrainingName());
+
+        Training updatedTraining = trainingService.updateTraining(id, training);
+
+        return  ResponseEntity.ok(updatedTraining);
     }
 
     // delete training rest api

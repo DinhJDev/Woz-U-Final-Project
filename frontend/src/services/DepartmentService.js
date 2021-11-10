@@ -4,7 +4,7 @@ import AuthorizationHeader from "./AuthorizationHeader";
 const DEPARTMENT_API_BASE_URL = "http://localhost:8080/api/department";
 
 class DepartmentService {
-  async getAllDepartments() {
+  async getAllDepartment() {
     return axios.get(DEPARTMENT_API_BASE_URL + "/all", {
       headers: await AuthorizationHeader(),
     });

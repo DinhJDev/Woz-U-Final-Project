@@ -1,10 +1,81 @@
 import React, { Component } from "react";
 import Chart from "chart.js/auto";
+import DepartmentService from "../../services/DepartmentService";
+import EmployeeService from "../../services/EmployeeService";
 
 export default class DepartmentsBreakdownChart extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      employees: [],
+      candidates: [],
+      managers: [],
+      hr: [],
+    };
+  }
   chartRef = React.createRef();
 
-  componentDidMount() {
+  async getEmployees() {
+    const candidates = await EmployeeService.getAllCandidates()
+      .then((res) => {
+        if (res) {
+          this.setState({
+            candidates: res.data,
+          });
+
+          console.log(res.data.length);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err.data);
+        }
+      });
+    const employees = await EmployeeService.getAllEmployees()
+      .then((res) => {
+        if (res) {
+          this.setState({
+            employees: res.data,
+          });
+          console.log(res.data.length);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err.data);
+        }
+      });
+    const managers = await EmployeeService.getAllManagers()
+      .then((res) => {
+        if (res) {
+          this.setState({
+            managers: res.data,
+          });
+          console.log(res.data.length);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err.data);
+        }
+      });
+
+    const hr = await EmployeeService.getAllHR()
+      .then((res) => {
+        if (res) {
+          this.setState({
+            hr: res.data,
+          });
+          console.log(res.data.length);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err.data);
+        }
+      });
+
     const ctx = this.chartRef.current.getContext("2d");
 
     new Chart(ctx, {
@@ -12,18 +83,14 @@ export default class DepartmentsBreakdownChart extends Component {
       height: "300px",
       width: "number",
       data: {
-        labels: [
-          "Operations",
-          "Management",
-          "Human Resources",
-          "Information Technology",
-          "Marketing",
-          "Finance",
-          "Accounting",
-        ],
+        labels: ["Employees", "Managers", "HR"],
         datasets: [
           {
-            data: [86, 114, 106, 106, 107, 111, 133],
+            data: [
+              this.state.employees.length,
+              this.state.managers.length,
+              this.state.hr.length,
+            ],
             label: "Total",
             borderColor: [
               "#FFB86C",
@@ -49,6 +116,10 @@ export default class DepartmentsBreakdownChart extends Component {
         ],
       },
     });
+  }
+
+  componentDidMount() {
+    this.getEmployees();
   }
   render() {
     return (

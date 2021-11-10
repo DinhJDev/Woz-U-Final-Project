@@ -1,6 +1,7 @@
 package com.wozu.hris.controllers;
 
 
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.repositories.EmployeeRepository;
 import com.wozu.hris.services.EmployeeService;
@@ -25,14 +26,73 @@ public class EmployeeController {
     @Autowired
     EmployeeRepository eRepo;
 
-    // get all employees
+    // Get all candidates
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/candidates")
+    public ResponseEntity<List<Employee>> getAllCandidates(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findByAccountRolesName(ERole.ROLE_CANDIDATE).forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Get all employees
     @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
     @GetMapping("/employees")
     public ResponseEntity<List<Employee>> getAllEmployees(){
         try {
             List<Employee> employees = new ArrayList<Employee>();
 
-            eRepo.findAll().forEach(employees::add);
+            eRepo.findByAccountRolesName(ERole.ROLE_EMPLOYEE).forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // get all managers
+
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/managers")
+    public ResponseEntity<List<Employee>> getAllManagers(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findByAccountRolesName(ERole.ROLE_MANAGER).forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // get all hr
+
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/hr")
+    public ResponseEntity<List<Employee>> getAllHR(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findByAccountRolesName(ERole.ROLE_HR).forEach(employees::add);
 
             if(employees.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

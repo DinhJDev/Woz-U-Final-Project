@@ -29,7 +29,8 @@ class BenefitsTable extends Component {
             "aria-label": "Name",
           },
         },
-        {                                                           // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
+        {
+          // field links so that componentDidMount knows what row to put where and how to link it. Similar to a CROSS JOIN
           label: "Created",
           field: "createdAt",
           width: "100%",
@@ -59,9 +60,9 @@ class BenefitsTable extends Component {
         },
       ],
     };
-   // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
-   // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
-   // this.deleteAccount = this.deleteAccount.bind(this);
+    // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
+    // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
+    // this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   benefitsName = (event) => {
@@ -73,27 +74,28 @@ class BenefitsTable extends Component {
   };
 
   deleteBenefit(id) {
-    BenefitService.deleteBenefit(id).then((res) => {   // Using BenefitService to access the deleteBenefit API
+    BenefitService.deleteBenefit(id).then((res) => {
+      // Using BenefitService to access the deleteBenefit API
       this.setState({
-        benefits: this.state.benefits.filter(
-          (benefit) => benefit.id !== id
-        ),
+        benefits: this.state.benefits.filter((benefit) => benefit.id !== id),
       });
     });
   }
 
   async componentDidMount() {
-    await BenefitService.getAllBenefits()   
+    await BenefitService.getAllBenefits()
       .then((res) => {
-        const data = JSON.stringify(res.data);    // res.data is the literal data being returned from the API
+        const data = JSON.stringify(res.data); // res.data is the literal data being returned from the API
         const parse = JSON.parse(data);
         const BenefitsList = [];
-        parse.forEach((benefits) => {  // For each benefit we get, we are pushing into the BenefitsList array
-          BenefitsList.push({                          // These are the "attributes" that get pushed in. Unique to each table.
+        parse.forEach((benefits) => {
+          // For each benefit we get, we are pushing into the BenefitsList array
+          BenefitsList.push({
+            // These are the "attributes" that get pushed in. Unique to each table.
             benefit_id: benefits.id,
-           name: benefits.name,                                        
+            name: benefits.name,
             description: benefits.description,
-            createdAt: unformatDate(benefits.createdAt),    // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
+            createdAt: unformatDate(benefits.createdAt), // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
             updatedAt: unformatDate(benefits.updatedAt),
           });
         });
@@ -149,10 +151,22 @@ class BenefitsTable extends Component {
   createTable() {
     const benefitsData = {
       columns: [
-        ...this.state.benefitsColumns
+        ...this.state.benefitsColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
       ],
       rows: [
-        ...this.state.benefits
+        ...this.state.benefits.map((benefit, index) => ({
+          ...benefit,
+          expand: <button className="row-expand-button bx bx-expand"></button>,
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
       ],
     };
 

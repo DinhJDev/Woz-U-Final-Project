@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import Chart from "chart.js/auto";
 import moment from "moment";
+import TimesheetService from "../../services/TimesheetService";
+import EmployeeService from "../../services/EmployeeService";
+import AuthorizationService from "../../services/AuthorizationService";
 
 export default class RandomChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mydata: "",
       currentUser: [],
+      employeeInfo: [],
       employees: [],
       employeecolumns: [],
       employeerows: [],
@@ -21,7 +24,29 @@ export default class RandomChart extends Component {
 
   chartRef = React.createRef();
 
+  async timesheetData() {
+    await AuthorizationService.getCurrentUser().then((res) => {
+      if (res.data) {
+        this.setState({ currentUser: res.data });
+        console.log(res.data);
+      }
+    });
+    await EmployeeService.getEmployeeById(this.state.currentUser.id).then(
+      (res) => {
+        if (res.data) {
+          this.setState({ employeeInfo: res.data });
+        }
+      }
+    );
+    await TimesheetService.getLastThreeTimesheets().then((res) => {
+      if (res.data) {
+        console.log(res.data);
+      }
+    });
+  }
+
   componentDidMount() {
+    this.timesheetData();
     const ctx = this.chartRef.current.getContext("2d");
 
     const startOfWeek = moment().startOf("week");
