@@ -10,9 +10,15 @@ class TrainingsTable extends Component {
   constructor(props) {
     super(props);
 
+    this.trainingName = this.trainingName.bind(this);
+    this.trainingDescription = this.trainingDescription.bind(this);
+
     this.state = {
+      trainingName: "",
+      trainingDescription: "",
       currentUser: [],
       trainings: [],
+      showCreateModal: false,
       trainingsColumns: [
         {
           label: "ID",
@@ -162,6 +168,49 @@ class TrainingsTable extends Component {
       });
   }
 
+  closeCreateTrainingModal(){
+    this.setState({
+      showCreateModal:false
+    })
+  }
+
+  openCreateTrainingModal(){
+    this.setState({
+      showCreateModal:true
+    })
+    console.log(this.state.showCreateModal)
+  }
+
+  validateForm() {
+    return (
+      this.state.trainingName.length > 0 &&
+      this.state.trainingDescription.length > 0
+    );
+  }
+
+  async submitNewTraining(e) {
+    e.preventDefault();
+  
+
+  let trainingObject = {
+    trainingName: this.state.trainingName,
+    description: this.state.trainingDescription
+  };
+
+  TrainingsService.createTraining(trainingObject)
+  .then((res) => {
+    console.log(res.data.message);
+  })
+  .catch((err) => {
+    if ( err.response ) {
+      console.log(err.response.data.message);
+    }
+  });
+}
+
+
+
+
   createTable() {
     const trainingsData = {
       columns: [
@@ -200,6 +249,9 @@ class TrainingsTable extends Component {
 
     return (
       <>
+      <button className="add-data-button" onClick={(e)=>{
+        this.openCreateTrainingModal()
+      }}>Add a New Training</button>
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}

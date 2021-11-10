@@ -10,20 +10,22 @@ class DepartmentService {
     });
   }
 
-  createDepartment(department) {
-    return axios.post(DEPARTMENT_API_BASE_URL, department);
+  async createDepartment(department) {
+    return axios.post(DEPARTMENT_API_BASE_URL + "/create", department); // comma means we are passing something into the department endpoint
   }
 
-  getDepartmentById(departmentId) {
-    return axios.get(DEPARTMENT_API_BASE_URL + "/" + departmentId);
+  async getDepartmentById(departmentId) {
+    return axios.get(DEPARTMENT_API_BASE_URL + "/" + departmentId, {      // + means we are trying to pass something that is /departments/something
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  updateDepartment(department, departmentId) {
-    return axios.put(DEPARTMENT_API_BASE_URL + "/" + departmentId, department);
+  async updateDepartment(department, departmentId) {
+    return axios.put(DEPARTMENT_API_BASE_URL + "/update/" + departmentId);
   }
 
-  deleteDepartment(departmentId) {
-    return axios.delete(DEPARTMENT_API_BASE_URL + "/" + departmentId);
+  async deleteDepartment(departmentId) {
+    return axios.delete(DEPARTMENT_API_BASE_URL + "/delete/" + departmentId);
   }
 }
 

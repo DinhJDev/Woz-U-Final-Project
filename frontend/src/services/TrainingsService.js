@@ -10,6 +10,10 @@ class TrainingsService {
     });
   }
 
+  async createTraining(training) {
+    return axios.post(TRAININGS_API_BASE_URL + "/trainings/", training);
+  }
+
   async getTrainingById(trainingId) {
     return axios.get(`${TRAININGS_API_BASE_URL}/trainings/` + trainingId, {
       headers: await AuthorizationHeader(),

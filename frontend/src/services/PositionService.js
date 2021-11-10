@@ -15,7 +15,7 @@ class PositionService {
   }
 
   async getPositionById(positionId) {
-    return axios.get(POSITION_API_BASE_URL + "/positions/" + positionId, {
+    return axios.get(POSITION_API_BASE_URL + "/positions/" + positionId, {      // + means we are trying to pass something that is /positions/something
       headers: await AuthorizationHeader(),
     });
   }

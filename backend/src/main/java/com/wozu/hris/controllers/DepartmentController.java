@@ -62,9 +62,11 @@ public class DepartmentController {
         department.setName(departmentRequest.getName());
         department.setManager(departmentRequest.getManager());
         dService.createDepartment(department);
-        for (int i = 0; i < departmentRequest.getEmployees().size(); i++) {
-            DepartmentEmployee dE = new DepartmentEmployee(dRepo.findByName(department.getName()), departmentRequest.getEmployees().get(i));
-            dERepo.save(dE);
+        if (!departmentRequest.getEmployees().isEmpty()) {
+            for (int i = 0; i < departmentRequest.getEmployees().size(); i++) {
+                DepartmentEmployee dE = new DepartmentEmployee(dRepo.findByName(department.getName()), departmentRequest.getEmployees().get(i));
+                dERepo.save(dE);
+            }
         }
 
         return ResponseEntity.ok(new MessageResponse("Department " + department.getName() + " created."));

@@ -11,7 +11,7 @@ class BenefitService {
   }
 
   async createBenefit(benefit) {
-    return axios.post(BENEFIT_API_BASE_URL + "/benefits/" + benefit);
+    return axios.post(BENEFIT_API_BASE_URL + "/benefits/", benefit);
   }
 
   async getBenefitById(benefitId) {
@@ -30,3 +30,10 @@ class BenefitService {
 }
 
 export default new BenefitService();
+
+
+// USING A PLUS is like /benefits/10  NUMBER 10 being the ID number 10 or the literal 10th benefit plan. /10 is an endpoint
+// SO we want to pass something into that benefit or access that SPECIFIC benefit
+
+// COMMA we are trying to pass something into the /benefits endpoint. so in this case, trying to pass something into the
+// table. COMMA is one step LESS specific.
