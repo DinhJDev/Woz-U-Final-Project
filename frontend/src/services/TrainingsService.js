@@ -11,7 +11,7 @@ class TrainingsService {
   }
 
   async createTraining(training) {
-    return axios.post(TRAININGS_API_BASE_URL + "/trainings/", training, {
+    return axios.post(TRAININGS_API_BASE_URL + "/create", training, {
       headers: await AuthorizationHeader(),
     });
   }
