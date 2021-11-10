@@ -2,6 +2,7 @@ package com.wozu.hris.controllers;
 
 import com.wozu.hris.models.Benefit;
 import com.wozu.hris.models.Training;
+import com.wozu.hris.payload.response.MessageResponse;
 import com.wozu.hris.repositories.TrainingRepository;
 import com.wozu.hris.services.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,13 @@ public class TrainingsController {
     public ResponseEntity<Training> getTrainingById(@PathVariable Long id){
         Training training = trainingService.findTraining(id);
         return ResponseEntity.ok(training);
+    }
+
+    // create training
+    @PostMapping("/create")
+    public ResponseEntity<?> createTraining(@RequestBody Training trainingDetails) {
+        trainingService.createTraining(trainingDetails);
+        return ResponseEntity.ok(new MessageResponse(trainingDetails.getTrainingName() + " created."));
     }
 
     // update training rest api
