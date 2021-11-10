@@ -42,15 +42,16 @@ public class Payroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long employee_id;
-
     private Date date;
     private Double amount;
 
     //constuctor
     public Payroll(){
 
+    }
+
+    public Payroll(Employee employee){
+        this.employee = employee;
     }
 
     /*
@@ -83,7 +84,7 @@ public class Payroll {
     */
 
     @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name="employee_id")
+    @JoinColumn(name="employee_id")
     private Employee employee;
 
 

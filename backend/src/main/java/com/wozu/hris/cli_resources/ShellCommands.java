@@ -1,14 +1,12 @@
 package com.wozu.hris.cli_resources;
 
 import com.wozu.hris.HrisApplication;
-import com.wozu.hris.models.Account;
-import com.wozu.hris.models.ERole;
-import com.wozu.hris.models.Employee;
-import com.wozu.hris.models.Role;
+import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.EmployeeService;
+import com.wozu.hris.services.PayrateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -42,7 +40,9 @@ public class ShellCommands {
 
     private PasswordEncoder bCryptPasswordEncoder;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder){
+    private PayrateService prService;
+
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
@@ -50,6 +50,7 @@ public class ShellCommands {
         this.eService = eService;
         this.rRepo = rRepo;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.prService = prService;
     }
 
     public void clearConsole(){
@@ -196,7 +197,12 @@ public class ShellCommands {
         //Commands available to All Roles
         if(permLvl >= ERole.ROLE_CANDIDATE.getID()){
             Map<String, String> commands = new HashMap<>();
-            //commands.put("commandKey", "commandDetails");
+
+            //Role Restricted Commands
+            if(permLvl == ERole.ROLE_CANDIDATE.getID()){
+                commands.put("commandKey", "commandDetails");
+            }
+
             listedCommands.put("Level 0", commands);
         }
 
@@ -206,13 +212,22 @@ public class ShellCommands {
             commands.put("cIn", "Clock In");
             commands.put("cOut", "Clock Out");
             commands.put("update", "Update Information");
+
+            if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
+
+            }
+
             listedCommands.put("Level 1", commands);
         }
 
         //Commands available to Manager+ Roles
         if(permLvl >= ERole.ROLE_MANAGER.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("performance", "Add performance review to Employee");
+
+            if(permLvl == ERole.ROLE_MANAGER.getID()){
+                commands.put("performance", "Add performance review to Employee");
+            }
+
             listedCommands.put("Level 2", commands);
         }
 
@@ -222,6 +237,11 @@ public class ShellCommands {
             commands.put("promote", "Promote Employee with Account");
             commands.put("edit", "Edit Employee");
             commands.put("deactivate", "Deactivate current Interface");
+
+            if(permLvl == ERole.ROLE_HR.getID()){
+
+            }
+
             listedCommands.put("Level 3", commands);
         }
 
@@ -229,16 +249,25 @@ public class ShellCommands {
     }
 
     public void updateItem(String type, String item, Account targetUser) throws ParseException {
-        String newValue;
+        updateItem(type, item, targetUser, false);
+    }
+
+    public void updateItem(String type, String item, Account targetUser, boolean hr) throws ParseException {
+        boolean hSwitch = false;
+        String newValue = "";
         if(item.equalsIgnoreCase("Date Of Birth")){
             newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
         }else if(item.equalsIgnoreCase("Benefits")){
             newValue = "Benefits to be Done later";
         }else{
-            newValue = inputReader.prompt(String.format("Update %s", item));
+            if(hr && !item.equals("First Name") && !item.equals("Last Name")){
+                hSwitch = true;
+            }else{
+                newValue = inputReader.prompt(String.format("Update %s", item));
+            }
         }
 
-        if(!inputReader.confirmationPrompt(String.format("Confirm new %s: %s", item, newValue))){
+        if(!hSwitch && !inputReader.confirmationPrompt(String.format("Confirm new %s: %s", item, newValue))){
             return;
         }
 
@@ -263,7 +292,86 @@ public class ShellCommands {
                     currentEmployee.setDateOfBirth(newDate);
                 }catch(ParseException e){}
             }else if(item.equalsIgnoreCase("Payrate")){
+                Payrate payrate = prService.existsByEmployee(currentEmployee) ? prService.findPayrateByEmployee(currentEmployee) : null;
+                if(payrate != null){
+                    Map<String, String> attributes = new HashMap<String, String>();
+                    attributes.put("A", "Hourly Rate");
+                    attributes.put("B", "Salary");
+                    attributes.put("C", "Effective Date");
+                    attributes.put("X", "FINISHED");
+                    do {
+                        clearConsole();
+                        String selection = inputReader.listInput("Edit Payrate",
+                                "Select an option [] above to update",
+                                attributes,
+                                true);
 
+                        if(selection.equalsIgnoreCase("X")){
+                            break;
+                        }
+                        do{
+                            if(selection.equalsIgnoreCase("A")){
+                                newValue = inputReader.prompt(attributes.get(selection));
+                                if(inputReader.confirmationPrompt(newValue)){
+                                    payrate.setHourlyRate(Double.parseDouble(newValue));
+                                    break;
+                                }
+                            }else if(selection.equalsIgnoreCase("B")){
+                                newValue = inputReader.prompt(attributes.get(selection));
+                                if(inputReader.confirmationPrompt(newValue)){
+                                    payrate.setSalary(Double.parseDouble(newValue));
+                                    break;
+                                }
+                            }else if(selection.equalsIgnoreCase("C")){
+                                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                                newValue = inputReader.prompt(String.format("%s (\"mm/dd/yyyy\")", attributes.get(selection)));
+                                if(inputReader.confirmationPrompt(newValue)){
+                                    payrate.setEffectiveDate(format.parse(newValue));
+                                    break;
+                                }
+                            }
+
+                        }while(true);
+                    }while(true);
+
+                    prService.updatePayrate(payrate.getId(), payrate);
+                }else{
+                    shellResult.printInfo("No Payrate found! Creating a new Payrate!");
+
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                    Double hourlyRate = 0.0;
+                    Double salary = 0.0;
+                    Date effectiveDate = new Date();
+                    do{
+                        shellResult.printInfo("Input \"exit\" to cancel!");
+                        newValue = inputReader.prompt("Hourly Rate");
+                        if(newValue.equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        hourlyRate = Double.parseDouble(newValue);
+                        newValue = inputReader.prompt("Salary");
+                        if(newValue.equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        salary = Double.parseDouble(newValue);
+                        newValue = inputReader.prompt("Effective Date (\"mm/dd/yyyy\")");
+                        if(newValue.equalsIgnoreCase("exit")){
+                            break;
+                        }
+
+                        effectiveDate = format.parse(newValue);
+
+                        if(inputReader.confirmationPrompt(String.format("Hourly Rate: $%.2f%nSalary: $%.2f%nEffective Date: %s", hourlyRate, salary, format.format(effectiveDate)))){
+                            payrate = prService.createPayrate(new Payrate(currentEmployee));
+                            payrate.setHourlyRate(hourlyRate);
+                            payrate.setSalary(salary);
+                            payrate.setEffectiveDate(effectiveDate);
+                            prService.updatePayrate(payrate.getId(), payrate);
+                            break;
+                        }
+                    }while(true);
+
+                }
             }else if(item.equalsIgnoreCase("Department")){
 
             }else if(item.equalsIgnoreCase("Position")){

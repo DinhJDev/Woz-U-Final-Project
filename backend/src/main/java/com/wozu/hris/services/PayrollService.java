@@ -29,6 +29,8 @@ public class PayrollService {
 
     @Autowired
     PayrollRepository prRepo;
+    @Autowired
+    TimesheetRepository tRepo;
 
     public List<Payroll> allPayrolls(){
         return prRepo.findAll();
@@ -55,12 +57,10 @@ public class PayrollService {
             return null;
         }
     }
-    @Autowired
-    TimesheetRepository tRepo;
+
     public Payroll calculatePayroll(Employee employee){
         Timesheet timesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);
-        Payroll c_Payroll = new Payroll();
-        c_Payroll.setEmployee(employee);
+        Payroll c_Payroll = new Payroll(employee);
         c_Payroll.setDate(timesheet.getEnd());
         Double daily;
         Date start = timesheet.getStart();
@@ -68,9 +68,12 @@ public class PayrollService {
         long diffInMillies = Math.abs(start.getTime() - end.getTime());
         double diffMinutes = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
         daily = diffMinutes/60;
-        Double amount = employee.getPayrate().getHourlyRate() * daily;
+        Double amount = null;
+        if(employee.getPayrate() != null) {
+            amount = employee.getPayrate().getHourlyRate() * daily;
+        }
         c_Payroll.setAmount(amount);
-        return c_Payroll;
+        return prRepo.save(c_Payroll);
     }
 
     public void deletePayroll(Long Id){

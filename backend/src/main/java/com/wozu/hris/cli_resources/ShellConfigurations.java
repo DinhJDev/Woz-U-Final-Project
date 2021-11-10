@@ -4,6 +4,7 @@ import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.EmployeeService;
+import com.wozu.hris.services.PayrateService;
 import org.jline.reader.LineReader;
 import org.jline.terminal.Terminal;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +25,7 @@ public class ShellConfigurations {
     public InputReader inputReader(@Lazy LineReader lineReader, ShellResult shellResult){return new InputReader(lineReader, shellResult);}
 
     @Bean
-    public ShellCommands shellCommands(@Lazy AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder){
-        return new ShellCommands(aRepo, inputReader, shellResult, aService, eService, rRepo, bCryptPasswordEncoder);
+    public ShellCommands shellCommands(@Lazy AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService){
+        return new ShellCommands(aRepo, inputReader, shellResult, aService, eService, rRepo, bCryptPasswordEncoder, prService);
     }
 }

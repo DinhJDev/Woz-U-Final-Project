@@ -9,6 +9,7 @@ import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.EmployeeService;
+import com.wozu.hris.services.PayrollService;
 import com.wozu.hris.services.TimesheetService;
 import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,7 +221,12 @@ class BasicCommands{
 						true);
 				if(selection.equalsIgnoreCase("A")){
 					shellResult.printSuccess("Sign In to Account");
+					shellResult.printInfo("Input \"exit\" to cancel");
 					String username = inputReader.prompt("Username");
+					if(username.equalsIgnoreCase("exit")){
+						connect();
+						return;
+					}
 					String password = inputReader.prompt("Password", null, false);
 					possibleUser = aService.authenticate( new Account(username, password));
 					if(possibleUser != null){
@@ -319,24 +325,20 @@ class EmployeeCommands {
 
 	@Autowired
 	ShellResult shellResult;
-
 	@Autowired
 	InputReader inputReader;
-
 	@Autowired
 	AccountService aService;
-
 	@Autowired
 	ShellCommands shellCommands;
-
 	@Autowired
 	TimesheetService tService;
-
 	@Autowired
 	TimesheetRepository tRepo;
-
 	@Autowired
 	EmployeeService eService;
+	@Autowired
+	PayrollService prService;
 
 
 	public Availability employeeAvailability(){
@@ -406,6 +408,7 @@ class EmployeeCommands {
 				timesheet.setEnd(new Date());
 				currentEmp.setClockedIn(false);
 
+				prService.calculatePayroll(currentEmp);
 				eService.updateEmployee(currentEmp.getId(), currentEmp);
 
 				shellCommands.clearConsole();
@@ -750,7 +753,7 @@ class HRCommands{
 							true);
 					if(selectedItem.equals("X")){break;}
 					try {
-						shellCommands.updateItem(options.get(selection), items.get(selectedItem), target);
+						shellCommands.updateItem(options.get(selection), items.get(selectedItem), target, true);
 						changed = true;
 					}catch(Exception e){
 						shellResult.printError(e.toString());
