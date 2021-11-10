@@ -46,14 +46,20 @@ class Profile extends Component {
               <h4>ID: {currentUser.id} </h4>
             </div>
             <div className="card-team-page-rol">
-              {currentUser.roles &&
-                currentUser.roles.map((role, index) =>
-                  currentUser.roles.length <= 1 ? (
-                    <h4 key={index}> Authority: {role}</h4>
-                  ) : (
-                    <h4 key={index}> Authorities: {role},</h4>
-                  )
-                )}
+              <h4>
+                {" "}
+                {currentUser.roles && currentUser.roles.length <= 1
+                  ? `Authority:`
+                  : `Authorities:`}
+                {currentUser.roles &&
+                  currentUser.roles.map((role, index) => (
+                    <span key={index}>
+                      {" "}
+                      {role.charAt(5) +
+                        role.replace("ROLE_", "").substring(1).toLowerCase()}
+                    </span>
+                  ))}
+              </h4>
             </div>
 
             <div className="card-team-page-social-media-wrapper">

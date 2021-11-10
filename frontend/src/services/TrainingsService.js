@@ -1,6 +1,5 @@
 import axios from "axios";
 import AuthorizationHeader from "./AuthorizationHeader";
-import jwtToken from "./JwtToken";
 
 const TRAININGS_API_BASE_URL = "http://localhost:8080/api/trainings";
 
@@ -28,7 +27,9 @@ class TrainingsService {
   }
 
   async deleteTraining(trainingId) {
-    return axios.delete(`${TRAININGS_API_BASE_URL}/trainings/` + trainingId);
+    return axios.delete(`${TRAININGS_API_BASE_URL}/trainings/`, trainingId, {
+      headers: await AuthorizationHeader(),
+    });
   }
 }
 

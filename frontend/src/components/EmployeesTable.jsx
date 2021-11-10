@@ -303,13 +303,23 @@ class EmployeesTable extends Component {
           centered
         >
           <ModalBody className="modal-main">
-            <h2>{chosenEmployee.firstName + `\n` + chosenEmployee.lastName}</h2>
+            <h3>{chosenEmployee.firstName + `\n` + chosenEmployee.lastName}</h3>
             <Tabs className="tabs-medium-width">
               <TabList className="multi-table-tab-list">
-                <Tab className="multi-table-tab-item">Edit</Tab>
-                <Tab className="multi-table-tab-item">Review</Tab>
+                <Tab className="multi-table-tab-item">Trainings</Tab>
+                <Tab className="multi-table-tab-item">Departments</Tab>
+                <Tab className="multi-table-tab-item">Benefits</Tab>
+                <Tab className="multi-table-tab-item">Reviews</Tab>
               </TabList>
 
+              <TabPanel>
+                <h4>Employees Current Trainings</h4>
+                <h4>All Current Trainings</h4>
+              </TabPanel>
+              <TabPanel>
+                <h4>Employees Current Departments</h4>
+                <h4>All Current Departments</h4>
+              </TabPanel>
               <TabPanel>
                 <form className="input-group">
                   <h4> Trainings </h4>
@@ -363,9 +373,10 @@ class EmployeesTable extends Component {
               </TabPanel>
               <TabPanel>
                 <form>
-                  <h4>Performance Review</h4>
                   <textarea
                     type="checkbox"
+                    rows="10"
+                    placeholder="Enter performance review"
                     name="checkbox-example"
                     id="checkbox-button-1"
                     className="input password"
