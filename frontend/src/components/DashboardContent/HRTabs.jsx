@@ -5,6 +5,7 @@ import EmployeesTable from "../EmployeesTable";
 import AccountsTable from "./AccountsTable";
 import PositionsTable from "./PositionTable";
 import CandidatesTable from "./CandidateTable";
+import DepartmentsTable from "./DepartmentsTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
