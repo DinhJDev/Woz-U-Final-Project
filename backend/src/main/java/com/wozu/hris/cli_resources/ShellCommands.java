@@ -118,7 +118,7 @@ public class ShellCommands {
 
 
         Account newAccount = new Account(username, password);
-        accountHolder = aService.registerCandidateAccount(newAccount);
+        accountHolder = aService.registerCandidateAccount(newAccount, new Employee());
 
         return accountHolder;
     }
