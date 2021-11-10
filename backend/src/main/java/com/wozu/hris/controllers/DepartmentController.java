@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
@@ -86,10 +87,13 @@ public class DepartmentController {
         delList.removeAll(eRepo.findByDepartmentEmployeeDepartment(department));
         for (int i = 0; i < addList.size(); i++) {
             DepartmentEmployee dE = new DepartmentEmployee(dRepo.findByName(department.getName()), addList.get(i));
+            dERepo.save(dE);
         }
         for (int i = 0; i < delList.size(); i++) {
-            List<DepartmentEmployee> dE = dERepo.findByEmployeeAndDepartment(delList.get(i), department);
-            dERepo.deleteAllInBatch(dE);
+            Optional<DepartmentEmployee> dE = dERepo.findByEmployeeAndDepartment(delList.get(i), department);
+            if (dE.isPresent()) {
+                dERepo.delete(dE.get());
+            }
         }
         return ResponseEntity.ok(new MessageResponse("Department successfully updated."));
     }
