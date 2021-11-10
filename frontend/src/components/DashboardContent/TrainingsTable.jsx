@@ -3,6 +3,8 @@ import PayrollsService from "../../services/PayrollsService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
 import TrainingsService from "../../services/TrainingsService";
+import Modal from "react-bootstrap/Modal";
+import { ModalBody } from "react-bootstrap";
 
 class TrainingsTable extends Component {
   constructor(props) {
@@ -42,16 +44,79 @@ class TrainingsTable extends Component {
           width: "100%",
         },
       ],
+      chosenTraining: [],
+      updatedTrainingName: "",
+      updatedTrainingDescription: "",
+      showUpdateModal: false,
     };
+    this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
+    this.updatedTrainingName = this.updatedTrainingName.bind(this);
+    this.updatedTrainingDescription =
+      this.updatedTrainingDescription.bind(this);
   }
 
-  deleteAccount(id) {
+  // this is to removes a training item within the delete training item end point. we are passing the training item id here
+
+  deleteTraining(id) {
     TrainingsService.deleteTraining(id).then((res) => {
       this.setState({
         trainings: this.state.trainings.filter(
           (training) => training.id !== id
         ),
       });
+    });
+  }
+
+  // update input function: this are the funciton that will captures every change made to the inputs withint he update training item modal
+
+  updatedTrainingName = (event) => {
+    this.setState({ updatedTrainingName: event.target.value });
+  };
+
+  updatedTrainingDescription = (event) => {
+    this.setState({ updatedTrainingDescription: event.target.value });
+  };
+
+  // this lets us run a function where we pass a parameter for the training item id and pass it throught he update end point
+
+  async updatedTrainingItem(id, e) {
+    e.preventDefault();
+    const trainingDetails = {
+      trainingName:
+        this.state.updatedTrainingName.length > 0
+          ? this.state.updatedTrainingName
+          : this.state.chosenTraining.trainingName,
+      description:
+        this.state.updatedTrainingDescription.length > 0
+          ? this.state.updatedTrainingDescription
+          : this.state.chosenTraining.description,
+    };
+    TrainingsService.updateTrainingById(id, trainingDetails).then((res) => {
+      if (res) {
+        console.log(res.data);
+      }
+    });
+    this.forceUpdate();
+  }
+
+  // this will open and close the modal for updating a training item
+
+  async openUpdateTrainingModal(id) {
+    this.setState({
+      showUpdateModal: true,
+    });
+    const chosenTraining = await TrainingsService.getTrainingById(id);
+    if (chosenTraining.data) {
+      this.setState({
+        chosenTraining: chosenTraining.data,
+      });
+    }
+    console.log(this.state.chosenTraining.id);
+  }
+
+  closeUpdateTrainingModal() {
+    this.setState({
+      showUpdateModal: false,
     });
   }
 
@@ -83,8 +148,29 @@ class TrainingsTable extends Component {
 
   createTable() {
     const trainingsData = {
-      columns: [...this.state.trainingsColumns],
-      rows: [...this.state.trainings],
+      columns: [
+        ...this.state.trainingsColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
+      ],
+      rows: [
+        ...this.state.trainings.map((training, index) => ({
+          ...training,
+          expand: (
+            <button
+              className="row-expand-button bx bx-expand"
+              onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id sot hat the modal has access to it's attributes
+            ></button>
+          ),
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
+      ],
     };
 
     return (
@@ -98,10 +184,71 @@ class TrainingsTable extends Component {
     );
   }
 
+  updateModal() {
+    const { chosenTraining } = this.state;
+    return (
+      <>
+        <Modal
+          show={this.state.showUpdateModal}
+          handleclose={this.closeUpdateTrainingModal}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <ModalBody className="modal-main">
+            <h3>Update: {chosenTraining.trainingName}</h3>
+            <form>
+              <input
+                autoFocus
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter new training name"
+                className="input password"
+                value={this.state.updatedTrainingName}
+                onChange={this.updatedTrainingName}
+              />
+              <textarea
+                type="name"
+                maxLength="400"
+                name="name"
+                placeholder="Enter new training description"
+                className="input password"
+                value={this.state.updatedTrainingDescription}
+                onChange={this.updatedTrainingDescription}
+              ></textarea>
+              <button
+                to="/"
+                size="lg"
+                maxHeight="300px"
+                type="submit"
+                onClick={(e) => {
+                  this.updatedTrainingItem(chosenTraining.id, e);
+                  this.closeUpdateTrainingModal();
+                }}
+                className="add-data-button middle-button"
+              >
+                Submit
+              </button>
+            </form>
+            <button
+              className="modal-button-close add-data-button"
+              type="button"
+              onClick={() => this.closeUpdateTrainingModal()}
+            >
+              Close
+            </button>
+          </ModalBody>
+        </Modal>
+      </>
+    );
+  }
+
   render() {
     return (
       <div className="white-box full-width zero-margin-box">
         <div className="box-padding">{this.createTable()}</div>
+        {this.updateModal()}
       </div>
     );
   }
