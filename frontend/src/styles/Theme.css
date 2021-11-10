@@ -111,3 +111,11 @@ body.dark-mode .loading-ring div {
   border: 8px solid var(--granite);
   border-color: var(--granite) transparent transparent transparent;
 }
+
+body.dark-mode .modal {
+  background: var(--white-alpha-40);
+}
+
+body.dark-mode .modal-main {
+  background: var(--white-alpha-75);
+}

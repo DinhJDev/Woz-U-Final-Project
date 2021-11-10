@@ -30,9 +30,9 @@ function Unauthorized() {
               }}
               className="paragraph feature-single-hero"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing, sedita do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nost.
+              Your request cannot be completed because it lacks valid
+              authentication credentials for the requested resource. Try logging
+              in before making the request again, or return home.
             </p>
             <a
               href="/#hero"

@@ -41,6 +41,9 @@ public class Payrate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    private Long employee_id;
+
     private Double hourlyRate;
     private Double salary;
     private Date effectiveDate;

@@ -1,26 +1,53 @@
 import axios from "axios";
 
-const EMPLOYEE_API_BASE_URL = "http://localhost:8080/api/employees/employees";
+import AuthorizationHeader from "./AuthorizationHeader";
+const EMPLOYEE_API_BASE_URL = "http://localhost:8080/api/employees";
 
 class EmployeeService {
-  getEmployees() {
+  getServer() {
     return axios.get(EMPLOYEE_API_BASE_URL);
   }
 
-  createEmployee(employee) {
-    return axios.post(EMPLOYEE_API_BASE_URL, employee);
+  async getAllEmployees() {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/employees", {
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  getEmployeeById(employeeId) {
-    return axios.get(EMPLOYEE_API_BASE_URL + "/" + employeeId);
+  async getAllCandidates() {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/candidates", {
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  updateEmployee(employee, employeeId) {
-    return axios.put(EMPLOYEE_API_BASE_URL + "/" + employeeId, employee);
+  async getAllManagers() {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/managers", {
+      headers: await AuthorizationHeader(),
+    });
   }
 
-  deleteEmployee(employeeId) {
-    return axios.delete(EMPLOYEE_API_BASE_URL + "/" + employeeId);
+  async getAllHR() {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/hr", {
+      headers: await AuthorizationHeader(),
+    });
+  }
+
+  async createEmployee(employee) {
+    return axios.post(EMPLOYEE_API_BASE_URL + "/employees", employee);
+  }
+
+  async getEmployeeById(employeeId) {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId, {
+      headers: await AuthorizationHeader(),
+    });
+  }
+
+  async updateEmployee(employeeId) {
+    return axios.put(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
+  }
+
+  async deleteEmployee(employeeId) {
+    return axios.delete(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
   }
 }
 

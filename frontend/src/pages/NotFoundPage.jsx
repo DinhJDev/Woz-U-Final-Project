@@ -7,12 +7,12 @@ import NotFound from "../components/NotFound";
 
 function NotFoundPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <NotFound />
       <Footer />
-    </div>
+    </>
   );
 }
 

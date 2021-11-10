@@ -19,6 +19,12 @@ VARIABLES
   --blue-sky: #85c8ff;
   --dodgerblue: dodgerblue;
 
+  --dashboard-blue-tag-rgb: 30, 144, 255;
+  --dashboard-purple-tag-rgb: 162, 121, 249;
+  --dashboard-green-tag-rgb: 99, 235, 103;
+  --dashboard-pink-tag-rgb: 251, 148, 255;
+  --dashboard-orange-tag-rgb: 255, 184, 108;
+
   --level-200-rgb: 187, 250, 187;
   --level-400-rgb: 255, 184, 108;
   --level-500-rgb: 238, 85, 131;
@@ -31,6 +37,7 @@ VARIABLES
   --white-alpha-75: rgba(255, 255, 255, 0.6);
   --white-alpha-40: rgba(255, 255, 255, 0.4);
   --white-alpha-36: rgba(255, 255, 255, 0.36);
+  --white-alpha-12: rgba(255, 255, 255, 0.12);
 
   --tooltip-zindex: 10;
   --z-fixed: 100;

@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,6 +19,7 @@ public class EmployeeTraining {
     }
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(insertable = false, updatable = false, name="employee_id")
     private Employee employee;
 
