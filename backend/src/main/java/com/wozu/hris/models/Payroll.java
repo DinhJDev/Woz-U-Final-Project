@@ -48,6 +48,11 @@ public class Payroll {
     private Date date;
     private Double amount;
 
+    //constuctor
+    public Payroll(){
+
+    }
+
     /*
 
    -----------------------------------------------------------------------------------
@@ -99,12 +104,12 @@ public class Payroll {
         this.id = id;
     }
 
-    public Long getEmployee_id() {
-        return employee_id;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public Date getDate() {

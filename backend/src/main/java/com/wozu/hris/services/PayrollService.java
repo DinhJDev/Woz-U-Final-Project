@@ -1,12 +1,18 @@
 package com.wozu.hris.services;
 
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Payroll;
+import com.wozu.hris.models.Timesheet;
 import com.wozu.hris.repositories.PayrollRepository;
+import com.wozu.hris.repositories.TimesheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /*
 
@@ -48,6 +54,23 @@ public class PayrollService {
         }else{
             return null;
         }
+    }
+    @Autowired
+    TimesheetRepository tRepo;
+    public Payroll calculatePayroll(Employee employee){
+        Timesheet timesheet = tRepo.findTopByEmployeeOrderByIdDesc(employee);
+        Payroll c_Payroll = new Payroll();
+        c_Payroll.setEmployee(employee);
+        c_Payroll.setDate(timesheet.getEnd());
+        Double daily;
+        Date start = timesheet.getStart();
+        Date end = timesheet.getEnd();
+        long diffInMillies = Math.abs(start.getTime() - end.getTime());
+        double diffMinutes = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        daily = diffMinutes/60;
+        Double amount = employee.getPayrate().getHourlyRate() * daily;
+        c_Payroll.setAmount(amount);
+        return c_Payroll;
     }
 
     public void deletePayroll(Long Id){
