@@ -20,7 +20,6 @@ class EmployeesTable extends Component {
     super(props);
 
     this.state = {
-      positionName: "",
       firstName: "",
       lastName: "",
       username: "",
@@ -60,16 +59,6 @@ class EmployeesTable extends Component {
           },
         },
         {
-          label: "Departments",
-          field: "departments",
-          width: "100%",
-        },
-        {
-          label: "Payrate",
-          field: "payrate",
-          width: "100%",
-        },
-        {
           label: "Created",
           field: "createdAt",
           width: "100%",
@@ -90,17 +79,12 @@ class EmployeesTable extends Component {
     };
     this.createPerformanceReview = this.createPerformanceReview.bind(this);
     this.performanceComments = this.performanceComments.bind(this);
-    this.positionName = this.positionName.bind(this);
     this.deleteEmployee = this.deleteEmployee.bind(this);
     this.openViewEmployeeModal = this.openViewEmployeeModal.bind(this);
   }
 
   performanceComments = (event) => {
     this.setState({ performanceComments: event.target.value });
-  };
-
-  positionName = (event) => {
-    this.setState({ positionName: event.target.value });
   };
 
   async openViewEmployeeModal(id) {
@@ -121,6 +105,15 @@ class EmployeesTable extends Component {
     if (chosenBenefit.data) {
       console.log(chosenBenefit.data);
       return chosenBenefit.data;
+    }
+  }
+
+  async getAllSelectedBenefits() {
+    var array = [];
+    var checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      array.push(checkboxes[i].value);
     }
   }
 
@@ -155,9 +148,7 @@ class EmployeesTable extends Component {
       });
   }
 
-  validateForm() {
-    return this.state.positionName.length > 0;
-  }
+  validateForm() {}
 
   closeViewEmployeeModal() {
     this.setState({
@@ -202,12 +193,15 @@ class EmployeesTable extends Component {
       console.log(trainingsList);
     });
     await DepartmentService.getAllDepartment().then((res) => {
-      const departentList = [];
+      const departmentsList = [];
       res.data.forEach((department) => {
-        departentList.push({
+        departmentsList.push({
           department_id: department.id,
+          name: department.name,
         });
       });
+      this.setState({ departmentsList: departmentsList });
+      console.log(departmentsList);
     });
     await BenefitService.getAllBenefits().then((res) => {
       const benefitList = [];
@@ -230,11 +224,16 @@ class EmployeesTable extends Component {
           let department = employee.department.map(
             (department) => department.department
           );
+          let training = employee.employeeTrainings.map(
+            (training) => training.training
+          );
           employeeList.push({
             id: employee.id,
             firstName: employee.firstName,
             lastName: employee.lastName,
-            departments: department,
+            department: department,
+            benefit: employee.benefit,
+            trainings: training,
             payrate: employee.payrate,
             createdAt: unformatDate(employee.createdAt),
             updatedAt: unformatDate(employee.updatedAt),
@@ -242,7 +241,7 @@ class EmployeesTable extends Component {
         });
         this.setState({ employees: employeeList });
         console.log(employeeList);
-        console.log(parse);
+        console.log(employeeList.benefit.name);
       })
       .catch((err) => {
         if (err.response) {
@@ -290,8 +289,13 @@ class EmployeesTable extends Component {
   }
 
   updateModal() {
-    const { chosenEmployee, benefitsList, trainingsList, employeeInfo } =
-      this.state;
+    const {
+      chosenEmployee,
+      departmentsList,
+      benefitsList,
+      trainingsList,
+      employeeInfo,
+    } = this.state;
 
     return (
       <>
@@ -304,7 +308,7 @@ class EmployeesTable extends Component {
         >
           <ModalBody className="modal-main">
             <h3>{chosenEmployee.firstName + `\n` + chosenEmployee.lastName}</h3>
-            <Tabs className="tabs-medium-width">
+            <Tabs>
               <TabList className="multi-table-tab-list">
                 <Tab className="multi-table-tab-item">Trainings</Tab>
                 <Tab className="multi-table-tab-item">Departments</Tab>
@@ -313,51 +317,94 @@ class EmployeesTable extends Component {
               </TabList>
 
               <TabPanel>
-                <h4>Employees Current Trainings</h4>
-                <h4>All Current Trainings</h4>
-              </TabPanel>
-              <TabPanel>
-                <h4>Employees Current Departments</h4>
-                <h4>All Current Departments</h4>
-              </TabPanel>
-              <TabPanel>
-                <form className="input-group">
-                  <h4> Trainings </h4>
+                <h4>Employee's Current Trainings</h4>
+
+                <div className="white-box full-width">
+                  <div className="box-padding">
+                    {chosenEmployee.training &&
+                      chosenEmployee.training.map((training) => (
+                        <div>
+                          {training.id}{" "}
+                          {training.trainingName == null
+                            ? `Unnamed`
+                            : training.trainingName}
+                          <label for={training.id}>
+                            {training.trainingName}
+                          </label>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                <h4>All Company Trainings</h4>
+                <form className="white-box full-width box-padding">
                   {trainingsList &&
                     trainingsList.map((training) => (
                       <div className="input-container">
                         <input
-                          type="radio"
-                          name="radio-example"
-                          id="radio-button-1"
+                          type="checkbox"
+                          value={training.id}
+                          name={training.id}
+                          id="trainings-list"
                         />
-                        <label for="radio-button-1">
-                          {training.trainingName}
-                        </label>
+                        <label for={training.id}>{training.trainingName}</label>
                       </div>
                     ))}
                 </form>
+              </TabPanel>
+              <TabPanel>
+                <h4>Employee's Current Departments</h4>
+                <div className="white-box full-width">
+                  <div className="box-padding">
+                    {chosenEmployee.department &&
+                      chosenEmployee.department.map((department) => (
+                        <div>
+                          {department.id}{" "}
+                          {department.name == null
+                            ? `Unnamed`
+                            : department.name}
+                        </div>
+                      ))}
+                  </div>
+                </div>
 
-                <form className="input-group">
-                  <h4> Benefits </h4>
+                <h4>All Company Departments</h4>
+                <form className="white-box full-width box-padding">
+                  {departmentsList &&
+                    departmentsList.map((department) => (
+                      <div className="input-container">
+                        <input
+                          type="checkbox"
+                          value={department.id}
+                          name={department.id}
+                          id="trainings-list"
+                        />
+                        <label for={department.id}>{department.name}</label>
+                      </div>
+                    ))}
+                </form>
+              </TabPanel>
+              <TabPanel>
+                <h4>Employee's Current Benefit</h4>
+
+                <div className="white-box full-width">
+                  <div className="box-padding"></div>
+                </div>
+
+                <h4>All Company Benefits</h4>
+                <form className="white-box full-width box-padding">
                   {benefitsList &&
                     benefitsList.map((benefit) => (
                       <div className="input-container">
                         <input
                           type="radio"
-                          name="radio-example"
-                          id="radio-button-1"
+                          value={benefit.id}
+                          name={benefit.id}
+                          id="benefits-list"
                         />
-                        <label for="radio-button-1">{benefit.name}</label>
+                        <label for={benefit.id}>{benefit.name}</label>
                       </div>
                     ))}
-
-                  <select id="dnd" multiple>
-                    {benefitsList &&
-                      benefitsList.map((benefit) => (
-                        <option value={benefit.id}>{benefit.name}</option>
-                      ))}
-                  </select>
                 </form>
 
                 <button

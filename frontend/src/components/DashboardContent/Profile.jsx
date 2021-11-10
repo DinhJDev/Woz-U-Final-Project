@@ -53,7 +53,7 @@ class Profile extends Component {
                   : `Authorities:`}
                 {currentUser.roles &&
                   currentUser.roles.map((role, index) => (
-                    <span key={index}>
+                    <span key={index} style={{ fontWeight: "500" }}>
                       {" "}
                       {role.charAt(5) +
                         role.replace("ROLE_", "").substring(1).toLowerCase()}
