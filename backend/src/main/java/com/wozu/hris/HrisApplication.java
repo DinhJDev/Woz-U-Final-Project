@@ -5,6 +5,7 @@ import com.wozu.hris.cli_resources.InputReader;
 import com.wozu.hris.cli_resources.ShellCommands;
 import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.*;
+import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.services.AccountService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.*;
 import org.springframework.boot.Banner;
@@ -112,6 +114,10 @@ class DevelopmentCommands{
 	EmployeeService eService;
 	@Autowired
 	TimesheetRepository tRepo;
+	@Autowired
+	PasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	AccountRepository aRepo;
 
 	public Availability developmentCheck(){
 		return HrisApplication.getDeveloping() ? Availability.available() : Availability.unavailable("Not in Development Mode");
@@ -164,6 +170,20 @@ class DevelopmentCommands{
 		List<Timesheet> t = tRepo.findAllByEndBetweenAndEmployeeOrderByIdAsc( chosenDate, new Date(), HrisApplication.getCurrentUser().getEmployee());
 		for(Timesheet item : t){
 			System.out.println(item.getId());
+		}
+	}
+
+	@ShellMethodAvailability("developmentCheck")
+	@ShellMethod(key="-ora", value="Override Account by ID")
+	public void overrideAccount(Long id){
+		Account targetAccount = aService.findAccountById(id);
+		String newValue = inputReader.prompt("Override Password");
+		if(newValue.length() > 5){
+			targetAccount.setPassword(bCryptPasswordEncoder.encode(newValue));
+			aRepo.save(targetAccount);
+			shellResult.printSuccess("Account Override Successful!");
+		}else{
+			shellResult.printError("Password must be greater than 5 Characters!");
 		}
 	}
 
