@@ -76,4 +76,19 @@ public class InputReader {
         }
         return false;
     }
+
+    public boolean confirmationPrompt(String prompt){
+        boolean result;
+        if(prompt != null) {
+            shellResult.printInfo(prompt);
+        }
+
+        shellResult.printInfo(String.format("[%s]/[%s]", "Y", "N"));
+        String answer;
+        do {
+            answer = lineReader.readLine(String.format("%s: ", "Confirm")).toUpperCase();
+        }while(!answer.equalsIgnoreCase("Y") && !answer.equalsIgnoreCase("N"));
+        result = answer.equalsIgnoreCase("Y") ? true : false;
+        return result;
+    }
 }

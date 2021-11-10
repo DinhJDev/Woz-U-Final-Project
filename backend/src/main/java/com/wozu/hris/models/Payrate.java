@@ -41,12 +41,24 @@ public class Payrate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long employee_id;
-
     private Double hourlyRate;
     private Double salary;
     private Date effectiveDate;
+
+    /*
+
+   -----------------------------------------------------------------------------------
+                                       Constructor
+   -----------------------------------------------------------------------------------
+
+    */
+
+    public Payrate(){}
+
+    public Payrate(Employee employee){
+        this.employee = employee;
+    }
+
 
     /*
 
@@ -77,7 +89,7 @@ public class Payrate {
     */
 
     @OneToOne
-    @JoinColumn(insertable = false, updatable = false, name = "employee_id")
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     /*
@@ -96,13 +108,9 @@ public class Payrate {
         this.id = id;
     }
 
-    public Long getEmployee_id() {
-        return employee_id;
-    }
+    public void setEmployee(Employee employee){this.employee = employee;}
 
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
-    }
+    public Employee getEmployee(){return this.employee;}
 
     public Double getHourlyRate() {
         return hourlyRate;
