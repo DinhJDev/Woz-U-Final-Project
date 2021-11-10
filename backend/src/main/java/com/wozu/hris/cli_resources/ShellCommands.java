@@ -4,10 +4,7 @@ import com.wozu.hris.HrisApplication;
 import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
-import com.wozu.hris.services.AccountService;
-import com.wozu.hris.services.DepartmentService;
-import com.wozu.hris.services.EmployeeService;
-import com.wozu.hris.services.PayrateService;
+import com.wozu.hris.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -36,8 +33,10 @@ public class ShellCommands {
     private PasswordEncoder bCryptPasswordEncoder;
     private PayrateService prService;
     private DepartmentService dService;
+    private DepartmentEmployeeService dEService;
+    private PositionService pService;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService){
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
@@ -47,6 +46,8 @@ public class ShellCommands {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.prService = prService;
         this.dService = dService;
+        this.dEService = dEService;
+        this.pService = pService;
     }
 
     public void clearConsole(){
@@ -186,6 +187,27 @@ public class ShellCommands {
         return permLvl;
     }
 
+    public String getPermissionString(Set<Role> role){
+        int permLvl = 0;
+        for (Iterator<Role> it = role.iterator(); it.hasNext(); ) {
+            Role r = it.next();
+            if(r.getRoleId() > permLvl){
+                permLvl = r.getRoleId();
+            }
+        }
+        if(permLvl <= ERole.ROLE_MANAGER.getID()){
+            if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
+                return "Employee";
+            }else if(permLvl == ERole.ROLE_CANDIDATE.getID()){
+                return "Candidate";
+            }else{
+                return "Manager";
+            }
+        }else{
+            return "HR";
+        }
+    }
+
     public LinkedHashMap<String, Map<String, String>> getCommandGroup(int permLvl){
         LinkedHashMap<String, Map<String, String>> listedCommands = new LinkedHashMap<>();
 
@@ -194,9 +216,10 @@ public class ShellCommands {
         if(permLvl >= ERole.ROLE_CANDIDATE.getID()){
             Map<String, String> commands = new HashMap<>();
 
+            commands.put("signOut", "Sign out of session");
             //Role Restricted Commands
             if(permLvl == ERole.ROLE_CANDIDATE.getID()){
-                commands.put("commandKey", "commandDetails");
+                commands.put("view", "View Company Information");
             }
 
             listedCommands.put("Level 0", commands);
@@ -208,6 +231,7 @@ public class ShellCommands {
             commands.put("cIn", "Clock In");
             commands.put("cOut", "Clock Out");
             commands.put("update", "Update Information");
+            commands.put("info", "View Employee Information");
 
             if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
 
@@ -219,6 +243,8 @@ public class ShellCommands {
         //Commands available to Manager+ Roles
         if(permLvl >= ERole.ROLE_MANAGER.getID()){
             Map<String, String> commands = new HashMap<>();
+
+            commands.put("view-performance", "View performance review of Employee");
 
             if(permLvl == ERole.ROLE_MANAGER.getID()){
                 commands.put("performance", "Add performance review to Employee");
@@ -369,28 +395,100 @@ public class ShellCommands {
 
                 }
             }else if(item.equalsIgnoreCase("Department")){
+                clearConsole();
                 Map<String, String> departmentOptions = new HashMap<>();
                 List<Department> list = dService.allDepts();
-                ArrayList<DepartmentEmployee> currentDeps = new ArrayList(currentEmployee.getDepartment());
                 for(int i = 0; i < list.size(); i++){
                     departmentOptions.put(String.valueOf((char)(i+65)), list.get(i).getName());
                 }
-                departmentOptions.put("X", "Cancel");
+                departmentOptions.put("X", "FINISHED/CANCEL");
                 do{
                     String selection = inputReader.listInput("Department",
                             "Select an option [] above",
                             departmentOptions,
                             true);
                     if(selection.equalsIgnoreCase("X")){
+
                         return;
                     }
+
                     if(inputReader.confirmationPrompt(String.format("Department: %s", departmentOptions.get(selection)))){
+                        if(dEService.existsByEmployeeAndDepartment(currentEmployee, dService.findByDeptName(departmentOptions.get(selection)))){
+                            DepartmentEmployee holder = dEService.findByEmployeeAndDepartment(currentEmployee, dService.findByDeptName(departmentOptions.get(selection)));
+                            Map<String, String> options = new HashMap<>();
+                            options.put("A", "Edit Position");
+                            options.put("B", "Remove from Department");
+                            options.put("X", "FINISHED/CANCEL");
+                            clearConsole();
+                            shellResult.printInfo(String.format("Department: %s", departmentOptions.get(selection)));
+                            String optionSelection = inputReader.listInput("Position",
+                                    "Select an option [] above",
+                                    options,
+                                    true);
+                            if(optionSelection.equalsIgnoreCase("X")){
+                                break;
+                            }else if(optionSelection.equalsIgnoreCase("A")){
+                                clearConsole();
+                                shellResult.printInfo(String.format("Current Position: %s", holder.getPosition().getName()));
+                                List<Position> posList = pService.allPos();
+                                Map<String, String> posOptions = new HashMap<>();
+                                for(int i = 0; i < posList.size(); i++){
+                                    posOptions.put(String.valueOf((char)(i+65)), posList.get(i).getName());
+                                }
+                                do {
+                                    String posSelection = inputReader.listInput("Position",
+                                            "Select an option [] above",
+                                            posOptions,
+                                            true);
+                                    if (inputReader.confirmationPrompt(String.format("Position: %s", posOptions.get(posSelection)))) {
+                                        clearConsole();
+                                        shellResult.printSuccess("Updated Position Successfully!");
+                                        holder.setPosition(pService.findByName(posOptions.get(posSelection)));
+                                        dEService.updateDepartmentEmployee(holder.getId(), holder);
+                                        break;
+                                    }
+                                }while(true);
+                            }else if(optionSelection.equalsIgnoreCase("B")){
+                                if(inputReader.confirmationPrompt(String.format("Remove from %s Department?", departmentOptions.get(selection)))){
+                                    clearConsole();
+                                    shellResult.printSuccess("Removed from Department Successfully");
+                                    dEService.deleteDepartmentEmployee(holder.getId());
+                                    break;
+                                }
+                            }
+                        }else{
+                            clearConsole();
+                            shellResult.printInfo(String.format("Employee is currently not in %s Department!", departmentOptions.get(selection)));
+                            if(inputReader.confirmationPrompt("Add Employee into Department?")){
+                                  List<Position> posList = pService.allPos();
+                                  Map<String, String> posOptions = new HashMap<>();
+                                  for(int i = 0; i < posList.size(); i++){
+                                      posOptions.put(String.valueOf((char)(i+65)), posList.get(i).getName());
+                                  }
+                                  do {
+                                      String posSelection = inputReader.listInput("Position",
+                                              "Select an option [] above",
+                                              posOptions,
+                                              true);
+                                      if(inputReader.confirmationPrompt(String.format("Position: %s", posOptions.get(posSelection)))){
+                                          clearConsole();
+                                          shellResult.printSuccess("Employee Added into Department Successfully!");
+                                          Department d = dService.findByDeptName(departmentOptions.get(selection));
+                                          dEService.createDepartmentEmployee(new DepartmentEmployee(d, currentEmployee, pService.findByName(posOptions.get(posSelection))));
+                                          break;
+                                      }else{
+                                          clearConsole();
+                                      }
+                                  }while(true);
+                            }else{
+                                clearConsole();
+                            }
+                        }
 
-
+                    }else{
+                        clearConsole();
                     }
                 }while(true);
-            }else if(item.equalsIgnoreCase("Position")){
-
             }else if(item.equalsIgnoreCase("Training")){
 
             }else if(item.equalsIgnoreCase("Benefits")){

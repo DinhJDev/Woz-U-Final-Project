@@ -36,6 +36,11 @@ public class PositionService {
         return p.orElse(null);
     }
 
+    public Position findByName(String n){
+        return posRepo.findByName(n);
+
+    }
+
     // update position
     public Position updateDepartments(Long pid, Position p) {
         Optional<Position> opp = posRepo.findById(pid);

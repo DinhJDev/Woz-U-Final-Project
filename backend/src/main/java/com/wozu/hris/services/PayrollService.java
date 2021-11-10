@@ -71,6 +71,7 @@ public class PayrollService {
         Double amount = null;
         if(employee.getPayrate() != null) {
             amount = employee.getPayrate().getHourlyRate() * daily;
+            amount = Math.round(amount * 100.0)/100.0;
         }
         c_Payroll.setAmount(amount);
         return prRepo.save(c_Payroll);
