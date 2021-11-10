@@ -11,11 +11,11 @@ class PositionService {
   }
 
   async createPosition(position) {
-    return axios.post(POSITION_API_BASE_URL + "/positions/" + position);
+    return axios.post(POSITION_API_BASE_URL + "/positions", position); // comma means we are passing something into the position endpoint
   }
 
   async getPositionById(positionId) {
-    return axios.get(POSITION_API_BASE_URL + "/positions/" + positionId, {
+    return axios.get(POSITION_API_BASE_URL + "/positions/" + positionId, {      // + means we are trying to pass something that is /positions/something
       headers: await AuthorizationHeader(),
     });
   }

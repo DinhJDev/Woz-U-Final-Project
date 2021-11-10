@@ -4,8 +4,10 @@ import ReactTable from "./ReactTable";
 import EmployeesTable from "../EmployeesTable";
 import AccountsTable from "./AccountsTable";
 import PositionsTable from "./PositionTable";
+import DepartmentsTable from "./DepartmentsTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+
 
 function HRTabs() {
   return (
@@ -18,12 +20,8 @@ function HRTabs() {
         <Tab className="multi-table-tab-item">Accounts</Tab>
       </TabList>
 
-      <TabPanel>
-        <div className="white-box full-width zero-margin-box">
-          <div className="box-padding">
-            <ReactTable />
-          </div>
-        </div>
+      <TabPanel>      
+            <DepartmentsTable />
       </TabPanel>
 
       <TabPanel>

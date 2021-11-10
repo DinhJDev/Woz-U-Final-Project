@@ -7,8 +7,9 @@ class AccountsTable extends Component {
   constructor(props) {
     super(props);
 
+    
+
     this.state = {
-      mydata: "",
       currentUser: [],
       accounts: [],
       accountsColumns: [
