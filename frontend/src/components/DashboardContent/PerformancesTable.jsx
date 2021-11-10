@@ -77,8 +77,24 @@ class PerformancesTable extends Component {
 
   createTable() {
     const performancesData = {
-      columns: [...this.state.reviewsColumns],
-      rows: [...this.state.reviews],
+      columns: [
+        ...this.state.reviewsColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
+      ],
+      rows: [
+        ...this.state.reviews.map((review, index) => ({
+          ...review,
+          expand: <button className="row-expand-button bx bx-expand"></button>,
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
+      ],
     };
 
     return (

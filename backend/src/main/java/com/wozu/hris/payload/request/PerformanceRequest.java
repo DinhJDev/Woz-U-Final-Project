@@ -9,6 +9,7 @@ public class PerformanceRequest {
     @NotBlank
     private String comment;
     @NotNull
+
     private Employee reviewee;
 
     public String getComment() {

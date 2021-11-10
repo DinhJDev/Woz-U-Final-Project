@@ -12,7 +12,9 @@ class PerformanceService {
   }
 
   async createPerformance(performance) {
-    return axios.post(PERFORMANCE_API_BASE_URL + "/create", performance);
+    return axios.post(PERFORMANCE_API_BASE_URL + "/create", performance, {
+      headers: await jwtToken(),
+    });
   }
 
   async getPerformanceById(performanceId) {

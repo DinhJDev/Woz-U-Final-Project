@@ -5,7 +5,7 @@ const DEPARTMENT_API_BASE_URL = "http://localhost:8080/api/department";
 
 class DepartmentService {
   async getAllDepartment() {
-    return axios.get(DEPARTMENT_API_BASE_URL, {
+    return axios.get(DEPARTMENT_API_BASE_URL + "/all", {
       headers: await AuthorizationHeader(),
     });
   }

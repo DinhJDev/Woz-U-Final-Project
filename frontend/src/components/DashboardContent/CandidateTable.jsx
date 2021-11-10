@@ -111,8 +111,24 @@ class CandidatesTable extends Component {
 
   createTable() {
     const candidateData = {
-      columns: [...this.state.candidatesColumns],
-      rows: [...this.state.candidates],
+      columns: [
+        ...this.state.candidatesColumns,
+        {
+          label: "",
+          field: "expand",
+        },
+        {
+          label: "",
+          field: "delete",
+        },
+      ],
+      rows: [
+        ...this.state.candidates.map((candidate, index) => ({
+          ...candidate,
+          expand: <button className="row-expand-button bx bx-expand"></button>,
+          delete: <button className="row-expand-button bx bx-trash"></button>,
+        })),
+      ],
     };
 
     return (

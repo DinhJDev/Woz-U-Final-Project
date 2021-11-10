@@ -64,6 +64,46 @@ public class EmployeeController {
         }
     }
 
+    // get all managers
+
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/managers")
+    public ResponseEntity<List<Employee>> getAllManagers(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findByAccountRolesName(ERole.ROLE_MANAGER).forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // get all hr
+
+    @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
+    @GetMapping("/hr")
+    public ResponseEntity<List<Employee>> getAllHR(){
+        try {
+            List<Employee> employees = new ArrayList<Employee>();
+
+            eRepo.findByAccountRolesName(ERole.ROLE_HR).forEach(employees::add);
+
+            if(employees.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // create employee rest api
     @PostMapping("/employees")
     public Employee createEmployee(@RequestBody Employee employee){
