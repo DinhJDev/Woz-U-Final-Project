@@ -5,6 +5,7 @@ import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.services.AccountService;
+import com.wozu.hris.services.DepartmentService;
 import com.wozu.hris.services.EmployeeService;
 import com.wozu.hris.services.PayrateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +28,16 @@ import java.util.*;
 public class ShellCommands {
 
     private AccountRepository aRepo;
-
     private InputReader inputReader;
-
     private ShellResult shellResult;
-
     private AccountService aService;
-
     private EmployeeService eService;
-
     private RoleRepository rRepo;
-
     private PasswordEncoder bCryptPasswordEncoder;
-
     private PayrateService prService;
+    private DepartmentService dService;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService){
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
@@ -51,6 +46,7 @@ public class ShellCommands {
         this.rRepo = rRepo;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.prService = prService;
+        this.dService = dService;
     }
 
     public void clearConsole(){
@@ -373,7 +369,26 @@ public class ShellCommands {
 
                 }
             }else if(item.equalsIgnoreCase("Department")){
+                Map<String, String> departmentOptions = new HashMap<>();
+                List<Department> list = dService.allDepts();
+                ArrayList<DepartmentEmployee> currentDeps = new ArrayList(currentEmployee.getDepartment());
+                for(int i = 0; i < list.size(); i++){
+                    departmentOptions.put(String.valueOf((char)(i+65)), list.get(i).getName());
+                }
+                departmentOptions.put("X", "Cancel");
+                do{
+                    String selection = inputReader.listInput("Department",
+                            "Select an option [] above",
+                            departmentOptions,
+                            true);
+                    if(selection.equalsIgnoreCase("X")){
+                        return;
+                    }
+                    if(inputReader.confirmationPrompt(String.format("Department: %s", departmentOptions.get(selection)))){
 
+
+                    }
+                }while(true);
             }else if(item.equalsIgnoreCase("Position")){
 
             }else if(item.equalsIgnoreCase("Training")){

@@ -19,4 +19,6 @@ public class DepartmentEmployee {
     @ManyToOne
     @JoinColumn(name="employee_id")
     private Employee employee;
+
+
 }
