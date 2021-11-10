@@ -82,7 +82,6 @@ class TrainingsTable extends Component {
     this.setState({ trainingDescription: event.target.value });
   };
 
-
   // this lets us run a function where we pass a parameter for the training item id and pass it throught he update end point
 
   async updatedTrainingItem(id, e) {
@@ -177,17 +176,17 @@ class TrainingsTable extends Component {
       });
   }
 
-  closeCreateTrainingModal(){
+  closeCreateTrainingModal() {
     this.setState({
-      showCreateModal:false
-    })
+      showCreateModal: false,
+    });
   }
 
-  openCreateTrainingModal(){
+  openCreateTrainingModal() {
     this.setState({
-      showCreateModal:true
-    })
-    console.log(this.state.showCreateModal)
+      showCreateModal: true,
+    });
+    console.log(this.state.showCreateModal);
   }
 
   validateForm() {
@@ -199,26 +198,22 @@ class TrainingsTable extends Component {
 
   async submitNewTraining(e) {
     e.preventDefault();
-  
 
-  let trainingObject = {
-    trainingName: this.state.trainingName,
-    description: this.state.trainingDescription
-  };
+    let trainingObject = {
+      trainingName: this.state.trainingName,
+      description: this.state.trainingDescription,
+    };
 
-  TrainingsService.createTraining(trainingObject)
-  .then((res) => {
-    console.log(res.data.message);
-  })
-  .catch((err) => {
-    if ( err.response ) {
-      console.log(err.response.data.message);
-    }
-  });
-}
-
-
-
+    TrainingsService.createTraining(trainingObject)
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data.message);
+        }
+      });
+  }
 
   createTable() {
     const trainingsData = {
@@ -258,9 +253,14 @@ class TrainingsTable extends Component {
 
     return (
       <>
-      <button className="add-data-button" onClick={(e)=>{
-        this.openCreateTrainingModal()
-      }}>Add a New Training</button>
+        <button
+          className="add-data-button"
+          onClick={(e) => {
+            this.openCreateTrainingModal();
+          }}
+        >
+          Add a New Training
+        </button>
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
@@ -271,51 +271,54 @@ class TrainingsTable extends Component {
   }
 
   createModal() {
-    return(
+    return (
       <>
-      <Modal
-      show={this.state.showCreateModal}
-      handleclose={this.closeCreateTrainingModal}
-      >
-<ModalBody className="modal-main">
-  <form>
-<label className="label">Training Name</label>
-<input
-type="name"
-maxLength="256"
-name="name"
-placeholder="Enter the training name"
-className="input training"
-value={this.state.trainingName}
-onChange={this.trainingName}
-/>
-<label className="label">Training Description</label>
-<input
-type="name"
-maxLength="256"
-name="name"
-placeholder="Enter the training name"
-className="input training"
-value={this.state.trainingDescription}
-onChange={this.trainingDescription}
-/>
-<button type="submit" onClick={(e)=>{
-                      this.submitNewTraining(e)
-                      this.closeCreateTrainingModal()
-                  }}
-                  className="add-data-button middle-button"
-                  >Submit</button>
-</form>
-<button
-className="modal-button-close add-data-button"
-type="button"
-onClick={() => this.closeCreateTrainingModal()}
->
-Close
-</button>
-</ModalBody>
-
-      </Modal>
+        <Modal
+          show={this.state.showCreateModal}
+          handleclose={this.closeCreateTrainingModal}
+        >
+          <ModalBody className="modal-main">
+            <form>
+              <label className="label">Training Name</label>
+              <input
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter the training name"
+                className="input training"
+                value={this.state.trainingName}
+                onChange={this.trainingName}
+              />
+              <label className="label">Training Description</label>
+              <input
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter the training name"
+                className="input training"
+                value={this.state.trainingDescription}
+                onChange={this.trainingDescription}
+              />
+              <button
+                type="submit"
+                onClick={(e) => {
+                  this.submitNewTraining(e);
+                  this.closeCreateTrainingModal();
+                }}
+                className="add-data-button middle-button"
+              >
+                Submit
+              </button>
+            </form>
+            <button
+              className="modal-button-close add-data-button"
+              type="button"
+              onClick={() => this.closeCreateTrainingModal()}
+            >
+              Close
+            </button>
+          </ModalBody>
+        </Modal>
       </>
     );
   }
