@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api")
 public class HomeController {
@@ -23,6 +23,19 @@ public class HomeController {
     @PreAuthorize("hasRole('CANDIDATE') or hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/dashboard")
     public ResponseEntity<Employee> dashboard(@RequestHeader("Authorization") String token) {
+        String username = jwtUtils.getUserNameFromJwtToken(token);
+        Employee employee = eService.findByUsername(username);          // Utilizes JwtToken to obtain username & gets Employee
+
+        if (employee != null) {
+            return new ResponseEntity<>(employee, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PreAuthorize("hasRole('HR')")
+    @GetMapping("/adminboard")
+    public ResponseEntity<Employee> adminboard(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Employee employee = eService.findByUsername(username);          // Utilizes JwtToken to obtain username & gets Employee
 

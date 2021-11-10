@@ -1,5 +1,9 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -15,7 +19,9 @@ public class Account {
     @NotNull
     private String username;
     @NotNull
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     @Transient
     private String passwordConfirmation;
     private Date createdAt;
@@ -23,6 +29,7 @@ public class Account {
 
     @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
     @JoinColumn(name = "employee_id")
+    @JsonIgnore
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -30,6 +37,11 @@ public class Account {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    public Account(String username, String password, Date dateOfBirth) {
+        this.username = username;
+        this.password = password;
+    }
 
     @PrePersist
     protected void onCreate(){

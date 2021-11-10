@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,16 +23,12 @@ public class AccountService {
     @Autowired
     RoleRepository rRepo;
 
-    // Register candidate account and hash their password
-    public Account registerCandidateAccount(Account account) {
-        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
-        Set<Role> roles = account.getRoles();
-        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
-        account.setRoles(roles);
-        Employee e = new Employee();
-        account.setEmployee(e);
-        return aRepo.save(account);
+    // Returns all the accounts
+    public List<Account> allAccounts() {
+        return aRepo.findAll();
     }
+
+    // Register candidate account and hash their password
     public Account registerCandidateAccount(Account account, Employee employee) {
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         Set<Role> roles = account.getRoles();
@@ -41,11 +38,11 @@ public class AccountService {
         return aRepo.save(account);
     }
 
-    // Register candidate account and hash their password
+    // Register candidate account without personal data (name & dob)
     public Account registerEmployeeAccount(Account account) {
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         Set<Role> roles = account.getRoles();
-        roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
         Employee e = new Employee();
         account.setEmployee(e);
@@ -112,5 +109,9 @@ public class AccountService {
             return null;
         }
         return acc;
+    }
+    // Delete an employee
+    public void deleteAccount(Long id) {
+        this.aRepo.deleteById(id);
     }
 }

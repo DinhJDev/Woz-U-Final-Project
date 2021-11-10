@@ -1,8 +1,12 @@
 package com.wozu.hris.repositories;
 
+import com.wozu.hris.models.Department;
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +18,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String firstName, String lastName);
 
+    List<Employee> findByAccountRolesName(ERole eRole);
+
+    List<Employee> findByAccountRolesNameNot(ERole eRole);
+
     Optional<Employee> findByAccountUsernameIgnoreCase(String username);
+
+    List<Employee> findByDepartmentEmployeeDepartment(Department department);
+
+    List<Employee> findByAccountRolesContaining(ERole eRole);
 }

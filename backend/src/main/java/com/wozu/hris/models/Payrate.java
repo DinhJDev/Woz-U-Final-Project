@@ -41,9 +41,6 @@ public class Payrate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long employee_id;
-
     private Double hourlyRate;
     private Double salary;
     private Date effectiveDate;
@@ -96,14 +93,6 @@ public class Payrate {
         this.id = id;
     }
 
-    public Long getEmployee_id() {
-        return employee_id;
-    }
-
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
-    }
-
     public Double getHourlyRate() {
         return hourlyRate;
     }
@@ -142,5 +131,9 @@ public class Payrate {
 
     public Date getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 }

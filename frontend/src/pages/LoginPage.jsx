@@ -7,12 +7,12 @@ import LoginForm from "../components/LoginForm";
 
 function LoginPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <LoginForm />
       <Footer />
-    </div>
+    </>
   );
 }
 
