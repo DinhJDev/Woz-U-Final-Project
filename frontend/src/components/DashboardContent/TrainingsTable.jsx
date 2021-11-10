@@ -1,5 +1,4 @@
 import { MDBDataTableV5 } from "mdbreact";
-import PayrollsService from "../../services/PayrollsService";
 import React, { Component } from "react";
 import unformatDate from "../../utils/unformatDate";
 import TrainingsService from "../../services/TrainingsService";
@@ -56,6 +55,7 @@ class TrainingsTable extends Component {
       showUpdateModal: false,
       showDeleteModal: false,
     };
+
     this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
     this.updatedTrainingName = this.updatedTrainingName.bind(this);
     this.updatedTrainingDescription =
