@@ -25,4 +25,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByAccountUsernameIgnoreCase(String username);
 
     List<Employee> findByDepartmentEmployeeDepartment(Department department);
+
+    List<Employee> findByAccountRolesContaining(ERole eRole);
 }

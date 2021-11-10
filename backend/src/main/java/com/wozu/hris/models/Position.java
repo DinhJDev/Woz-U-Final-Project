@@ -18,7 +18,6 @@ public class Position {
     private Long id;
     @NotNull
     private String name;
-    @NotNull
     private Date createdAt;
     private Date updatedAt;
 
