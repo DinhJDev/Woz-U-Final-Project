@@ -1,6 +1,7 @@
 package com.wozu.hris.controllers;
 
 import com.wozu.hris.models.Training;
+import com.wozu.hris.payload.request.TrainingRequest;
 import com.wozu.hris.payload.response.MessageResponse;
 import com.wozu.hris.repositories.TrainingRepository;
 import com.wozu.hris.services.TrainingService;
@@ -40,8 +41,6 @@ public class TrainingsController {
         }
     }
 
-  
-
     // get training by id rest api
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @GetMapping("/trainings/{id}")
@@ -52,8 +51,11 @@ public class TrainingsController {
 
     // create training
     @PostMapping("/create")
-    public ResponseEntity<?> createTraining(@RequestBody Training trainingDetails) {
-        trainingService.createTraining(trainingDetails);
+    public ResponseEntity<?> createTraining(@RequestBody TrainingRequest trainingDetails) {
+        Training training = new Training();
+        training.setTrainingName(trainingDetails.getTrainingName());
+        training.setDescription(trainingDetails.getDescription());
+        trainingService.createTraining(training);
         return ResponseEntity.ok(new MessageResponse(trainingDetails.getTrainingName() + " created."));
     }
 
