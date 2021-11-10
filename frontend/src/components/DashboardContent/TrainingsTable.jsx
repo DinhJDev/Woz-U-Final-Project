@@ -54,23 +54,14 @@ class TrainingsTable extends Component {
       updatedTrainingName: "",
       updatedTrainingDescription: "",
       showUpdateModal: false,
+      showDeleteModal: false,
     };
     this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
     this.updatedTrainingName = this.updatedTrainingName.bind(this);
     this.updatedTrainingDescription =
       this.updatedTrainingDescription.bind(this);
-  }
-
-  // this is to removes a training item within the delete training item end point. we are passing the training item id here
-
-  deleteTraining(id) {
-    TrainingsService.deleteTraining(id).then((res) => {
-      this.setState({
-        trainings: this.state.trainings.filter(
-          (training) => training.id !== id
-        ),
-      });
-    });
+    this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this);
+    this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this);
   }
 
   // update input function: this are the funciton that will captures every change made to the inputs withint he update training item modal
@@ -132,6 +123,31 @@ class TrainingsTable extends Component {
   closeUpdateTrainingModal() {
     this.setState({
       showUpdateModal: false,
+    });
+  }
+
+  openDeleteTrainingModal() {
+    this.setState({
+      showDeleteModal: true,
+    });
+  }
+
+  closeDeleteTrainingModal() {
+    this.setState({
+      showDeleteModal: false,
+    });
+  }
+
+  // this is to removes a training item within the delete training item end point. we are passing the training item id here
+
+  async deleteTraining(id, e) {
+    e.preventDefault();
+    TrainingsService.deleteTraining(id).then((res) => {
+      this.setState({
+        trainings: this.state.trainings.filter(
+          (training) => training.id !== id
+        ),
+      });
     });
   }
 
@@ -226,7 +242,16 @@ class TrainingsTable extends Component {
               onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id sot hat the modal has access to it's attributes
             ></button>
           ),
-          delete: <button className="row-expand-button bx bx-trash"></button>,
+          delete: (
+            <button
+              className="row-expand-button bx bx-trash"
+              onClick={() =>
+                this.setState({
+                  showDeleteModal: true,
+                })
+              }
+            ></button>
+          ),
         })),
       ],
     };
@@ -322,6 +347,7 @@ Close
               <textarea
                 type="name"
                 maxLength="400"
+                rows="10"
                 name="name"
                 placeholder="Enter new training description"
                 className="input password"
@@ -355,12 +381,51 @@ Close
     );
   }
 
+  deleteModal() {
+    const { chosenTraining } = this.state;
+    return (
+      <Modal
+        show={this.state.showDeleteModal}
+        handleclose={this.closeDeleteTrainingModal}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <ModalBody className="modal-main">
+          <h2> Are you sure you want to delete this?</h2>
+          <h4>{chosenTraining.trainingName}</h4>
+          <button
+            to="/"
+            size="lg"
+            maxHeight="300px"
+            type="submit"
+            onClick={(e) => {
+              this.deleteTraining(chosenTraining.id, e);
+              this.closeDeleteTrainingModal();
+            }}
+            className="add-data-button middle-button"
+          >
+            Delete
+          </button>
+          <button
+            className="modal-button-close add-data-button"
+            type="button"
+            onClick={() => this.closeDeleteTrainingModal()}
+          >
+            Close
+          </button>
+        </ModalBody>
+      </Modal>
+    );
+  }
+
   render() {
     return (
       <div className="white-box full-width zero-margin-box">
         <div className="box-padding">{this.createTable()}</div>
         {this.updateModal()}
         {this.createModal()}
+        {this.deleteModal()}
       </div>
     );
   }
