@@ -29,6 +29,9 @@ function AdministratorOverview() {
             <span className="content-tag blue-tag">Candidates Data</span>
             <br />
             <br />
+            <RandomChart />
+            <br />
+            <br />
             <CandidatesDataChart />
           </div>
         </div>

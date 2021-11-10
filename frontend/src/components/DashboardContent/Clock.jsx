@@ -95,13 +95,3 @@ class Clock extends Component {
 }
 
 export default Clock;
-
-/**
- * <div className="ui-clock">
-        <div id="day">{days[date_now.getDay()]}</div>
-        <div className="wrapper">
-          <div id="time">{hr + ":" + min + ":" + sec}</div>
-          <div id="midday">{middayVal}</div>
-        </div>
-      </div>
- */

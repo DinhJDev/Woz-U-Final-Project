@@ -6,6 +6,7 @@ import unformatDate from "../utils/unformatDate";
 import Modal from "react-bootstrap/Modal";
 import { ModalBody } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import PositionService from "../services/PositionService";
 
 import "@vaadin/vaadin-checkbox/vaadin-checkbox.js";
 import "@vaadin/vaadin-list-box/src/vaadin-list-box.js";
@@ -15,6 +16,12 @@ class EmployeesTable extends Component {
     super(props);
 
     this.state = {
+      positionName: "",
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: "",
+      dateOfBirth: "",
       chosenEmployee: [],
       currentUser: [],
       employees: [],
@@ -72,13 +79,15 @@ class EmployeesTable extends Component {
       departmentsList: [],
       showViewModal: false,
     };
-    this.addEmployee = this.addEmployee.bind(this);
-    this.editEmployee = this.editEmployee.bind(this);
+    this.positionName = this.positionName.bind(this);
     this.deleteEmployee = this.deleteEmployee.bind(this);
     this.openAddEmployeeModal = this.openAddEmployeeModal.bind(this);
-    this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
     this.openViewEmployeeModal = this.openViewEmployeeModal.bind(this);
   }
+
+  positionName = (event) => {
+    this.setState({ positionName: event.target.value });
+  };
 
   async openViewEmployeeModal(id) {
     this.setState({
@@ -93,6 +102,44 @@ class EmployeesTable extends Component {
     console.log(chosenEmployee);
   }
 
+  async getCurrentBenefit(id) {
+    const chosenBenefit = await BenefitService.getBenefitById(id);
+    if (chosenBenefit.data) {
+      console.log(chosenBenefit.data);
+      return chosenBenefit.data;
+    }
+  }
+
+  validateForm() {
+    return this.state.positionName.length > 0;
+  }
+
+  async submitNewEmployee(e) {
+    e.preventDefault();
+
+    let accountObject = {
+      username: "",
+      password: "",
+      dob: "",
+    };
+
+    let employeeObject = {
+      firstname: this.state.positionName,
+      lastname: "",
+      account: accountObject,
+    };
+
+    EmployeeService.createEmployee(accountObject)
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data.message);
+        }
+      });
+  }
+
   closeViewEmployeeModal() {
     this.setState({
       showViewModal: false,
@@ -101,20 +148,6 @@ class EmployeesTable extends Component {
 
   openAddEmployeeModal(id) {
     console.log("ID is: " + id);
-  }
-
-  closeAddEmployeeModal() {}
-
-  addEmployee() {
-    this.props.history.push("/employees");
-  }
-
-  viewEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
-  }
-
-  editEmployee(id) {
-    this.props.history.push(`/employees/${id}`);
   }
 
   deleteEmployee(id) {
@@ -196,8 +229,6 @@ class EmployeesTable extends Component {
 
     return (
       <>
-        <button className="add-data-button">Add Employee</button>
-
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
@@ -207,7 +238,7 @@ class EmployeesTable extends Component {
     );
   }
 
-  createModal() {
+  updateModal() {
     const { chosenEmployee, benefits } = this.state;
 
     return (
@@ -333,12 +364,57 @@ class EmployeesTable extends Component {
     );
   }
 
+  createModal() {
+    return (
+      <>
+        <Modal
+          show={this.state.showCreateModal}
+          handleclose={this.closeCreateEmployeeModal}
+        >
+          <ModalBody className="modal-main">
+            <form>
+              <label className="label">Position Name</label>
+              <input
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter position name"
+                className="input password"
+                value={this.state.positionName}
+                onChange={this.positionName}
+              />
+              <button
+                type="submit"
+                onClick={(e) => {
+                  this.submitNewEmployee(e);
+                  this.closeCreateEmployeeModal();
+                }}
+                className="add-data-button middle-button"
+              >
+                Submit
+              </button>
+            </form>
+
+            <button
+              className="modal-button-close add-data-button"
+              type="button"
+              onClick={() => this.closeCreateEmployeeModal()}
+            >
+              Close
+            </button>
+          </ModalBody>
+        </Modal>
+      </>
+    );
+  }
+
   render() {
     const { showAddModal } = this.state;
     return (
       <>
         <div className="white-box white-box full-width zero-margin-box">
           <div className="box-padding">{this.createTable()}</div>
+          {this.updateModal()}
           {this.createModal()}
         </div>
       </>

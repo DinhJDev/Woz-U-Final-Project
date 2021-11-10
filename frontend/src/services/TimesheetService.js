@@ -1,19 +1,8 @@
 import axios from "axios";
 
 import AuthorizationHeader from "./AuthorizationHeader";
+import jwtToken from "./JwtToken";
 const TIMESHEET_API_BASE_URL = "http://localhost:8080/api/timesheet";
-
-const user = JSON.parse(localStorage.getItem("user"));
-
-async function TimesheetHeader() {
-  if (user && user.token) {
-    return {
-      Authorization: user.token,
-    };
-  } else {
-    return {};
-  }
-}
 
 class TimesheetService {
   async getAllTimesheets() {
@@ -41,7 +30,7 @@ class TimesheetService {
       TIMESHEET_API_BASE_URL + "/clockin",
       { data: "" },
       {
-        headers: await TimesheetHeader(),
+        headers: await jwtToken(),
       }
     );
   }
@@ -51,7 +40,7 @@ class TimesheetService {
       TIMESHEET_API_BASE_URL + "/clockout",
       { data: "" },
       {
-        headers: await TimesheetHeader(),
+        headers: await jwtToken(),
       }
     );
   }
