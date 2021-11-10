@@ -12,6 +12,7 @@ import com.wozu.hris.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -27,7 +28,6 @@ import java.util.*;
 
 public class ShellCommands {
 
-
     private AccountRepository aRepo;
 
     private InputReader inputReader;
@@ -40,13 +40,16 @@ public class ShellCommands {
 
     private RoleRepository rRepo;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo){
+    private PasswordEncoder bCryptPasswordEncoder;
+
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
         this.aService = aService;
         this.eService = eService;
         this.rRepo = rRepo;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public void clearConsole(){
@@ -193,8 +196,8 @@ public class ShellCommands {
         //Commands available to All Roles
         if(permLvl >= ERole.ROLE_CANDIDATE.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("commandKey", "commandDetails");
-            listedCommands.put("Candidate", commands);
+            //commands.put("commandKey", "commandDetails");
+            listedCommands.put("Level 0", commands);
         }
 
         //Commands available to Employee+ Roles
@@ -203,28 +206,29 @@ public class ShellCommands {
             commands.put("cIn", "Clock In");
             commands.put("cOut", "Clock Out");
             commands.put("update", "Update Information");
-            listedCommands.put("Employee", commands);
+            listedCommands.put("Level 1", commands);
         }
 
         //Commands available to Manager+ Roles
         if(permLvl >= ERole.ROLE_MANAGER.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("promote", "Promote Candidate Account to Employee");
-            listedCommands.put("Manager", commands);
+            commands.put("performance", "Add performance review to Employee");
+            listedCommands.put("Level 2", commands);
         }
 
         //Commands available to HR Role
         if(permLvl >= ERole.ROLE_HR.getID()){
             Map<String, String> commands = new HashMap<>();
-            commands.put("hPromote", "Advanced Promotion");
+            commands.put("promote", "Promote Employee with Account");
+            commands.put("edit", "Edit Employee");
             commands.put("deactivate", "Deactivate current Interface");
-            listedCommands.put("HR", commands);
+            listedCommands.put("Level 3", commands);
         }
 
         return listedCommands;
     }
 
-    public void updateItem(String type, String item, Account currentUser) throws ParseException {
+    public void updateItem(String type, String item, Account targetUser) throws ParseException {
         String newValue;
         if(item.equalsIgnoreCase("Date Of Birth")){
             newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
@@ -234,16 +238,19 @@ public class ShellCommands {
             newValue = inputReader.prompt(String.format("Update %s", item));
         }
 
+        if(!inputReader.confirmationPrompt(String.format("Confirm new %s: %s", item, newValue))){
+            return;
+        }
 
-        Employee currentEmployee = currentUser.getEmployee();
+        Employee currentEmployee = targetUser.getEmployee();
 
         if(type.equalsIgnoreCase("Account Information")){
             if(item.equalsIgnoreCase("Username")){
-                currentUser.setUsername(newValue);
+                targetUser.setUsername(newValue);
             }else{
-                currentUser.setPassword(newValue);
+                targetUser.setPassword(bCryptPasswordEncoder.encode(newValue));
             }
-            aRepo.save(currentUser);
+            aRepo.save(targetUser);
         }else{
             if(item.equalsIgnoreCase("First Name")){
                 currentEmployee.setFirstName(newValue);
@@ -251,12 +258,20 @@ public class ShellCommands {
                 currentEmployee.setLastName(newValue);
             }else if(item.equalsIgnoreCase("Date Of Birth")){
                 try {
-                    SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy", Locale.ENGLISH);
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
                     Date newDate = format.parse(newValue);
                     currentEmployee.setDateOfBirth(newDate);
                 }catch(ParseException e){}
-            }else{
-                // Benefits to be done later.
+            }else if(item.equalsIgnoreCase("Payrate")){
+
+            }else if(item.equalsIgnoreCase("Department")){
+
+            }else if(item.equalsIgnoreCase("Position")){
+
+            }else if(item.equalsIgnoreCase("Training")){
+
+            }else if(item.equalsIgnoreCase("Benefits")){
+
             }
             eService.updateEmployee(currentEmployee.getId(), currentEmployee);
         }
