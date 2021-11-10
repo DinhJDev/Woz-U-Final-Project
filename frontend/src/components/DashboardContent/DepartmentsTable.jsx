@@ -70,7 +70,7 @@ class DepartmentsTable extends Component {
   }
 
   async componentDidMount() {
-    await DepartmentService.getAllDepartments()   
+    await DepartmentService.getAllDepartment()   
       .then((res) => {
         const data = JSON.stringify(res.data);    // res.data is the literal data being returned from the API
         const parse = JSON.parse(data);

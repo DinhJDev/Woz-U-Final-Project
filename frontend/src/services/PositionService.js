@@ -11,7 +11,10 @@ class PositionService {
   }
 
   async createPosition(position) {
-    return axios.post(POSITION_API_BASE_URL + "/positions", position);
+    return axios.post(POSITION_API_BASE_URL + "/positions", position, {
+      headers: await AuthorizationHeader(),
+    }); 
+    
   }
 
   async getPositionById(positionId) {

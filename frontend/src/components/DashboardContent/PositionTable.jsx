@@ -125,7 +125,7 @@ closeCreatePositionModal(){
         e.preventDefault();
     
         let positionObject = {
-          positionName: this.state.positionName     // In Position.Java in INTELLIJ It is called "name" so this HAS to be called name. 
+          name: this.state.positionName     // In Position.Java in INTELLIJ It is called "name" so this HAS to be called name. 
         };
     
         PositionService.createPosition(positionObject)  // linked to IntelliJ here in .createPosition > PositionService > IntelliJ

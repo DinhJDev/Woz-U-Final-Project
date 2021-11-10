@@ -1,5 +1,5 @@
 import React from "react";
-import TableExample from "./TableExample";
+
 import ReactTable from "./ReactTable";
 import EmployeesTable from "../EmployeesTable";
 import AccountsTable from "./AccountsTable";

@@ -83,6 +83,15 @@ class TrainingsTable extends Component {
     this.setState({ updatedTrainingDescription: event.target.value });
   };
 
+  trainingName = (event) => {
+    this.setState({ trainingName: event.target.value });
+  };
+
+  trainingDescription = (event) => {
+    this.setState({ trainingDescription: event.target.value });
+  };
+
+
   // this lets us run a function where we pass a parameter for the training item id and pass it throught he update end point
 
   async updatedTrainingItem(id, e) {
@@ -236,6 +245,56 @@ class TrainingsTable extends Component {
     );
   }
 
+  createModal() {
+    return(
+      <>
+      <Modal
+      show={this.state.showCreateModal}
+      handleclose={this.closeCreateTrainingModal}
+      >
+<ModalBody className="modal-main">
+  <form>
+<label className="label">Training Name</label>
+<input
+type="name"
+maxLength="256"
+name="name"
+placeholder="Enter the training name"
+className="input training"
+value={this.state.trainingName}
+onChange={this.trainingName}
+/>
+<label className="label">Training Description</label>
+<input
+type="name"
+maxLength="256"
+name="name"
+placeholder="Enter the training name"
+className="input training"
+value={this.state.trainingDescription}
+onChange={this.trainingDescription}
+/>
+<button type="submit" onClick={(e)=>{
+                      this.submitNewTraining(e)
+                      this.closeCreateTrainingModal()
+                  }}
+                  className="add-data-button middle-button"
+                  >Submit</button>
+</form>
+<button
+className="modal-button-close add-data-button"
+type="button"
+onClick={() => this.closeCreateTrainingModal()}
+>
+Close
+</button>
+</ModalBody>
+
+      </Modal>
+      </>
+    );
+  }
+
   updateModal() {
     const { chosenTraining } = this.state;
     return (
@@ -301,6 +360,7 @@ class TrainingsTable extends Component {
       <div className="white-box full-width zero-margin-box">
         <div className="box-padding">{this.createTable()}</div>
         {this.updateModal()}
+        {this.createModal()}
       </div>
     );
   }
