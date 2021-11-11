@@ -395,7 +395,7 @@ class BenefitTable extends Component {
         },
         {
           label: "Benefit",
-          field: "benefit_name",
+          field: "name",
           width: "100%",
         },
         {
@@ -451,10 +451,10 @@ class BenefitTable extends Component {
   async updatedBenefitItem(id, e) {
     e.preventDefault();
     const benefitDetails = {
-      benefitName:
+      name:
         this.state.updatedBenefitName.length > 0 // Is the number of characters greater then 0? then I am going to set it to the updatedBenefitName otherwise I am going to set it to the benefitName oir the original one.
           ? this.state.updatedBenefitName
-          : this.state.chosenBenefit.benefitName,
+          : this.state.chosenBenefit.name,
       description:
         this.state.updatedBenefitDescription.length > 0 // NEW
           ? this.state.updatedBenefitDescription
@@ -521,7 +521,7 @@ class BenefitTable extends Component {
         parse.forEach((benefit) => {
           benefitsList.push({
             id: benefit.id,
-            benefit_name: benefit.benefitName,
+            name: benefit.name,
             description: benefit.description,
             createdAt: unformatDate(benefit.createdAt),
             updatedAt: unformatDate(benefit.updatedAt),
@@ -562,7 +562,7 @@ class BenefitTable extends Component {
     e.preventDefault();
 
     let benefitObject = {
-      benefitName: this.state.benefitName,
+      name: this.state.benefitName,
       description: this.state.benefitDescription,
     };
 
