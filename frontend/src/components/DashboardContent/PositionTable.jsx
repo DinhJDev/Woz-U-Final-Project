@@ -53,6 +53,7 @@ class PositionsTable extends Component {
       chosenPosition: [],
       updatedPositionName: "",
       showUpdateModal: false,
+      showDeleteModal: false,
     
     };
     // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
@@ -60,7 +61,8 @@ class PositionsTable extends Component {
     // this.deleteAccount = this.deleteAccount.bind(this);
     this.openUpdatePositionModal = this.openUpdatePositionModal.bind(this);
     this.updatedPositionName = this.updatedPositionName.bind(this);
-
+    this.closeDeletePositionModal = this.closeDeletePositionModal(this);
+    this.openDeletePositionModal = this.openDeletePositionModal(this);
   }
 
   updatedPositionName = (event) => {
@@ -115,6 +117,38 @@ class PositionsTable extends Component {
   closeUpdatePositionModal() {
     this.setState({
       showUpdateModal: false,
+    });
+  }
+
+  async openDeletePositionModal(id) {                                                           // NEW @@@
+    this.setState({
+      showDeleteModal: true,
+    });
+    const chosenPosition = await PositionService.getPositionById(id);
+    if (chosenPosition.data) {
+      this.setState({
+        chosenPosition: chosenPosition.data, // THis pushes the parameters in
+      });
+    }
+    console.log(this.state.chosenPosition.id); // NEW
+  }
+
+  closeDeletePositionModal() {                                                              // NEW @@@
+    this.setState({
+      showDeleteModal: false,
+    });
+  }
+
+  // this is to removes a position item within the delete position item end point. we are passing the position item id here
+
+  async deletePosition(id, e) {                                                     // NEW @@@
+    e.preventDefault();
+    PositionService.deletePosition(id).then((res) => {
+      this.setState({
+        positions: this.state.positions.filter(
+          (position) => position.id !== id                                      
+        ),
+      });
     });
   }
 
@@ -209,7 +243,9 @@ closeCreatePositionModal(){
           onClick={() => this.openUpdatePositionModal(position.id)}
           ></button>
           ),
-          delete:  <button className="row-expand-button bx bx-trash"></button>,
+          delete: ( <button className="row-expand-button bx bx-trash"
+          onClick={() => this.openDeletePositionModal(position.id)}
+          ></button>),
         })),
       ],
     };
@@ -319,12 +355,50 @@ updateModal() {
   );
 }
 
+deleteModal() {                                                                       // NEW @@@        Line 412. String Interpulation. Can put strings and variables.  ' ' = String Interpulation. Which means you can put strings and variables. 
+  const { chosenPosition } = this.state;
+  return (
+    <Modal
+      show={this.state.showDeleteModal}
+      handleclose={this.closeDeletePositionModal}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered  
+    >                                                                                         
+      <ModalBody className="modal-main">
+        <h3> Now deleting: {`\t` + chosenPosition.positionName}</h3>                    
+        <button
+          to="/"
+          size="lg"
+          maxHeight="300px"
+          type="submit"
+          onClick={(e) => {
+            this.deletePosition(chosenPosition.id, e);
+            this.closeDeletePositionModal();
+          }}
+          className="add-data-button middle-button"
+        >
+          Delete
+        </button>
+        <button
+          className="modal-button-close add-data-button"
+          type="button"
+          onClick={() => this.closeDeletePositionModal()}
+        >
+          Close
+        </button>
+      </ModalBody>
+    </Modal>
+  );
+}
+
   render() {
     return (
       <div className="white-box full-width zero-margin-box">    
         <div className="box-padding">{this.createTable()}</div>
         {this.createModal()}       
-        {this.updateModal()}                                            
+        {this.updateModal()}      
+        {this.deleteModal()}                                      
       </div>
     );
   }

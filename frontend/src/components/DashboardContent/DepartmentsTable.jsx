@@ -57,11 +57,14 @@ class DepartmentsTable extends Component {
       updatedDepartmentManager: null,
       updatedDepartmentName: "",
       showUpdateModal: false,
+      showDeleteModal: false,
     };
     this.updatedDepartmentName = this.updatedDepartmentName.bind(this);
     // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
     // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
     // this.deleteAccount = this.deleteAccount.bind(this);
+    this.closeDeleteDepartmentModal = this.closeDeleteDepartmentModal.bind(this);           
+    this.openDeleteDepartmentModal = this.openDeleteDepartmentModal.bind(this);  
   }
 
   updatedDepartmentManager = (event) => {
@@ -95,12 +98,32 @@ class DepartmentsTable extends Component {
     });
   }
 
-  deleteDepartment(id) {
+  async openDeleteDepartmentModal(id) {                                                           // NEW @@@
+    this.setState({
+      showDeleteModal: true,
+    });
+    const chosenDepartment = await DepartmentService.getDepartmentById(id);
+    if (chosenDepartment.data) {
+      this.setState({
+        chosenDepartment: chosenDepartment.data, // THis pushes the parameters in
+      });
+    }
+    console.log(this.state.chosenDepartment.id); // NEW
+  }
+
+  closeDeleteDepartmentModal() {                                                              // NEW @@@
+    this.setState({
+      showDeleteModal: false,
+    });
+  }
+
+
+  async deleteDepartment(id, e) {                                                     // NEW @@@
+    e.preventDefault();
     DepartmentService.deleteDepartment(id).then((res) => {
-      // Using DepartmentService to access the deleteDepartment API
       this.setState({
         departments: this.state.departments.filter(
-          (department) => department.id !== id
+          (department) => department.id !== id                                      
         ),
       });
     });
@@ -206,13 +229,13 @@ class DepartmentsTable extends Component {
           expand: (
             <button
               className="row-expand-button bx bx-expand"
-              onClick={() => this.openUpdateDepartmentModal(department.id)} //passing the training item id sot hat the modal has access to it's attributes
+              onClick={() => this.openUpdateDepartmentModal(department.id)} //passing the department item id sot hat the modal has access to it's attributes
             ></button>
           ),
           delete: (
             <button
               className="row-expand-button bx bx-trash"
-              onClick={() => this.setState({})}
+              onClick={() => this.openDeleteDepartmentModal(department.id)}
             ></button>
           ),
         })),
@@ -333,12 +356,50 @@ class DepartmentsTable extends Component {
     );
   }
 
+  deleteModal() {                                                                       // NEW @@@        Line 412. String Interpulation. Can put strings and variables.  ' ' = String Interpulation. Which means you can put strings and variables. 
+    const { chosenDepartment } = this.state;
+    return (
+      <Modal
+        show={this.state.showDeleteModal}
+        handleclose={this.closeDeleteDepartmentModal}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered  
+      >                                                                                         
+        <ModalBody className="modal-main">
+          <h3> Now deleting: {`\t` + chosenDepartment.departmentName}</h3>                    
+          <button
+            to="/"
+            size="lg"
+            maxHeight="300px"
+            type="submit"
+            onClick={(e) => {
+              this.deleteDepartment(chosenDepartment.id, e);
+              this.closeDeleteDepartmentModal();
+            }}
+            className="add-data-button middle-button"
+          >
+            Delete
+          </button>
+          <button
+            className="modal-button-close add-data-button"
+            type="button"
+            onClick={() => this.closeDeleteDepartmentModal()}
+          >
+            Close
+          </button>
+        </ModalBody>
+      </Modal>
+    );
+  }
+
   render() {
     return (
       <div className="white-box full-width zero-margin-box">
         <div className="box-padding">{this.createTable()}</div>
         {this.createModal()}
         {this.updateModal()}
+        {this.deleteModal()}
       </div>
     );
   }
