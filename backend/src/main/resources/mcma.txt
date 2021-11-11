@@ -1,0 +1,5 @@
+McMillan and Associates have hired our development team to design, develop, and implement an HRIS for their respected company.
+The information system will support the organization’s HR division, in support of the organization as a whole.
+This HRIS is the online solution to help McMillan an Associates to collect and store data on their employees.
+Included in this project is an applicant tracking system, payroll, benefits, time & attendance, training, performance, management, and employee self-service.
+This system will also allow for the management of all employee information.

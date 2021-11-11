@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -37,9 +39,11 @@ public class Department {
     //relationships
     @OneToOne
     @JoinColumn(name = "manager_id")
+    @JsonIgnore
     private Employee manager;
 
     @OneToMany(mappedBy = "department")
+    @JsonIgnore
     private List<DepartmentEmployee> employees;
 
     //getters
@@ -61,6 +65,13 @@ public class Department {
         return updatedAt;
     }
 
+    public Employee getManager() {
+        return manager;
+    }
+
+    public List<DepartmentEmployee> getEmployees() {
+        return employees;
+    }
 
     //setters
 
@@ -79,5 +90,13 @@ public class Department {
 
     public void setUpdatedAt(Date u) {
         this.updatedAt = u;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    public void setEmployees(List<DepartmentEmployee> employees) {
+        this.employees = employees;
     }
 }

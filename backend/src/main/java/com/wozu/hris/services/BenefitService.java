@@ -1,6 +1,7 @@
 package com.wozu.hris.services;
 
 import com.wozu.hris.models.Benefit;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.repositories.BenefitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,4 +81,27 @@ public class BenefitService {
     public void deleteBenefit(Long benefitID) {
         this.benefitRepository.deleteById(benefitID);
     }
+
+    /*----------------------------------------------------------------
+    Custom Queries
+    ----------------------------------------------------------------*/
+
+    public Benefit findByName(String name){
+        Optional<Benefit> optional = benefitRepository.findByName(name);
+        if(optional.isPresent()){
+            return optional.get();
+        }else{
+            return null;
+        }
+    }
+
+    public Boolean existsByEmployee(Employee e){
+        return e.getBenefit() != null ? true : false;
+    }
+
+    public List<Employee> findAllById(Long Id){
+        return benefitRepository.findAllById(Id);
+    }
+
+
 }

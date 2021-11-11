@@ -1,7 +1,10 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +50,7 @@ public class Employee {
     private List<Performance> performances;
 
     @OneToOne(mappedBy = "manager")
+    @JsonIgnore
     private Department mDepartment;
 
     @OneToMany(mappedBy = "employee")

@@ -138,6 +138,12 @@ input:is([type="hidden"], [type="image"], [type="file"]) {
   display: block;
 }
 
+@media screen and (max-width: 767px) {
+  div.utility-page-content-password.full-form {
+    margin-top: 0 !important;
+  }
+}
+
 @media screen and (min-width: 1440px) {
   .image.feature-single.small {
     max-width: 100%;

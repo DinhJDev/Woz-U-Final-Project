@@ -59,10 +59,10 @@ body.open-nav #mobile-nav-button:before {
     display: none;
   }
 }
-
+/*
 body.open-nav.header-main-wrapper {
   z-index: var(--tooltip-zindex);
-}
+}*/
 
 body.open-nav .app-nav-overlay {
   overflow: visible;
@@ -72,6 +72,7 @@ body.open-nav .app-nav-overlay {
   position: fixed;
   left: 0;
   right: 0;
+  z-index: -1;
 }
 
 .header-navigation.mobile-navigation {
@@ -132,11 +133,6 @@ body.open-nav .mobile-nav-menu {
   margin-right: auto;
   margin-left: auto;
   background-color: transparent;
-}
-
-.app-nav {
-  position: relative;
-  z-index: 1000;
 }
 
 .header-main-wrapper {
@@ -292,6 +288,10 @@ foreignObject {
 }
 
 /**/
+
+.app-nav-overlay {
+  margin-top: -147px;
+}
 
 .app-nav[data-animation="over-right"] .app-nav-overlay,
 .app-nav[data-animation="over-right"] [data-nav-menu-open] {

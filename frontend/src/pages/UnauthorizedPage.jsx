@@ -7,12 +7,12 @@ import Unauthorized from "../components/Unauthorized";
 
 function UnauthorizedPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <Unauthorized />
       <Footer />
-    </div>
+    </>
   );
 }
 

@@ -22,6 +22,9 @@ public class ShellResult {
     @Value("${shell.out.error}")
     public String errorColor;
 
+    @Value("${shell.out.bright}")
+    public String brightColor;
+
     private Terminal terminal;
 
     public ShellResult(Terminal terminal) {
@@ -67,6 +70,8 @@ public class ShellResult {
     public void printError(String message){
         print(message, PromptColor.valueOf(errorColor));
     }
+
+    public void printBright(String message){print(message, PromptColor.valueOf(brightColor));}
 
     public void print(String message, PromptColor color){
         String toPrint = message;

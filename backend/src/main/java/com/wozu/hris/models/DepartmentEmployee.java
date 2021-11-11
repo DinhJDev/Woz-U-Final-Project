@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +19,55 @@ public class DepartmentEmployee {
     private Department department;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="employee_id")
     private Employee employee;
+
+    public DepartmentEmployee(){
+
+    }
+
+    public DepartmentEmployee(Department department, Employee employee) {
+        this.department = department;
+        this.employee = employee;
+        this.position = null;
+    }
+
+    public DepartmentEmployee(Department department, Employee employee, Position position) {
+        this.department = department;
+        this.employee = employee;
+        this.position = position;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }

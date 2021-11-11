@@ -7,12 +7,12 @@ import RegistrationForm from "../components/RegistrationForm";
 
 function RegistrationPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <RegistrationForm />
       <Footer />
-    </div>
+    </>
   );
 }
 

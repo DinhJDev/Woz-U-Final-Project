@@ -5,6 +5,7 @@ import com.wozu.hris.cli_resources.InputReader;
 import com.wozu.hris.cli_resources.ShellCommands;
 import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.*;
+import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
 import com.wozu.hris.services.AccountService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.*;
 import org.springframework.boot.Banner;
@@ -25,6 +27,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +46,7 @@ public class HrisApplication {
 	private static boolean active = true;
 	private static LinkedHashMap<String, Map<String, String>> list = null;
 	private static int permissionLevel = 0;
+	private static String stringRole = "";
 
 	public static void main(String[] args) {
 		// Creating Console Clearing Process
@@ -91,6 +97,10 @@ public class HrisApplication {
 	public static boolean getDeveloping(){
 		return developing;
 	}
+
+	public static void setStringRole(String role){stringRole = role;}
+
+	public static String getStringRole(){return stringRole;}
 }
 
 @ShellComponent
@@ -112,6 +122,10 @@ class DevelopmentCommands{
 	EmployeeService eService;
 	@Autowired
 	TimesheetRepository tRepo;
+	@Autowired
+	PasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	AccountRepository aRepo;
 
 	public Availability developmentCheck(){
 		return HrisApplication.getDeveloping() ? Availability.available() : Availability.unavailable("Not in Development Mode");
@@ -167,6 +181,20 @@ class DevelopmentCommands{
 		}
 	}
 
+	@ShellMethodAvailability("developmentCheck")
+	@ShellMethod(key="-ora", value="Override Account by ID")
+	public void overrideAccount(Long id){
+		Account targetAccount = aService.findAccountById(id);
+		String newValue = inputReader.prompt("Override Password");
+		if(newValue.length() > 5){
+			targetAccount.setPassword(bCryptPasswordEncoder.encode(newValue));
+			aRepo.save(targetAccount);
+			shellResult.printSuccess("Account Override Successful!");
+		}else{
+			shellResult.printError("Password must be greater than 5 Characters!");
+		}
+	}
+
 }
 
 @ShellComponent
@@ -196,12 +224,13 @@ class BasicCommands{
 	}
 
 	@ShellMethodAvailability("currentSessionOut")
-	@ShellMethod("Sign Out Of Session")
+	@ShellMethod(key="signOut", value="Sign Out Of Session")
 	public void signOut(){
 		HrisApplication.setCurrentUser(null);
 		HrisApplication.setPermissionLevel(0);
 		shellCommands.clearConsole();
 		CustomPromptProvider.changePrompt("disconnected");
+		connect();
 	}
 
 	@ShellMethodAvailability("currentSessionIn")
@@ -215,7 +244,7 @@ class BasicCommands{
 				options.put("A", "Sign In");
 				options.put("B", "Register");
 				String selection = inputReader.listInput(
-						"Welcome to McMilan and Associates HRIS",
+						"Welcome to McMillian  and Associates HRIS",
 						"Please select an option [] provided above.",
 						options, // HashMap
 						true);
@@ -233,12 +262,19 @@ class BasicCommands{
 						shellResult.printSuccess("Successfully Logged In!");
 						HrisApplication.setCurrentUser(possibleUser);
 						HrisApplication.setPermissionLevel(shellCommands.getPermissionLevel(possibleUser.getRoles()));
+						HrisApplication.setStringRole(shellCommands.getPermissionString(possibleUser.getRoles()));
+
 
 						CustomPromptProvider.changePrompt("connected");
 
 						shellCommands.clearConsole();
 						shellCommands.displayBanner();
 						shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+						if(HrisApplication.getPermissionLevel() > 0){
+							shellResult.printBright(String.format("Welcome %s %s", HrisApplication.getStringRole(), possibleUser.getEmployee().getFirstName()));
+						}else{
+							shellResult.printBright(String.format("Welcome %s %s!", "Candidate", possibleUser.getUsername()));
+						}
 
 					}else{
 						shellResult.printError("Error, try again!");
@@ -253,10 +289,12 @@ class BasicCommands{
 						shellResult.printSuccess("Successfully Registered Candidate Account!");
 						HrisApplication.setCurrentUser(user);
 						HrisApplication.setPermissionLevel(shellCommands.getPermissionLevel(user.getRoles()));
+						HrisApplication.setStringRole("Candidate");
 						CustomPromptProvider.changePrompt("connected");
 						shellCommands.clearConsole();
 						shellCommands.displayBanner();
 						shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+						shellResult.printBright(String.format("Welcome %s %s!", "Candidate", user.getUsername()));
 					}
 				}
 			}
@@ -311,11 +349,32 @@ class CandidateCommands{
 		return Availability.unavailable("Invalid Permission Level");
 	}
 
-	@ShellMethod("Candidate Stuff")
+	@ShellMethod(key="view", value="View Company Information")
 	@ShellMethodAvailability("candidateAvailability")
-	public String candidateMethod(){
-		return shellResult.getSuccessMessage("I'm a Candidate!");
+	public void candidateMethod(){
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		try{
+			//Paths.get("backend", "src", "main", "resources", "banner.txt"))
+			String filepath = new File("").getAbsolutePath();
+			BufferedReader read = new BufferedReader(new FileReader(filepath.concat("/src/main/resources/mcma.txt")));
+			String line;
+			while((line = read.readLine()) != null){
+				shellResult.printBright(line);
+			}
+		}catch(IOException e){
+			shellResult.printError(e.toString());
+		}
+		do {
+			if (inputReader.confirmationPrompt("Done reading")) {
+				shellCommands.clearConsole();
+				shellCommands.displayBanner();
+				shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+				break;
+			}
+		}while(true);
 	}
+
 }
 
 @ShellComponent
@@ -484,6 +543,10 @@ class EmployeeCommands {
 		}
 
 	}
+
+	@ShellMethod(key="info", value="View Employee Information")
+	@ShellMethodAvailability("employeeAvailability")
+	public void info(){}
 }
 
 @ShellComponent
@@ -566,6 +629,10 @@ class ManagerCommands{
 
 	}
 
+	@ShellMethod(key="view-performance", value="View performance review of Employee")
+	@ShellMethodAvailability("managerAvailability")
+	public void viewPerformance(){}
+
 }
 
 @ShellComponent
@@ -625,6 +692,7 @@ class HRCommands{
 	@ShellMethod(key="promote", value="Advanced Promotion")
 	@ShellMethodAvailability("hrAvailability")
 	public void hPromote(){
+		shellCommands.clearConsole();
 		shellResult.printInfo("Promote Account");
 		String type = null;
 		String target = null;
@@ -648,6 +716,8 @@ class HRCommands{
 			target = inputReader.prompt(String.format("Input %s", type));
 		}while(target == null);
 
+		shellCommands.clearConsole();
+
 		do{
 			role = roles.get(inputReader.listInput("New Role",
 					"Please select an option [] provided above.",
@@ -656,8 +726,14 @@ class HRCommands{
 		}while(role == null);
 
 		if(shellCommands.promoteAccount(type, target, role)){
+			shellCommands.clearConsole();
+			shellCommands.displayBanner();
+			shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
 			shellResult.printSuccess("Account Promoted Successfully!");
 		}else{
+			shellCommands.clearConsole();
+			shellCommands.displayBanner();
+			shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
 			shellResult.printError("Failed to Promote Account!");
 		}
 	}
@@ -705,15 +781,26 @@ class HRCommands{
 
 			if(type.equals("A")){
 				target = aService.findAccountById(Long.parseLong(t));
+				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
+					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
+					target = null;
+				}
 			}else if(type.equals("B")){
 				target = aService.findByUsername(t).get();
+				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
+					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
+					target = null;
+				}
 			}else if(type.equals("C")){
 				target = eService.findEmployee(Long.parseLong(t)).getAccount();
+				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
+					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
+					target = null;
+				}
 			}else if(type.equals("D")){
 				target = HrisApplication.getCurrentUser();
 			}
 		}while(target == null);
-
 
 		boolean active = true;
 		Map<String, String> options = new HashMap<>();
@@ -731,11 +818,10 @@ class HRCommands{
 				break;
 			}else{
 				Map<String, String> items = new HashMap<>();
-				items.put("A", "Payrate");
-				items.put("B", "Department");
-				items.put("C", "Position");
-				items.put("D", "Training");
-				items.put("E", "Benefits");
+				items.put("A", "Payrate"); // Done
+				items.put("B", "Department"); // Done
+				items.put("C", "Training");
+				items.put("D", "Benefits"); // Done
 
 				if(type.equalsIgnoreCase("D")){
 					items.put("F", "First Name");
@@ -770,5 +856,22 @@ class HRCommands{
 		}else{
 			shellResult.printInfo("No Changes Detected.");
 		}
+	}
+
+	@ShellMethod(key="manage", value="Manage Company")
+	@ShellMethodAvailability("hrAvailability")
+	public void manageCompany(){
+		Map<String, String> manageable = new HashMap<>();
+		manageable.put("A", "Positions");
+		manageable.put("B", "Benefits");
+		manageable.put("C", "Departments");
+		manageable.put("D", "Trainings");
+		manageable.put("X", "EXIT");
+
+		String manageSelection = inputReader.listInput("Manage",
+				"Please select an option [] above to manage.",
+				manageable,
+				true);
+
 	}
 }

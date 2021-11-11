@@ -7,12 +7,12 @@ import ServerError from "../components/ServerError";
 
 function ServerErrorPage() {
   return (
-    <div>
+    <>
       <Scroll />
       <Header />
       <ServerError />
       <Footer />
-    </div>
+    </>
   );
 }
 

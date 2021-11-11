@@ -36,8 +36,13 @@ public class PositionService {
         return p.orElse(null);
     }
 
+    public Position findByName(String n){
+        return posRepo.findByName(n);
+
+    }
+
     // update position
-    public Position updateDepartemnts(Long pid, Position p) {
+    public Position updateDepartments(Long pid, Position p) {
         Optional<Position> opp = posRepo.findById(pid);
         if(opp.isPresent()) {
             return posRepo.save(p);
@@ -50,4 +55,5 @@ public class PositionService {
     public void deletePosition(Long pid) {
         this.posRepo.deleteById(pid);
     }
+
 }
