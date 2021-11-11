@@ -87,7 +87,8 @@ class EmployeesTable extends Component {
     this.setState({ performanceComments: event.target.value });
   };
 
-  async getAllSelectedTrainings() {
+  async getAllSelectedTrainings(e) {
+    e.preventDefault();
     const selectedTrainings = [];
     const checkboxes = document.querySelectorAll(
       "input[type=checkbox]:checked"
@@ -98,26 +99,26 @@ class EmployeesTable extends Component {
         parseInt(checkboxes[i].value, 10)
       ).then((res) => {
         if (res.data) {
-          /*
-          console.log(res.data);*/
+          console.log(res.data);
           selectedTrainings.push(res.data);
         }
       });
     }
 
-    return selectedTrainings;
+    this.setState({ updatedTrainings: selectedTrainings });
   }
 
   async updateEmployeeTrainings() {
-    const updatedDetails = await this.getAllSelectedTrainings();
-    /*
+    const updatedDetails = {
+      employeeTrainings: this.state.updatedTrainings,
+    };
     await EmployeeService.updateEmployee(
       this.state.chosenEmployee.id,
       updatedDetails
     ).then((res) => {
       console.log(res);
-    });*/
-    console.log(updatedDetails);
+    });
+    console.log(this.state.updatedTrainings);
   }
 
   async updateEmployeeDepartment() {}
@@ -395,8 +396,7 @@ class EmployeesTable extends Component {
                   className="add-data-button middle-button"
                   type="submit"
                   onClick={(e) => {
-                    /*
-                    this.getAllSelectedTrainings(e);*/
+                    this.getAllSelectedTrainings(e);
                     this.updateEmployeeTrainings();
                   }}
                 >

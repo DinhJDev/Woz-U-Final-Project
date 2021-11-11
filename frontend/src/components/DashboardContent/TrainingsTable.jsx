@@ -53,14 +53,14 @@ class TrainingsTable extends Component {
       updatedTrainingName: "", // Similar to trainingName and trainingDescription at the top. New name when we push it in
       updatedTrainingDescription: "",
       showUpdateModal: false, //  New modal.
-      showDeleteModal: false,
+      showDeleteModal: false,                             // NEW @@@
     };
 
     this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
     this.updatedTrainingName = this.updatedTrainingName.bind(this);
     this.updatedTrainingDescription = this.updatedTrainingDescription.bind(this);
-    this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this);
-    this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this);
+    this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this);           // NEW @@@
+    this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this);           // NEW @@@
   }
 
   // update input function: this are the funciton that will captures every change made to the inputs withint he update training item modal
@@ -124,7 +124,7 @@ class TrainingsTable extends Component {
     }); // NEW
   }
 
-  async openDeleteTrainingModal(id) {
+  async openDeleteTrainingModal(id) {                                                           // NEW @@@
     this.setState({
       showDeleteModal: true,
     });
@@ -137,7 +137,7 @@ class TrainingsTable extends Component {
     console.log(this.state.chosenTraining.id); // NEW
   }
 
-  closeDeleteTrainingModal() {
+  closeDeleteTrainingModal() {                                                              // NEW @@@
     this.setState({
       showDeleteModal: false,
     });
@@ -145,12 +145,12 @@ class TrainingsTable extends Component {
 
   // this is to removes a training item within the delete training item end point. we are passing the training item id here
 
-  async deleteTraining(id, e) {
+  async deleteTraining(id, e) {                                                     // NEW @@@
     e.preventDefault();
     TrainingsService.deleteTraining(id).then((res) => {
       this.setState({
         trainings: this.state.trainings.filter(
-          (training) => training.id !== id
+          (training) => training.id !== id                                      
         ),
       });
     });
@@ -246,7 +246,7 @@ class TrainingsTable extends Component {
             ></button>
           ),
           delete: (
-            <button
+            <button                                                                                   // NEW @@@
               className="row-expand-button bx bx-trash"
               onClick={() => this.openDeleteTrainingModal(training.id)}
             ></button>
@@ -388,7 +388,7 @@ class TrainingsTable extends Component {
     );
   }
 
-  deleteModal() {
+  deleteModal() {                                                                       // NEW @@@        Line 412. String Interpulation. Can put strings and variables.  ' ' = String Interpulation. Which means you can put strings and variables. 
     const { chosenTraining } = this.state;
     return (
       <Modal
@@ -396,10 +396,10 @@ class TrainingsTable extends Component {
         handleclose={this.closeDeleteTrainingModal}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
+        centered  
+      >                                                                                         
         <ModalBody className="modal-main">
-          <h3> Now deleting: {chosenTraining.trainingName}</h3>
+          <h3> Now deleting: {`\t` + chosenTraining.trainingName}</h3>                    
           <button
             to="/"
             size="lg"
@@ -425,16 +425,28 @@ class TrainingsTable extends Component {
     );
   }
 
-  render() {
+  render() {                                                                
     return (
-      <div className="white-box full-width zero-margin-box">
+      <div className="white-box full-width zero-margin-box">   
         <div className="box-padding">{this.createTable()}</div>
         {this.updateModal()}
         {this.createModal()}
-        {this.deleteModal()}
+        {this.deleteModal()}                                           
       </div>
     );
   }
 }
 
 export default TrainingsTable;
+
+
+// ADD DELETE MODAL IN THE RENDER METHOD LINE 434. 
+
+
+// Delete the delete button on Performances table
+
+// Delete Functionality
+// Benefits
+// Departments
+// Positions
+
