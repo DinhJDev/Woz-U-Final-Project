@@ -15,13 +15,17 @@ class DepartmentService {
   }
 
   async getDepartmentById(departmentId) {
-    return axios.get(DEPARTMENT_API_BASE_URL + "/" + departmentId, {      // + means we are trying to pass something that is /departments/something
-      headers: await AuthorizationHeader(),
-    });
+    return axios.get(
+      DEPARTMENT_API_BASE_URL + "/" + departmentId
+      // + means we are trying to pass something that is /departments/something
+    );
   }
 
-  async updateDepartment(department, departmentId) {
-    return axios.put(DEPARTMENT_API_BASE_URL + "/update/" + departmentId);
+  async updateDepartment(departmentId, departmentDetails) {
+    return axios.put(
+      DEPARTMENT_API_BASE_URL + "/update/" + departmentId,
+      departmentDetails
+    );
   }
 
   async deleteDepartment(departmentId) {

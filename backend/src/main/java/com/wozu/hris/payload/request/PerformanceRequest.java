@@ -9,8 +9,7 @@ public class PerformanceRequest {
     @NotBlank
     private String comment;
     @NotNull
-
-    private Employee reviewee;
+    private Long reviewee;
 
     public String getComment() {
         return comment;
@@ -20,11 +19,11 @@ public class PerformanceRequest {
         this.comment = comment;
     }
 
-    public Employee getReviewee() {
+    public Long getReviewee() {
         return reviewee;
     }
 
-    public void setReviewee(Employee reviewee) {
+    public void setReviewee(Long reviewee) {
         this.reviewee = reviewee;
     }
 }

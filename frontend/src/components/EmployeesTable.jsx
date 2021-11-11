@@ -10,7 +10,6 @@ import TrainingsService from "../services/TrainingsService";
 import AuthorizationService from "../services/AuthorizationService";
 import PerformanceService from "../services/PerformanceService";
 import DepartmentService from "../services/DepartmentService";
-import PayrateService from "../services/PayratesService";
 
 import "@vaadin/vaadin-checkbox/vaadin-checkbox.js";
 import "@vaadin/vaadin-list-box/src/vaadin-list-box.js";
@@ -81,11 +80,50 @@ class EmployeesTable extends Component {
     this.performanceComments = this.performanceComments.bind(this);
     this.deleteEmployee = this.deleteEmployee.bind(this);
     this.openViewEmployeeModal = this.openViewEmployeeModal.bind(this);
+    this.getAllSelectedTrainings = this.getAllSelectedTrainings.bind(this);
   }
 
   performanceComments = (event) => {
     this.setState({ performanceComments: event.target.value });
   };
+
+  async getAllSelectedTrainings(e) {
+    e.preventDefault();
+    const selectedTrainings = [];
+    const checkboxes = document.querySelectorAll(
+      "input[type=checkbox]:checked"
+    );
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      await TrainingsService.getTrainingById(
+        parseInt(checkboxes[i].value, 10)
+      ).then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          selectedTrainings.push(res.data);
+        }
+      });
+    }
+
+    this.setState({ updatedTrainings: selectedTrainings });
+  }
+
+  async updateEmployeeTrainings() {
+    const updatedDetails = {
+      employeeTrainings: this.state.updatedTrainings,
+    };
+    await EmployeeService.updateEmployee(
+      this.state.chosenEmployee.id,
+      updatedDetails
+    ).then((res) => {
+      console.log(res);
+    });
+    console.log(this.state.updatedTrainings);
+  }
+
+  async updateEmployeeDepartment() {}
+
+  async updateEmployeeBenefits() {}
 
   async openViewEmployeeModal(id) {
     this.setState({
@@ -109,8 +147,8 @@ class EmployeesTable extends Component {
   }
 
   async getAllSelectedBenefits() {
-    var array = [];
-    var checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+    const array = [];
+    const checkboxes = document.querySelectorAll('input[aria-checked="true"]');
 
     for (var i = 0; i < checkboxes.length; i++) {
       array.push(checkboxes[i].value);
@@ -343,14 +381,27 @@ class EmployeesTable extends Component {
                       <div className="input-container">
                         <input
                           type="checkbox"
-                          value={training.id}
-                          name={training.id}
+                          value={training.training_id}
+                          name={training.training_id}
                           id="trainings-list"
+                          aria-checked
                         />
-                        <label for={training.id}>{training.trainingName}</label>
+                        <label for={training.training_id}>
+                          {training.trainingName}
+                        </label>
                       </div>
                     ))}
                 </form>
+                <button
+                  className="add-data-button middle-button"
+                  type="submit"
+                  onClick={(e) => {
+                    this.getAllSelectedTrainings(e);
+                    this.updateEmployeeTrainings();
+                  }}
+                >
+                  Update
+                </button>
               </TabPanel>
               <TabPanel>
                 <h4>Employee's Current Departments</h4>

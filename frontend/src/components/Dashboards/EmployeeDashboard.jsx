@@ -8,6 +8,7 @@ import DashboardLogo from "../DashboardLogo";
 import PerformanceReviews from "../../components/DashboardContent/PerformanceReviews";
 import Profile from "../DashboardContent/Profile";
 import EmployeeOverview from "../DashboardContent/EmployeeOverview";
+import InboxTabs from "../DashboardContent/InboxTabs";
 
 const EmployeeDashboard = () => {
   return (
@@ -56,9 +57,9 @@ const EmployeeDashboard = () => {
 
         <TabPanel className="dashboard-view-panel">
           <div className="board-header">
-            <span>Performance Reviews</span>
+            <span>Inbox</span>
           </div>
-          <PerformanceReviews />
+          <InboxTabs />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
           <div className="board-header">

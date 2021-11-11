@@ -7,8 +7,6 @@ class AccountsTable extends Component {
   constructor(props) {
     super(props);
 
-    
-
     this.state = {
       currentUser: [],
       accounts: [],
@@ -106,17 +104,12 @@ class AccountsTable extends Component {
         ...this.state.accountsColumns,
         {
           label: "",
-          field: "expand",
-        },
-        {
-          label: "",
           field: "delete",
         },
       ],
       rows: [
         ...this.state.accounts.map((account, index) => ({
           ...account,
-          expand: <button className="row-expand-button bx bx-expand"></button>,
           delete: <button className="row-expand-button bx bx-trash"></button>,
         })),
       ],

@@ -19,6 +19,12 @@ class PayratesService {
   async deletePayrate(payratesId) {
     return axios.delete(`${PAYROLLS_API_BASE_URL}/payrates/` + payratesId);
   }
+
+  async createPayrate(payrate) {
+    return axios.post(`${PAYROLLS_API_BASE_URL}/create`, payrate, {
+      headers: await AuthorizationHeader(),
+    });
+  }
 }
 
 export default new PayratesService();

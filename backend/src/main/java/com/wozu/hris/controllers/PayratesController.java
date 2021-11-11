@@ -25,7 +25,7 @@ public class PayratesController {
     PayrateRepository payrateRepository;
 
     // create payrate
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createPayrate(@RequestBody Payrate payrate) {
         payrateService.createPayrate(payrate);
         return ResponseEntity.ok(new MessageResponse("Payrate for employee " + payrate.getEmployee().getId()));
