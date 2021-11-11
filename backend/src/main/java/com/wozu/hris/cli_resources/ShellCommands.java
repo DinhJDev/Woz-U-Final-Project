@@ -35,8 +35,11 @@ public class ShellCommands {
     private DepartmentService dService;
     private DepartmentEmployeeService dEService;
     private PositionService pService;
+    private BenefitService bService;
+    private TrainingService tService;
+    private EmployeeTrainingService eTService;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService){
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
@@ -48,6 +51,9 @@ public class ShellCommands {
         this.dService = dService;
         this.dEService = dEService;
         this.pService = pService;
+        this.bService = bService;
+        this.tService = tService;
+        this.eTService = eTService;
     }
 
     public void clearConsole(){
@@ -259,6 +265,7 @@ public class ShellCommands {
             commands.put("promote", "Promote Employee with Account");
             commands.put("edit", "Edit Employee");
             commands.put("deactivate", "Deactivate current Interface");
+            commands.put("manage", "Manage Company");
 
             if(permLvl == ERole.ROLE_HR.getID()){
 
@@ -279,8 +286,6 @@ public class ShellCommands {
         String newValue = "";
         if(item.equalsIgnoreCase("Date Of Birth")){
             newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
-        }else if(item.equalsIgnoreCase("Benefits")){
-            newValue = "Benefits to be Done later";
         }else{
             if(hr && !item.equals("First Name") && !item.equals("Last Name")){
                 hSwitch = true;
@@ -490,9 +495,230 @@ public class ShellCommands {
                     }
                 }while(true);
             }else if(item.equalsIgnoreCase("Training")){
+                clearConsole();
+                if(eTService.existsByEmployee(currentEmployee)){
+                    Map<String, String> option = new HashMap<>();
+                    option.put("A", "Add");
+                    option.put("B", "Remove");
+                    option.put("X", "FINISH/CANCEL");
+
+                    Map<String, String> trainingOptions = new HashMap<>();
+
+                    String selection;
+
+                    do{
+                        selection = inputReader.listInput("Training",
+                                "Select an option [] provided above.",
+                                option,
+                                true);
+                        if(selection.equalsIgnoreCase("X")){
+                            clearConsole();
+                            break;
+                        }
+
+                        if(selection.equalsIgnoreCase("A")){
+                            clearConsole();
+                            List<EmployeeTraining> listedTrainings = eTService.findAllByEmployee(currentEmployee);
+                            List<String> ArrayListedTrainings = new ArrayList<>(listedTrainings.size());
+                            List<Training> nonListedTrainings;
+
+                            for(EmployeeTraining e : listedTrainings){
+                                ArrayListedTrainings.add(e.getTraining().getTrainingName());
+                            }
+
+                            nonListedTrainings = tService.findAllNotIn(ArrayListedTrainings);
+                            String selectedTraining;
+
+                            if(nonListedTrainings.size() > 0){
+                                for(int i = 0; i < nonListedTrainings.size(); i++){
+                                    trainingOptions.put(String.valueOf((char)(i+65)), nonListedTrainings.get(i).getTrainingName());
+                                }
+
+                                trainingOptions.put("X", "FINISH/CANCEL");
+
+                                do{
+                                    selectedTraining = inputReader.listInput("Training",
+                                            "Select an option [] provided above",
+                                            trainingOptions,
+                                            true);
+
+                                    if(selectedTraining.equalsIgnoreCase("X")){
+                                        clearConsole();
+                                        break;
+                                    }
+
+                                    if(inputReader.confirmationPrompt(String.format("Add Training: %s", trainingOptions.get(selectedTraining)))){
+                                        clearConsole();
+                                        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                                        String completionDate = inputReader.prompt("Date of Completion(mm/dd/yyyy)");
+                                        clearConsole();
+                                        if(inputReader.confirmationPrompt(String.format("Training: %s%nDate Of Completion: %s", trainingOptions.get(selectedTraining), completionDate))){
+                                            clearConsole();
+                                            eTService.createEmployeeTraining(new EmployeeTraining(currentEmployee, tService.findByTrainingName(trainingOptions.get(selectedTraining)), format.parse(completionDate)));
+                                            shellResult.printSuccess("Added Training Successfully!");
+                                            return;
+                                        }
+                                    }
+
+                                }while(true);
+                            }else{
+                                clearConsole();
+                                shellResult.printInfo("No Available Trainings!");
+                                break;
+                            }
+
+
+                        }else if(selection.equalsIgnoreCase("B")){
+                            clearConsole();
+                            String selectedTraining;
+
+                            do{
+                                List<EmployeeTraining> listedTrainings = eTService.findAllByEmployee(currentEmployee);
+                                trainingOptions = new HashMap<>();
+                                for(int i = 0; i < listedTrainings.size(); i++){
+                                    trainingOptions.put(String.valueOf((char)(i+65)), listedTrainings.get(i).getTraining().getTrainingName());
+                                }
+                                trainingOptions.put("X", "FINISH/CANCEL");
+
+                                selectedTraining = inputReader.listInput("Training",
+                                        "Select an option [] provided above.",
+                                        trainingOptions,
+                                        true);
+
+                                if(selectedTraining.equalsIgnoreCase("X")){
+                                    clearConsole();
+                                    break;
+                                }
+                                if(inputReader.confirmationPrompt(String.format("Remove Training: %s", trainingOptions.get(selectedTraining)))){
+                                    clearConsole();
+                                    eTService.deleteEmployeeTraining(eTService.findByEmployeeAndTraining(currentEmployee, tService.findByTrainingName(trainingOptions.get(selectedTraining))).getId());
+                                    shellResult.printSuccess("Removed Training Successfully!");
+                                    return;
+                                }else{
+                                    clearConsole();
+                                }
+                            }while(true);
+
+                        }else{
+                            clearConsole();
+                            break;
+                        }
+                    }while(true);
+                }else{
+                    Map<String, String> trainingOptions = new HashMap<>();
+                    shellResult.printInfo("No Recorded Trainings!");
+                    if(inputReader.confirmationPrompt("Add Training to Employee?")){
+                        String selectedTraining;
+
+                        List<Training> listedTrainings = tService.allTrainings();
+                        for(int i = 0; i < listedTrainings.size(); i++){
+                            trainingOptions.put(String.valueOf((char)(i+65)), listedTrainings.get(i).getTrainingName());
+                        }
+                        trainingOptions.put("X", "FINISH/CANCEL");
+
+                        do{
+                            selectedTraining = inputReader.listInput("Training",
+                                    "Select an option [] provided above.",
+                                    trainingOptions,
+                                    true);
+                           if(selectedTraining.equalsIgnoreCase("X")){
+                               clearConsole();
+                               break;
+                           }
+
+                           if(inputReader.confirmationPrompt(String.format("Add Training: %s", trainingOptions.get(selectedTraining)))){
+                               clearConsole();
+                               SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                               String completionDate = inputReader.prompt("Date of Completion(mm/dd/yyyy)");
+                               clearConsole();
+                               if(inputReader.confirmationPrompt(String.format("Training: %s%nDate Of Completion: %s", trainingOptions.get(selectedTraining), completionDate))){
+                                   clearConsole();
+                                   eTService.createEmployeeTraining(new EmployeeTraining(currentEmployee, tService.findByTrainingName(trainingOptions.get(selectedTraining)), format.parse(completionDate)));
+                                   shellResult.printSuccess("Added Training Successfully!");
+                                   return;
+                               }
+                           }
+
+                        }while(true);
+
+                    }else{
+                        clearConsole();
+                        return;
+                    }
+                }
 
             }else if(item.equalsIgnoreCase("Benefits")){
+                clearConsole();
+                String selection;
+                Map<String, String> benefitOptions = new HashMap<>();
+                List<Benefit> listedBenefits = bService.allBenefits();
 
+                for(int i = 0; i < listedBenefits.size(); i++){
+                    benefitOptions.put(String.valueOf((char)(i+65)), listedBenefits.get(i).getName());
+                }
+                benefitOptions.put("X", "CANCEL");
+
+
+                if(bService.existsByEmployee(currentEmployee)){
+                    shellResult.printInfo(String.format("Current Benefit Package: %s", currentEmployee.getBenefit().getName()));
+                    if(inputReader.confirmationPrompt("Would you like to change the current Package?")) {
+                        do{
+
+                            selection = inputReader.listInput("Benefit Package",
+                                    "Select a Benefit Package option [] above.",
+                                    benefitOptions,
+                                    true);
+
+                            if(selection.equalsIgnoreCase("X")){
+                                clearConsole();
+                                return;
+                            }
+
+                            if (inputReader.confirmationPrompt(String.format("Benefit Package: %s", benefitOptions.get(selection)))) {
+                                clearConsole();
+                                currentEmployee.setBenefit(bService.findByName(benefitOptions.get(selection)));
+                                shellResult.printSuccess("Successfully Changed Benefit Package!");
+                                break;
+                            }else{
+                                clearConsole();
+                            }
+
+                        }while(true);
+
+                    }else{
+                        clearConsole();
+                        return;
+                    }
+                }else{
+                   shellResult.printInfo("Employee has no Benefit Package!");
+                   if(inputReader.confirmationPrompt("Would you like to add a Benefit Package?")){
+                       do{
+
+                           selection = inputReader.listInput("Benefit Package",
+                                   "Select a Benefit Package option [] above.",
+                                   benefitOptions,
+                                   true);
+
+                           if(selection.equalsIgnoreCase("X")){
+                               clearConsole();
+                               return;
+                           }
+
+                           if (inputReader.confirmationPrompt(String.format("Benefit Package: %s", benefitOptions.get(selection)))) {
+                               clearConsole();
+                               currentEmployee.setBenefit(bService.findByName(benefitOptions.get(selection)));
+                               shellResult.printSuccess("Successfully Changed Benefit Package!");
+                               break;
+                           }else{
+                               clearConsole();
+                           }
+
+                       }while(true);
+                   }else{
+                       clearConsole();
+                       return;
+                   }
+                }
             }
             eService.updateEmployee(currentEmployee.getId(), currentEmployee);
         }

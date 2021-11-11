@@ -36,4 +36,17 @@ public class TrainingService {
     public void deleteTraining(Long id) {
         this.trainingRepository.deleteById(id);
     }
+
+    public List<Training> findAllNotIn(List<String> t){
+        return trainingRepository.findByTrainingNameNotIn(t);
+    }
+
+    public Training findByTrainingName(String n){
+        Optional<Training> opt = trainingRepository.findByTrainingName(n);
+        if(opt.isPresent()){
+            return opt.get();
+        }else{
+            return null;
+        }
+    }
 }

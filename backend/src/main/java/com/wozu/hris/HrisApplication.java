@@ -818,10 +818,10 @@ class HRCommands{
 				break;
 			}else{
 				Map<String, String> items = new HashMap<>();
-				items.put("A", "Payrate");
-				items.put("B", "Department");
+				items.put("A", "Payrate"); // Done
+				items.put("B", "Department"); // Done
 				items.put("C", "Training");
-				items.put("D", "Benefits");
+				items.put("D", "Benefits"); // Done
 
 				if(type.equalsIgnoreCase("D")){
 					items.put("F", "First Name");
@@ -856,5 +856,22 @@ class HRCommands{
 		}else{
 			shellResult.printInfo("No Changes Detected.");
 		}
+	}
+
+	@ShellMethod(key="manage", value="Manage Company")
+	@ShellMethodAvailability("hrAvailability")
+	public void manageCompany(){
+		Map<String, String> manageable = new HashMap<>();
+		manageable.put("A", "Positions");
+		manageable.put("B", "Benefits");
+		manageable.put("C", "Departments");
+		manageable.put("D", "Trainings");
+		manageable.put("X", "EXIT");
+
+		String manageSelection = inputReader.listInput("Manage",
+				"Please select an option [] above to manage.",
+				manageable,
+				true);
+
 	}
 }

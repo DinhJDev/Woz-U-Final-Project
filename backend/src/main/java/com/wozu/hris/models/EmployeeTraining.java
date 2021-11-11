@@ -20,12 +20,20 @@ public class EmployeeTraining {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(insertable = false, updatable = false, name="employee_id")
+    @JoinColumn(name="employee_id")
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name="training_id")
+    @JoinColumn(name="training_id")
     private Training training;
+
+    public EmployeeTraining(){}
+
+    public EmployeeTraining(Employee e, Training t, Date d){
+        this.employee = e;
+        this.training = t;
+        this.dateOfCompletion = d;
+    }
 
     public Long getId() {
         return id;
