@@ -49,10 +49,10 @@ class TrainingsTable extends Component {
           width: "100%",
         },
       ],
-      chosenTraining: [],
-      updatedTrainingName: "",
+      chosenTraining: [],                       // Reference the training we are choosing when we click the expand button                                     NEW
+      updatedTrainingName: "",                  // Similar to trainingName and trainingDescription at the top. New name when we push it in
       updatedTrainingDescription: "",
-      showUpdateModal: false,
+      showUpdateModal: false,       //  New modal. 
       showDeleteModal: false,
     };
 
@@ -71,7 +71,7 @@ class TrainingsTable extends Component {
   };
 
   updatedTrainingDescription = (event) => {
-    this.setState({ updatedTrainingDescription: event.target.value });
+    this.setState({ updatedTrainingDescription: event.target.value });                // SAME AS THE 2 BELOW ADD THEM FOR THE UPDATE                       NEW
   };
 
   trainingName = (event) => {
@@ -88,11 +88,11 @@ class TrainingsTable extends Component {
     e.preventDefault();
     const trainingDetails = {
       trainingName:
-        this.state.updatedTrainingName.length > 0
-          ? this.state.updatedTrainingName
+        this.state.updatedTrainingName.length > 0         // Is the number of characters greater then 0? then I am going to set it to the updatedTrainingName otherwise I am going to set it to the trainingName oir the original one.
+          ? this.state.updatedTrainingName                                                                                        
           : this.state.chosenTraining.trainingName,
       description:
-        this.state.updatedTrainingDescription.length > 0
+        this.state.updatedTrainingDescription.length > 0                                         // NEW
           ? this.state.updatedTrainingDescription
           : this.state.chosenTraining.description,
     };
@@ -108,21 +108,21 @@ class TrainingsTable extends Component {
 
   async openUpdateTrainingModal(id) {
     this.setState({
-      showUpdateModal: true,
+      showUpdateModal: true,                                                                             // NEW
     });
     const chosenTraining = await TrainingsService.getTrainingById(id);
     if (chosenTraining.data) {
       this.setState({
-        chosenTraining: chosenTraining.data,
+        chosenTraining: chosenTraining.data,                    // THis pushes the parameters in
       });
     }
-    console.log(this.state.chosenTraining.id);
+    console.log(this.state.chosenTraining.id);                                                       // NEW
   }
 
   closeUpdateTrainingModal() {
     this.setState({
       showUpdateModal: false,
-    });
+    });                                                                                                // NEW
   }
 
   openDeleteTrainingModal() {
@@ -229,13 +229,13 @@ class TrainingsTable extends Component {
         },
       ],
       rows: [
-        ...this.state.trainings.map((training, index) => ({
-          ...training,
+        ...this.state.trainings.map((training, index) => ({         // NEW
+          ...training,                                                                              // THese auto update so as soon as you add a new row via the create modal. auto adds the expand and delete button
           expand: (
             <button
               className="row-expand-button bx bx-expand"
-              onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id sot hat the modal has access to it's attributes
-            ></button>
+              onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id so that the modal has access to it's attributes      This opens the training modal but its like wait. It needs a parameter. an ID parameter. Since we are already 
+            ></button>                                                      // mapping through constatntly, it can grab the correct id. ensrues you pull up the right info. 
           ),
           delete: (
             <button
