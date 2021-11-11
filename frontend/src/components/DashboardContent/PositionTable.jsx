@@ -22,7 +22,7 @@ class PositionsTable extends Component {
       positionsColumns: [
         {
           label: "Position ID",
-          field: "position_id",
+          field: "id",
           width: "100%",
           attributes: {
             "aria-controls": "DataTable",
@@ -50,11 +50,22 @@ class PositionsTable extends Component {
           width: "100%",
         },
       ],
+      chosenPosition: [],
+      updatedPositionName: "",
+      showUpdateModal: false,
+    
     };
     // this.getAllAccounts = this.getAllAccounts.bind(this);     // Binding our functions into our state for this class.
     // this.getAccountById = this.getAccountById.bind(this); // These are just meant for notes. Ignore in terms of the overall program.
     // this.deleteAccount = this.deleteAccount.bind(this);
+    this.openUpdatePositionModal = this.openUpdatePositionModal.bind(this);
+    this.updatedPositionName = this.updatedPositionName.bind(this);
+
   }
+
+  updatedPositionName = (event) => {
+    this.setState({ updatedPositionName: event.target.value });
+  };
 
   positionName = (event) => {
     this.setState({ positionName: event.target.value });        // new an event is "something happening in an HTML element" onClick. onHover. these are events. grabs whatever is happening inside of the elemnt and find the value and set the value to out positionName item.     
@@ -71,6 +82,44 @@ class PositionsTable extends Component {
     });
   }
 
+  async updatedPositionItem(id, e) {
+    e.preventDefault();
+    const position = {
+      name: this.state.updatedPositionName.length > 0             // These functions...when you are passing in the item. Object being created. Object is going back to Java so the attribute name HAS to match in JAVA
+      ? this.state.updatedPositionName
+      : this.state.chosenPosition.positionName,
+    };
+
+      PositionService.updatePosition(id, position).then((res) => {
+        if (res) {
+          console.log(res.data);
+        }
+      });
+      this.forceUpdate();
+  }
+
+  async openUpdatePositionModal(id) {
+    this.setState({
+      showUpdateModal: true,
+    });
+
+    const chosenPosition = await PositionService.getPositionById(id);
+    if (chosenPosition.data) {
+      this.setState({
+        chosenPosition: chosenPosition.data,
+      });
+    }
+      console.log(this.state.chosenPosition.id);
+  }
+
+  closeUpdatePositionModal() {
+    this.setState({
+      showUpdateModal: false,
+    });
+  }
+
+ 
+
   async componentDidMount() {
     await PositionService.getAllPositions()
       .then((res) => {
@@ -81,7 +130,7 @@ class PositionsTable extends Component {
           // For each position we get, we are pushing into the PositionsList array
           PositionsList.push({
             // These are the "attributes" that get pushed in. Unique to each table.
-            position_id: positions.id,
+            id: positions.id,
             name: positions.name,
             description: positions.description,
             createdAt: unformatDate(positions.createdAt), // unformatDate allows us to change MySQLs date format into something readable by humans. linked to unformatDate in util folder
@@ -156,8 +205,11 @@ closeCreatePositionModal(){
       rows: [
         ...this.state.positions.map((position, index) => ({
           ...position,
-          expand: <button className="row-expand-button bx bx-expand"></button>,
-          delete: <button className="row-expand-button bx bx-trash"></button>,
+          expand: ( <button className="row-expand-button bx bx-expand"
+          onClick={() => this.openUpdatePositionModal(position.id)}
+          ></button>
+          ),
+          delete:  <button className="row-expand-button bx bx-trash"></button>,
         })),
       ],
     };
@@ -216,11 +268,63 @@ createModal() {
     )
 }
 
+updateModal() {
+  const { chosenPosition } = this.state;
+  return (
+    <>
+      <Modal
+        show={this.state.showUpdateModal}
+        handleclose={this.closeUpdatePositionModal}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <ModalBody className="modal-main">
+          <h3>Update: {chosenPosition.positionName}</h3>
+          <form>
+            <input
+              autoFocus
+              type="name"
+              maxLength="256"
+              name="name"
+              placeholder="Enter new position name"
+              className="input password"
+              value={this.state.updatedPositionName}
+              onChange={this.updatedPositionName}
+            />
+            <button
+              to="/"
+              size="lg"
+              maxHeight="300px"
+              type="submit"
+              onClick={(e) => {
+                this.updatedPositionItem(chosenPosition.id, e);
+                this.closeUpdatePositionModal();
+              }}
+              className="add-data-button middle-button"
+            >
+              Submit
+            </button>
+          </form>
+          <button
+            className="modal-button-close add-data-button"
+            type="button"
+            onClick={() => this.closeUpdatePositionModal()}
+          >
+            Close
+          </button>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+
   render() {
     return (
       <div className="white-box full-width zero-margin-box">    
         <div className="box-padding">{this.createTable()}</div>
-        {this.createModal()}                                                   
+        {this.createModal()}       
+        {this.updateModal()}                                            
       </div>
     );
   }
