@@ -23,8 +23,10 @@ class PositionService {
     });
   }
 
-  async updatePosition(position, positionId) {
-    return axios.put(POSITION_API_BASE_URL + "/positions/" + positionId);
+  async updatePosition(positionId, position) {
+    return axios.put(POSITION_API_BASE_URL + "/positions/" + positionId, position, {
+      headers: await AuthorizationHeader(),
+    });
   }
 
   async deletePosition(positionId) {
@@ -33,3 +35,5 @@ class PositionService {
 }
 
 export default new PositionService();
+
+

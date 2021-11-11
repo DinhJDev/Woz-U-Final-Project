@@ -58,8 +58,7 @@ class TrainingsTable extends Component {
 
     this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
     this.updatedTrainingName = this.updatedTrainingName.bind(this);
-    this.updatedTrainingDescription =
-      this.updatedTrainingDescription.bind(this);
+    this.updatedTrainingDescription = this.updatedTrainingDescription.bind(this);
     this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this);
     this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this);
   }

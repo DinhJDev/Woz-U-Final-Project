@@ -20,8 +20,10 @@ class BenefitService {
     });
   }
 
-  async updateBenefit(benefit, benefitId) {
-    return axios.put(BENEFIT_API_BASE_URL + "/benefits/" + benefitId);
+  async updateBenefit(benefitid, benefit) {
+    return axios.put(BENEFIT_API_BASE_URL + "/benefits/" + benefitid, benefit, {
+      headers: await AuthorizationHeader(),
+    });
   }
 
   async deleteBenefit(benefitId) {
