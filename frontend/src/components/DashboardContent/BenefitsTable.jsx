@@ -124,13 +124,20 @@ class BenefitTable extends Component {
     }); // NEW
   }
 
-  openDeleteBenefitModal() {
+  async openDeleteBenefitModal(id) {                                                           // NEW @@@
     this.setState({
       showDeleteModal: true,
     });
+    const chosenBenefit = await BenefitService.getBenefitById(id);
+    if (chosenBenefit.data) {
+      this.setState({
+        chosenBenefit: chosenBenefit.data, // THis pushes the parameters in
+      });
+    }
+    console.log(this.state.chosenBenefit.id); // NEW
   }
 
-  closeDeleteBenefitModal() {
+  closeDeleteBenefitModal() {                                                              // NEW @@@
     this.setState({
       showDeleteModal: false,
     });
@@ -239,11 +246,7 @@ class BenefitTable extends Component {
           delete: (
             <button
               className="row-expand-button bx bx-trash"
-              onClick={() =>
-                this.setState({
-                  showDeleteModal: true,
-                })
-              }
+              onClick={() => this.openDeleteBenefitModal(benefit.id)}
             ></button>
           ),
         })),
