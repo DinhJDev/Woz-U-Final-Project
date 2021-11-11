@@ -400,7 +400,7 @@ class TrainingsTable extends Component {
         centered
       >
         <ModalBody className="modal-main">
-          <h3> Now deleting: {`\t` + chosenTraining.trainingName}</h3>
+          <h3> Now deleting: {chosenTraining.trainingName}</h3>
           <button
             to="/"
             size="lg"

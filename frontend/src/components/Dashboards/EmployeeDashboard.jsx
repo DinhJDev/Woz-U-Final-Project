@@ -29,12 +29,6 @@ const EmployeeDashboard = () => {
                 <i className="bx bx-envelope nav__icon"></i> Inbox
               </div>
             </Tab>
-            <Tab className="dashboard-tab-item">
-              <div className="nav__link  dashboard-tab-title">
-                {" "}
-                <i className="bx bx-wrench nav__icon"></i> Tracking
-              </div>
-            </Tab>
 
             <Tab className="dashboard-tab-item">
               <div className="nav__link  dashboard-tab-title">
@@ -63,13 +57,8 @@ const EmployeeDashboard = () => {
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
           <div className="board-header">
-            <span>Timesheets</span>
+            <span>User Profile</span>
           </div>
-          Employe timesheets table here
-        </TabPanel>
-
-        <TabPanel className="dashboard-view-panel">
-          <h2>View 5</h2>
           <Profile />
         </TabPanel>
       </Tabs>

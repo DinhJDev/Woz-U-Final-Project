@@ -10,10 +10,10 @@ class BenefitsTable extends Component {
     super(props);
 
     this.benefitsName = this.benefitsName.bind(this);
-    this.benefitsDescription = this.benefitsDescription.bind(this);   // these
+    this.benefitsDescription = this.benefitsDescription.bind(this); // these
 
     this.state = {
-      benefitsDescription: "",      // these
+      benefitsDescription: "", // these
       benefitsName: "",
       mydata: "",
       currentUser: [],
@@ -66,7 +66,7 @@ class BenefitsTable extends Component {
   }
 
   benefitsName = (event) => {
-    this.setState({ benefitsName: event.target.value });        // these
+    this.setState({ benefitsName: event.target.value }); // these
   };
 
   benefitsDescription = (event) => {
@@ -110,16 +110,16 @@ class BenefitsTable extends Component {
       });
   }
 
-  closeCreateBenefitsModal(){
+  closeCreateBenefitsModal() {
     this.setState({
-      showCreateModal:false
-    })
+      showCreateModal: false,
+    });
   }
 
   openCreateBenefitsModal() {
     this.setState({
-      showCreateModal:true
-    })
+      showCreateModal: true,
+    });
   }
 
   validateForm() {
@@ -133,16 +133,16 @@ class BenefitsTable extends Component {
     e.preventDefault();
 
     let benefitsObject = {
-      name: this.state.benefitsName,     // these
-      description: this.state.benefitsDescription   // HAVE TO MATCH WHATS IN JAVA
+      name: this.state.benefitsName, // these
+      description: this.state.benefitsDescription, // HAVE TO MATCH WHATS IN JAVA
     };
 
     BenefitService.createBenefit(benefitsObject)
-    .then((res) => {
-      console.log(res.data.message);
-    })
-      .catch((err)=> {
-        if ( err.response) {
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        if (err.response) {
           console.log(err.response.data.message);
         }
       });
@@ -172,9 +172,14 @@ class BenefitsTable extends Component {
 
     return (
       <>
-      <button className="add-data-button" onClick={(e)=>{
-        this.openCreateBenefitsModal()
-      }}>Add a New Benefit</button>
+        <button
+          className="add-data-button"
+          onClick={(e) => {
+            this.openCreateBenefitsModal();
+          }}
+        >
+          Add a New Benefit
+        </button>
         <MDBDataTableV5
           hover
           entriesOptions={[5, 20, 25]}
@@ -185,53 +190,56 @@ class BenefitsTable extends Component {
   }
 
   createModal() {
-    return(
+    return (
       <>
-      <Modal
-      show={this.state.showCreateModal}
-      handleclose={this.closeCreateBenefitsModal}
-      >
-<ModalBody className="modal-main">
-  <form>
-<label className="label">Benefit Name</label>
-<input
-type="name"
-maxLength="256"
-name="name"
-placeholder="Enter the benefit name"
-className="input benefit"
-value={this.state.benefitsName}
-onChange={this.benefitsName}
-/>
-<label className="label">Benefit Description</label>
-<input
-type="name"
-maxLength="256"
-name="name"
-placeholder="Enter the benefit name"
-className="input benefit"
-value={this.state.benefitsDescription}
-onChange={this.benefitsDescription}
-/>
-<button type="submit" onClick={(e)=>{
-                      this.submitNewBenefit(e)
-                      this.closeCreateBenefitsModal()
-                  }}
-                  className="add-data-button middle-button"
-                  >Submit</button>
-</form>
-<button
-className="modal-button-close add-data-button"
-type="button"
-onClick={() => this.closeCreateBenefitsModal()}
->
-Close
-</button>
-</ModalBody>
-
-      </Modal>
+        <Modal
+          show={this.state.showCreateModal}
+          handleclose={this.closeCreateBenefitsModal}
+        >
+          <ModalBody className="modal-main">
+            <form>
+              <label className="label">Benefit Name</label>
+              <input
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter the benefit name"
+                className="input benefit"
+                value={this.state.benefitsName}
+                onChange={this.benefitsName}
+              />
+              <label className="label">Benefit Description</label>
+              <input
+                type="name"
+                maxLength="256"
+                name="name"
+                placeholder="Enter the benefit name"
+                className="input benefit"
+                value={this.state.benefitsDescription}
+                onChange={this.benefitsDescription}
+              />
+              <button
+                type="submit"
+                onClick={(e) => {
+                  this.submitNewBenefit(e);
+                  this.closeCreateBenefitsModal();
+                }}
+                className="add-data-button middle-button"
+              >
+                Submit
+              </button>
+            </form>
+            <button
+              className="modal-button-close add-data-button"
+              type="button"
+              onClick={() => this.closeCreateBenefitsModal()}
+            >
+              Close
+            </button>
+          </ModalBody>
+        </Modal>
       </>
-    )
+    );
   }
 
   render() {
