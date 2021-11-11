@@ -30,7 +30,7 @@ class TrainingsTable extends Component {
         },
         {
           label: "Training",
-          field: "training_name",
+          field: "name",
           width: "100%",
         },
         {
@@ -49,10 +49,10 @@ class TrainingsTable extends Component {
           width: "100%",
         },
       ],
-      chosenTraining: [],                       // Reference the training we are choosing when we click the expand button                                     NEW
-      updatedTrainingName: "",                  // Similar to trainingName and trainingDescription at the top. New name when we push it in
+      chosenTraining: [], // Reference the training we are choosing when we click the expand button                                     NEW
+      updatedTrainingName: "", // Similar to trainingName and trainingDescription at the top. New name when we push it in
       updatedTrainingDescription: "",
-      showUpdateModal: false,       //  New modal. 
+      showUpdateModal: false, //  New modal.
       showDeleteModal: false,
     };
 
@@ -71,7 +71,7 @@ class TrainingsTable extends Component {
   };
 
   updatedTrainingDescription = (event) => {
-    this.setState({ updatedTrainingDescription: event.target.value });                // SAME AS THE 2 BELOW ADD THEM FOR THE UPDATE                       NEW
+    this.setState({ updatedTrainingDescription: event.target.value }); // SAME AS THE 2 BELOW ADD THEM FOR THE UPDATE                       NEW
   };
 
   trainingName = (event) => {
@@ -88,11 +88,11 @@ class TrainingsTable extends Component {
     e.preventDefault();
     const trainingDetails = {
       trainingName:
-        this.state.updatedTrainingName.length > 0         // Is the number of characters greater then 0? then I am going to set it to the updatedTrainingName otherwise I am going to set it to the trainingName oir the original one.
-          ? this.state.updatedTrainingName                                                                                        
+        this.state.updatedTrainingName.length > 0 // Is the number of characters greater then 0? then I am going to set it to the updatedTrainingName otherwise I am going to set it to the trainingName oir the original one.
+          ? this.state.updatedTrainingName
           : this.state.chosenTraining.trainingName,
       description:
-        this.state.updatedTrainingDescription.length > 0                                         // NEW
+        this.state.updatedTrainingDescription.length > 0 // NEW
           ? this.state.updatedTrainingDescription
           : this.state.chosenTraining.description,
     };
@@ -108,27 +108,34 @@ class TrainingsTable extends Component {
 
   async openUpdateTrainingModal(id) {
     this.setState({
-      showUpdateModal: true,                                                                             // NEW
+      showUpdateModal: true, // NEW
     });
     const chosenTraining = await TrainingsService.getTrainingById(id);
     if (chosenTraining.data) {
       this.setState({
-        chosenTraining: chosenTraining.data,                    // THis pushes the parameters in
+        chosenTraining: chosenTraining.data, // THis pushes the parameters in
       });
     }
-    console.log(this.state.chosenTraining.id);                                                       // NEW
+    console.log(this.state.chosenTraining.id); // NEW
   }
 
   closeUpdateTrainingModal() {
     this.setState({
       showUpdateModal: false,
-    });                                                                                                // NEW
+    }); // NEW
   }
 
-  openDeleteTrainingModal() {
+  async openDeleteTrainingModal(id) {
     this.setState({
       showDeleteModal: true,
     });
+    const chosenTraining = await TrainingsService.getTrainingById(id);
+    if (chosenTraining.data) {
+      this.setState({
+        chosenTraining: chosenTraining.data, // THis pushes the parameters in
+      });
+    }
+    console.log(this.state.chosenTraining.id); // NEW
   }
 
   closeDeleteTrainingModal() {
@@ -159,7 +166,7 @@ class TrainingsTable extends Component {
         parse.forEach((training) => {
           trainingsList.push({
             id: training.id,
-            training_name: training.trainingName,
+            name: training.trainingName,
             description: training.description,
             createdAt: unformatDate(training.createdAt),
             updatedAt: unformatDate(training.updatedAt),
@@ -229,22 +236,20 @@ class TrainingsTable extends Component {
         },
       ],
       rows: [
-        ...this.state.trainings.map((training, index) => ({         // NEW
-          ...training,                                                                              // THese auto update so as soon as you add a new row via the create modal. auto adds the expand and delete button
+        ...this.state.trainings.map((training, index) => ({
+          // NEW
+          ...training, // THese auto update so as soon as you add a new row via the create modal. auto adds the expand and delete button
+          // mapping through constatntly, it can grab the correct id. ensrues you pull up the right info.
           expand: (
             <button
               className="row-expand-button bx bx-expand"
-              onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id so that the modal has access to it's attributes      This opens the training modal but its like wait. It needs a parameter. an ID parameter. Since we are already 
-            ></button>                                                      // mapping through constatntly, it can grab the correct id. ensrues you pull up the right info. 
+              onClick={() => this.openUpdateTrainingModal(training.id)} //passing the training item id so that the modal has access to it's attributes      This opens the training modal but its like wait. It needs a parameter. an ID parameter. Since we are already
+            ></button>
           ),
           delete: (
             <button
               className="row-expand-button bx bx-trash"
-              onClick={() =>
-                this.setState({
-                  showDeleteModal: true,
-                })
-              }
+              onClick={() => this.openDeleteTrainingModal(training.id)}
             ></button>
           ),
         })),
@@ -395,8 +400,7 @@ class TrainingsTable extends Component {
         centered
       >
         <ModalBody className="modal-main">
-          <h2> Are you sure you want to delete this?</h2>
-          <h4>{chosenTraining.trainingName}</h4>
+          <h3> Now deleting: {`\t` + chosenTraining.trainingName}</h3>
           <button
             to="/"
             size="lg"
