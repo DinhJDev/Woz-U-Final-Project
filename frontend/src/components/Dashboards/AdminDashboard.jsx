@@ -11,7 +11,7 @@ import CompanyTabs from "../DashboardContent/CompanyTabs";
 import EmployeesTable from "../EmployeesTable";
 import Profile from "../DashboardContent/Profile";
 import HRTabs from "../DashboardContent/HRTabs";
-import PerformanceReviews from "../DashboardContent/PerformanceReviews";
+import InboxTabs from "../DashboardContent/InboxTabs";
 
 const AdminDashboard = () => {
   return (
@@ -69,9 +69,9 @@ const AdminDashboard = () => {
 
         <TabPanel className="dashboard-view-panel">
           <div className="board-header">
-            <span>Performance Reviews</span>
+            <span>Inbox</span>
           </div>
-          <PerformanceReviews />
+          <InboxTabs />
         </TabPanel>
         <TabPanel className="dashboard-view-panel">
           <div className="board-header">

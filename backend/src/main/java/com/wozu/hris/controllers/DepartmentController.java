@@ -74,9 +74,8 @@ public class DepartmentController {
     }
 
     // Update department
-    @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateDepartment(@Valid @RequestBody DepartmentRequest departmentRequest,
-                                              @PathVariable("id") Long id){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateDepartment(@PathVariable("id") Long id, @Valid @RequestBody DepartmentRequest departmentRequest){
         Department department = dRepo.findById(id).get();
         department.setName(departmentRequest.getName());
         department.setManager(departmentRequest.getManager());

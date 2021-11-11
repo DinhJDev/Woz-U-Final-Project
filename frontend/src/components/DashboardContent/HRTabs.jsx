@@ -9,7 +9,6 @@ import DepartmentsTable from "./DepartmentsTable";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
-
 function HRTabs() {
   return (
     <Tabs className="tabs-medium-width">
@@ -21,8 +20,8 @@ function HRTabs() {
         <Tab className="multi-table-tab-item">Accounts</Tab>
       </TabList>
 
-      <TabPanel>      
-            <DepartmentsTable />
+      <TabPanel>
+        <DepartmentsTable />
       </TabPanel>
 
       <TabPanel>

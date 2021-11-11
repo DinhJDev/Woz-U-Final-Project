@@ -5,6 +5,7 @@ import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Performance;
 import com.wozu.hris.payload.request.PerformanceRequest;
+import com.wozu.hris.repositories.EmployeeRepository;
 import com.wozu.hris.repositories.PerformanceRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.security.jwt.JwtUtils;
@@ -13,6 +14,7 @@ import com.wozu.hris.services.PerformanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,8 @@ public class PerformanceController {
     RoleRepository rRepo;
     @Autowired
     PerformanceRepository pRepo;
+    @Autowired
+    EmployeeRepository eRepo;
 
     // get all performances
     @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
@@ -103,7 +107,7 @@ public class PerformanceController {
     }
 
     // Post manager/HR's review of employee
-    @PreAuthorize("hasRole('MANAGER') or hasRole('HR')")
+    @PostAuthorize("hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/create")
     public ResponseEntity<Performance> createPerformance(@RequestBody PerformanceRequest performanceRequest,
                                                          @RequestHeader("Authorization") String token) {
@@ -111,7 +115,7 @@ public class PerformanceController {
         Employee employee = eService.findByUsername(username);
 
         try {
-            Performance performance = new Performance(performanceRequest.getComment(), performanceRequest.getReviewee(), employee);
+            Performance performance = new Performance(performanceRequest.getComment(), eRepo.getById(performanceRequest.getReviewee()), employee);
             Performance _performance = pService.createPerformance(performance);
             return new ResponseEntity<>(_performance, HttpStatus.CREATED);
         } catch (Exception e){

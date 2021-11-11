@@ -42,8 +42,11 @@ class EmployeeService {
     });
   }
 
-  async updateEmployee(employeeId) {
-    return axios.put(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
+  async updateEmployee(employeeId, employeeDetails) {
+    return axios.put(
+      EMPLOYEE_API_BASE_URL + "/employees/" + employeeId,
+      employeeDetails
+    );
   }
 
   async deleteEmployee(employeeId) {
