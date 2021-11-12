@@ -136,12 +136,35 @@ public class Employee {
         return timesheets;
     }
 
+    public String totalHours(){
+        double total = 0;
+        for (Timesheet t: timesheets){
+            total = t.getEnd().getTime() - t.getStart().getTime();
+        }
+        total = (total / (1000*60*60)) % 24;
+
+        return String.valueOf(total);
+    }
+
     public void setTimesheets(List<Timesheet> timesheets) {
         this.timesheets = timesheets;
     }
 
     public Set<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
+    }
+
+    public String getEmployeeTrainingString(){
+        StringBuilder trainingList = new StringBuilder();
+        int count = 1;
+
+        for (EmployeeTraining e: employeeTrainings){
+            trainingList.append(e.getTraining().getTrainingName());
+            if (count < (employeeTrainings.size()-1)){
+                trainingList.append(", ");
+            }
+        }
+        return trainingList.toString();
     }
 
     public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
@@ -168,12 +191,28 @@ public class Employee {
         return benefit;
     }
 
+    public String getBenefitName(){
+        return benefit.getName();
+    }
+
     public void setBenefit(Benefit benefit) {
         this.benefit = benefit;
     }
 
     public List<Performance> getReviews() {
         return reviews;
+    }
+
+    public String getlastPerformance(){
+        return performances.get(performances.size()-1).getComment();
+    }
+
+    public String getStatus(){
+        if (isClockedIn){
+            return "Clocked In";
+        } else {
+            return "Clocked Out";
+        }
     }
 
     public void setReviews(List<Performance> reviews) {
@@ -200,6 +239,19 @@ public class Employee {
         return department;
     }
 
+    public String getEmployeeDepartmentString(){
+        StringBuilder departemntList = new StringBuilder();
+        int count = 1;
+
+        for (DepartmentEmployee d: department){
+            departemntList.append(d.getDepartment().getName());
+            if (count < (department.size()-1)){
+                departemntList.append(", ");
+            }
+        }
+        return departemntList.toString();
+    }
+
     public void setDepartment(List<DepartmentEmployee> department) {
         this.department = department;
     }
@@ -209,6 +261,10 @@ public class Employee {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.benefit = benefit; //or whatever level employees should have by default
+    }
+
+    public String getPosition(){
+        return "Employee";
     }
     public Boolean getClockedIn() {
         return isClockedIn;

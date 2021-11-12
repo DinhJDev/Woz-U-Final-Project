@@ -26,16 +26,17 @@ public class TableDisplay {
         temp[1] = employee.getFirstName();
         temp[2] = employee.getLastName();
         temp[3] = employee.getDateOfBirth().toString();
-        temp[4] = employee.getDepartment().toString();
-        temp[5] = "N/A"; //find position...
+        temp[4] = employee.getEmployeeDepartmentString();
+        temp[5] = employee.getPosition();
         temp[6] = employee.getPayrate().toString();
-        temp[7] = "N/A"; //find total hours
-        temp[8] = employee.getEmployeeTrainings().toString();
+        temp[7] = employee.totalHours();
+        temp[8] = employee.getEmployeeTrainingString();
         temp[9] = employee.getPerformances().toString();
-        temp[10] = employee.getBenefit().toString();
-        temp[11] = employee.getClockedIn().toString();
+        temp[10] = employee.getBenefitName();
+        temp[11] = employee.getStatus();
 
         Object[][] set = new String[][] {
+                {"ID", "First Name", "Last Name", "Date of Birth", "Department", "Position", "Payrate", "Total Hours", "Training", "Performance", "Benefits", "Status"},
                 temp
         };
 
@@ -59,11 +60,11 @@ public class TableDisplay {
             temp[0] = e.getId().toString();
             temp[1] = e.getFirstName();
             temp[2] = e.getLastName();
-            temp[3] = e.getDepartment().toString();
-            temp[4] = "N/A"; //find position...
-            temp[5] = e.getEmployeeTrainings().toString();
-            temp[6] = e.getPerformances().toString();
-            temp[7] = e.getClockedIn().toString();
+            temp[3] = e.getEmployeeDepartmentString();
+            temp[4] = e.getPosition();
+            temp[5] = e.getEmployeeTrainingString();
+            temp[6] = e.getlastPerformance();
+            temp[7] = e.getStatus();
 
             set[count] = temp;
             count ++;
@@ -89,15 +90,15 @@ public class TableDisplay {
             temp[1] = e.getFirstName();
             temp[2] = e.getLastName();
             temp[3] = e.getDateOfBirth().toString();
-            temp[4] = e.getDepartment().toString();
-            temp[5] = "N/A"; //find position...
+            temp[4] = e.getEmployeeDepartmentString();
+            temp[5] = e.getPosition();
             temp[6] = e.getPayrate().toString();
-            temp[7] = "N/A"; //find total hours
-            temp[8] = e.getEmployeeTrainings().toString();
-            temp[9] = e.getPerformances().toString();
-            temp[10] = e.getBenefit().toString();
-            temp[11] = "N/A"; //find role
-            temp[12] = e.getClockedIn().toString();
+            temp[7] = e.totalHours();
+            temp[8] = e.getEmployeeTrainingString();
+            temp[9] = e.getlastPerformance();
+            temp[10] = e.getBenefitName();
+            temp[11] = e.getPosition();
+            temp[12] = e.getStatus();
 
             set[count] = temp;
             count ++;
@@ -118,7 +119,7 @@ public class TableDisplay {
         String[] temp = new String[3];
         temp[0] = employee.getId().toString();
         temp[1] = employee.getFirstName();
-        temp[2] = "N/A"; //find status
+        temp[2] = "Pending"; //find status
 
         Object[][] set = new String[][] {
                 temp
