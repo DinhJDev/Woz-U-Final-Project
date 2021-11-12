@@ -23,6 +23,13 @@ public class Training {
     @OneToMany(mappedBy = "employee")
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
+    public Training(){}
+
+    public Training(String name, String description){
+        this.trainingName = name;
+        this.description = description;
+    }
+
 
     @PrePersist
     protected void onCreate(){

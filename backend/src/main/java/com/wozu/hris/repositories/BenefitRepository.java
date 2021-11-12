@@ -20,5 +20,7 @@ public interface BenefitRepository extends JpaRepository<Benefit, Long> {
 
     List<Employee> findAllById(Long id);
 
+    Boolean existsByName(String name);
+
 }
 

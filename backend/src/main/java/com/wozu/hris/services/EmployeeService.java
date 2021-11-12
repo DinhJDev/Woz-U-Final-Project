@@ -52,7 +52,11 @@ public class EmployeeService {
     }
     // Delete an employee
     public void deleteEmployee(Long id) {
-        this.employeeRepository.deleteById(id);
+        employeeRepository.deleteById(id);
+    }
+
+    public Boolean existsById(Long Id){
+        return employeeRepository.existsById(Id);
     }
 }
 

@@ -49,4 +49,12 @@ public class TrainingService {
             return null;
         }
     }
+
+    public Boolean existsByName(String name){
+        return trainingRepository.existsByTrainingName(name);
+    }
+
+    public Boolean existsById(Long Id){
+        return trainingRepository.existsById(Id);
+    }
 }

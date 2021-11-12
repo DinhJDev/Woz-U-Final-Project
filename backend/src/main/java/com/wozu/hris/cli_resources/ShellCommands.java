@@ -24,6 +24,8 @@ import java.util.*;
 
 public class ShellCommands {
 
+    private String debug;
+
     private AccountRepository aRepo;
     private InputReader inputReader;
     private ShellResult shellResult;
@@ -38,8 +40,9 @@ public class ShellCommands {
     private BenefitService bService;
     private TrainingService tService;
     private EmployeeTrainingService eTService;
+    private PerformanceService pfService;
 
-    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService){
+    public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService, PerformanceService pfService){
         this.aRepo = aRepo;
         this.inputReader = inputReader;
         this.shellResult = shellResult;
@@ -54,6 +57,11 @@ public class ShellCommands {
         this.bService = bService;
         this.tService = tService;
         this.eTService = eTService;
+        this.pfService = pfService;
+    }
+
+    public String getDebug(){
+       return this.debug;
     }
 
     public void clearConsole(){
@@ -79,8 +87,8 @@ public class ShellCommands {
         }
     }
 
-    public Account createAccount(){
-        Account accountHolder;
+    public Account createAccount(String type){
+        Account accountHolder = null;
         String username = null;
         String password = null;
 
@@ -125,8 +133,11 @@ public class ShellCommands {
 
 
         Account newAccount = new Account(username, password);
-        accountHolder = aService.registerCandidateAccount(newAccount, new Employee());
-
+        if(type.equalsIgnoreCase("Candidate")) {
+            accountHolder = aService.registerCandidateAccount(newAccount, new Employee());
+        }else{
+            accountHolder = aService.registerEmployeeAccount(newAccount);
+        }
         return accountHolder;
     }
 
@@ -137,6 +148,12 @@ public class ShellCommands {
     public boolean promoteAccount(String type, String t, String role){
         boolean result = false;
         Account targetAccount = type.equalsIgnoreCase("Username") ? aService.findByUsername(t).get() : aService.findAccountById(Long.parseLong(t));
+        int targetPermission = getPermissionLevel(targetAccount.getRoles());
+
+        if(targetPermission >= ERole.ROLE_HR.getID()){
+            debug = "Permission Level Not High Enough!";
+            return false;
+        }
 
         if(role != null){
             if(role == "Employee"){
@@ -146,6 +163,10 @@ public class ShellCommands {
             }
         }else{
             result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
+        }
+
+        if(!result){
+            debug = "Account possibly already has role.";
         }
 
         return result;
@@ -158,10 +179,12 @@ public class ShellCommands {
     public boolean promoteAccount(String type, String t, boolean hr, String role){
         boolean result = false;
         Account targetAccount = type.equalsIgnoreCase("Username") ? aService.findByUsername(t).get() : aService.findAccountById(Long.parseLong(t));
+        int targetPermission = getPermissionLevel(targetAccount.getRoles());
 
-        System.out.println(t);
-        System.out.println(targetAccount);
-        System.out.println(role);
+        if(targetPermission >= ERole.ROLE_HR.getID()){
+            debug = "Permission Level Not High Enough!";
+            return false;
+        }
 
         if(hr){
             if(role != null){
@@ -176,9 +199,9 @@ public class ShellCommands {
                 result = aService.promoteCandidateAccount(targetAccount) != null ? true : false;
             }
         }
-
-        System.out.println(result);
-
+        if(!result){
+            debug = "Account possibly already has role.";
+        }
         return result;
     }
 
@@ -237,7 +260,7 @@ public class ShellCommands {
             commands.put("cIn", "Clock In");
             commands.put("cOut", "Clock Out");
             commands.put("update", "Update Information");
-            commands.put("info", "View Employee Information");
+            commands.put("info", "View Your Information");
 
             if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
 
@@ -284,19 +307,23 @@ public class ShellCommands {
     public void updateItem(String type, String item, Account targetUser, boolean hr) throws ParseException {
         boolean hSwitch = false;
         String newValue = "";
-        if(item.equalsIgnoreCase("Date Of Birth")){
-            newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
-        }else{
-            if(hr && !item.equals("First Name") && !item.equals("Last Name")){
-                hSwitch = true;
-            }else{
-                newValue = inputReader.prompt(String.format("Update %s", item));
+        do {
+            if (item.equalsIgnoreCase("Date Of Birth")) {
+                newValue = inputReader.prompt("Input Date Of Birth (mm/dd/yyyy)");
+            } else {
+                if (hr && !item.equals("First Name") && !item.equals("Last Name")) {
+                    hSwitch = true;
+                } else {
+                    newValue = inputReader.prompt(String.format("Update %s", item));
+                }
             }
-        }
 
-        if(!hSwitch && !inputReader.confirmationPrompt(String.format("Confirm new %s: %s", item, newValue))){
-            return;
-        }
+            if (!hSwitch && !inputReader.confirmationPrompt(String.format("Confirm new %s: %s", item, newValue))) {
+
+            }else {
+                break;
+            }
+        }while(true);
 
         Employee currentEmployee = targetUser.getEmployee();
 
@@ -339,20 +366,20 @@ public class ShellCommands {
                         do{
                             if(selection.equalsIgnoreCase("A")){
                                 newValue = inputReader.prompt(attributes.get(selection));
-                                if(inputReader.confirmationPrompt(newValue)){
+                                if(inputReader.confirmationPrompt(String.format("New Hourly Rate: %.2f", Double.parseDouble(newValue)))){
                                     payrate.setHourlyRate(Double.parseDouble(newValue));
                                     break;
                                 }
                             }else if(selection.equalsIgnoreCase("B")){
                                 newValue = inputReader.prompt(attributes.get(selection));
-                                if(inputReader.confirmationPrompt(newValue)){
+                                if(inputReader.confirmationPrompt(String.format("New Salary: %.2f", Double.parseDouble(newValue)))){
                                     payrate.setSalary(Double.parseDouble(newValue));
                                     break;
                                 }
                             }else if(selection.equalsIgnoreCase("C")){
                                 SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                                 newValue = inputReader.prompt(String.format("%s (\"mm/dd/yyyy\")", attributes.get(selection)));
-                                if(inputReader.confirmationPrompt(newValue)){
+                                if(inputReader.confirmationPrompt(String.format("New Effective Date: %s", newValue))){
                                     payrate.setEffectiveDate(format.parse(newValue));
                                     break;
                                 }
@@ -724,5 +751,265 @@ public class ShellCommands {
         }
 
     }
+
+    public Boolean manageCompany(String type){
+        clearConsole();
+        Boolean result = false;
+        String selection;
+        Map<String, String> options = new HashMap<>();
+        options.put("A", String.format("Add %s", type)); // Add Entity
+        options.put("B", String.format("Remove %s", type)); // Remove Entity
+        options.put("C", String.format("View all %ss", type)); // View All Entities
+        if(!type.equalsIgnoreCase("Employee")) {
+            options.put("D", String.format("Edit %s", type)); // Edit Existing Entity
+        }
+        options.put("X", "FINISH/CANCEL");
+
+        do{
+
+            selection = inputReader.listInput(type,
+                    "Selection an action [] above.",
+                    options,
+                    true);
+
+            if(selection.equalsIgnoreCase("X")){
+                break;
+            }
+
+            if(selection.equalsIgnoreCase("A")){
+                clearConsole();
+                if(type.equalsIgnoreCase("Training") || type.equalsIgnoreCase("Benefit")){
+
+                    String name = null;
+                    String desc = null;
+
+                    do{
+                        shellResult.printInfo(String.format("Create new %s:", type));
+                        String holder = inputReader.prompt(String.format("%s Name(input \"exit\" to cancel)", type));
+
+                        if(holder.equalsIgnoreCase("exit")){
+                            debug = "Cancelled Creation";
+                            return false;
+                        }
+
+                        if(tService.existsByName(holder) || bService.existsByName(holder)){
+                            clearConsole();
+                            shellResult.printError(String.format("%s already Exists!", type));
+                            continue;
+                        }
+
+                        if(inputReader.confirmationPrompt(String.format("%s Name: %s", type, holder))){
+                            name = holder;
+                            break;
+                        }
+                    }while(name == null);
+
+                    clearConsole();
+
+                    do{
+                        shellResult.printInfo(String.format("Create new %s:", type));
+                        String holder = inputReader.prompt(String.format("%s Description(input \"exit\" to cancel)", type));
+
+                        if(holder.equalsIgnoreCase("exit")){
+                            debug = "Cancelled Creation";
+                            return false;
+                        }
+
+                        if(inputReader.confirmationPrompt(String.format("%s Description: %s", type, holder))){
+                            desc = holder;
+                            break;
+                        }
+
+
+                    }while(desc == null);
+
+                    if(type.equalsIgnoreCase("Training")){
+                        clearConsole();
+                        tService.createTraining(new Training(name, desc));
+                        result = true;
+                        shellResult.printSuccess("Created Successfully!");
+                    }else if(type.equalsIgnoreCase("Benefit")){
+                        clearConsole();
+                        bService.createBenefit(new Benefit(name, desc));
+                        result = true;
+                        shellResult.printSuccess("Created Successfully!");
+                    }
+
+                }else if(!type.equalsIgnoreCase("Employee")){
+
+                    String name = null;
+
+                    do{
+                        shellResult.printInfo(String.format("Create new %s:", type));
+                        String holder = inputReader.prompt(String.format("%s Name(input \"exit\" to cancel)", type));
+
+                        if(holder.equalsIgnoreCase("exit")){
+                            debug = "Cancelled Creation";
+                            return false;
+                        }
+
+                        if(dService.existsByName(holder) || pService.existsByName(holder)){
+                            clearConsole();
+                            shellResult.printError(String.format("%s already Exists!", type));
+                            continue;
+                        }
+
+                        if(inputReader.confirmationPrompt(String.format("%s Name: %s", type, holder))){
+                            name = holder;
+                            break;
+                        }
+                    }while(name == null);
+
+                    if(type.equalsIgnoreCase("Department")){
+                        clearConsole();
+                        dService.createDepartment(new Department(name));
+                        result = true;
+                        shellResult.printSuccess("Created Successfully!");
+                    }else if(type.equalsIgnoreCase("Position")){
+                        clearConsole();
+                        pService.createPosition(new Position(name));
+                        result = true;
+                        shellResult.printSuccess("Created Successfully!");
+                    }
+
+                }else{
+                   clearConsole();
+                   if(createAccount("Employee") != null){
+                       clearConsole();
+                        result = true;
+                        shellResult.printSuccess("Created Successfully!");
+                   }else{
+                       debug = "Cancelled Creation";
+                   }
+                }
+            }else if(selection.equalsIgnoreCase("B")){
+                Long id = null;
+                do{
+                    String holder = inputReader.prompt(String.format("%s ID:", type));
+
+                    try{
+                        id = Long.parseLong(holder);
+                    }catch(NumberFormatException e){
+                        clearConsole();
+                        shellResult.printError("Error Parsing Input! Must be Digits!");
+                        continue;
+                    }
+
+                    if(type.equalsIgnoreCase("Position")){
+                        if(pService.existsById(id)){
+                            pService.deletePosition(id);
+                            clearConsole();
+                            shellResult.printSuccess(String.format("Removed %s Successfully!", type));
+                            result = true;
+                        }else{
+                            shellResult.printError(String.format("No %s With ID %s", type, id));
+                        }
+                    }else if(type.equalsIgnoreCase("Benefit")){
+                        if(bService.existsById(id)){
+                            bService.deleteBenefit(id);
+                            clearConsole();
+                            shellResult.printSuccess(String.format("Removed %s Successfully!", type));
+                            result = true;
+                        }else{
+                            shellResult.printError(String.format("No %s With ID %s", type, id));
+                        }
+                    }else if(type.equalsIgnoreCase("Department")){
+                        if(dService.existsById(id)){
+                            dService.deleteDepartment(id);
+                            clearConsole();
+                            shellResult.printSuccess(String.format("Removed %s Successfully!", type));
+                            result = true;
+                        }else{
+                            shellResult.printError(String.format("No %s With ID %s", type, id));
+                        }
+                    }else if(type.equalsIgnoreCase("Training")){
+                        if(tService.existsById(id)){
+                            tService.deleteTraining(id);
+                            clearConsole();
+                            shellResult.printSuccess(String.format("Removed %s Successfully!", type));
+                            result = true;
+                        }else{
+                            shellResult.printError(String.format("No %s With ID %s", type, id));
+                        }
+                    }else if(type.equalsIgnoreCase("Employee")){
+                        if(eService.existsById(id)){
+                            clearConsole();
+                            eService.deleteEmployee(id);
+                            shellResult.printSuccess(String.format("Removed %s Successfully!", type));
+                            result = true;
+                        }else{
+                            shellResult.printError(String.format("No %s With ID %s", type, id));
+                        }
+                    }
+                }while(id == null);
+            }else if(selection.equalsIgnoreCase("C")){
+
+            }else if(selection.equalsIgnoreCase("D")){
+
+            }
+        }while(true);
+
+        return result;
+    }
+
+    public boolean makePerformance(Account currentUser){
+        clearConsole();
+        shellResult.printInfo("Performance Review:");
+        String comment = null;
+        Employee reviewee = null;
+        Employee reviewer = currentUser.getEmployee();
+        Department managingDepartment = dService.findByManagerId(reviewer);
+
+        do{
+            String holder = inputReader.prompt("Comment(input \"exit\" to cancel)");
+            if(holder.equalsIgnoreCase("exit")){
+                return false;
+            }
+            if(inputReader.confirmationPrompt("Finish Comment")){
+                comment = holder;
+                break;
+            }
+        }while(comment == null);
+        clearConsole();
+        do{
+            Employee target = null;
+            Map<String, String> typeOptions = new HashMap<>();
+            typeOptions.put("A", "Account ID");
+            typeOptions.put("B", "Account Username");
+            typeOptions.put("C", "Employee ID");
+            typeOptions.put("X", "Cancel");
+
+            String type = inputReader.listInput("Find by: ",
+                    "Please selection an option [] above",
+                    typeOptions,
+                    true);
+
+            if(type.equalsIgnoreCase("X")){
+                return false;
+            }
+
+            String t = inputReader.prompt(typeOptions.get(type));
+
+            if(type.equals("A")){
+                target = aService.findAccountById(Long.parseLong(t)).getEmployee();
+            }else if(type.equals("B")){
+                target = aService.findByUsername(t).get().getEmployee();
+            }else if(type.equals("C")){
+                target = eService.findEmployee(Long.parseLong(t));
+            }
+
+            if(dEService.existsByEmployeeAndDepartment(target, managingDepartment) && getPermissionLevel(target.getAccount().getRoles()) < ERole.ROLE_MANAGER.getID()){
+                reviewee = target;
+                break;
+            }else{
+                shellResult.printError("Cannot Add A Performance Review To Employee!");
+            }
+
+        }while(reviewee == null);
+
+        pfService.createPerformance(new Performance(comment, reviewer, reviewee));
+        return true;
+    }
+
 
 }

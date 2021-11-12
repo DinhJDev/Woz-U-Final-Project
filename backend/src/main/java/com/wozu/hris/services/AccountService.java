@@ -42,7 +42,7 @@ public class AccountService {
     public Account registerEmployeeAccount(Account account) {
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         Set<Role> roles = account.getRoles();
-        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
         Employee e = new Employee();
         account.setEmployee(e);

@@ -103,5 +103,11 @@ public class BenefitService {
         return benefitRepository.findAllById(Id);
     }
 
+    public Boolean existsByName(String name){
+        return benefitRepository.existsByName(name);
+    }
 
+    public Boolean existsById(Long Id){
+        return benefitRepository.existsById(Id);
+    }
 }

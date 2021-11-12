@@ -46,6 +46,12 @@ public class Department {
     @JsonIgnore
     private List<DepartmentEmployee> employees;
 
+    public Department(){}
+
+    public Department(String name){
+        this.name = name;
+    }
+
     //getters
 
 

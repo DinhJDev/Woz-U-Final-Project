@@ -15,4 +15,7 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
     List<Training> findByTrainingNameNotIn(List<String> t);
 
     Optional<Training> findByTrainingName(String n);
+
+    Boolean existsByTrainingName(String name);
+
 }

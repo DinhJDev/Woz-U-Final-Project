@@ -1,6 +1,7 @@
 package com.wozu.hris.services;
 
 import com.wozu.hris.models.Department;
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,17 @@ public class DepartmentService {
     //delete department
     public void deleteDepartment(Long did) {
         this.deptRepo.deleteById(did);
+    }
+
+    public Department findByManagerId(Employee e){
+        return deptRepo.findByManagerId(e.getId());
+    }
+
+    public Boolean existsByName(String name){
+        return deptRepo.existsByName(name);
+    }
+
+    public Boolean existsById(Long Id){
+        return deptRepo.existsById(Id);
     }
 }

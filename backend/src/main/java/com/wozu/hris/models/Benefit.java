@@ -60,6 +60,13 @@ public class Benefit {
     @OneToMany(mappedBy = "benefit")
     private List<Employee> employees;
 
+    public Benefit(){}
+
+    public Benefit(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
+
     /*----------------------------------------------------------------
     GETTERS
     ----------------------------------------------------------------*/

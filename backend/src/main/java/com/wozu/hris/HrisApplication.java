@@ -230,12 +230,14 @@ class BasicCommands{
 		HrisApplication.setPermissionLevel(0);
 		shellCommands.clearConsole();
 		CustomPromptProvider.changePrompt("disconnected");
-		connect();
+		try {
+			connect();
+		}catch(Exception e){}
 	}
 
 	@ShellMethodAvailability("currentSessionIn")
 	@ShellMethod(key={"c", "connect", "-c", "sign-in", "in"}, value="Connect to HRIS")
-	public void connect(){
+	public void connect() throws ParseException {
 			shellCommands.clearConsole();
 			if(HrisApplication.getCurrentUser() == null) {
 				//Optional<Account> possibleUser;
@@ -267,6 +269,17 @@ class BasicCommands{
 
 						CustomPromptProvider.changePrompt("connected");
 
+						if(HrisApplication.getPermissionLevel() > 0 && (possibleUser.getEmployee().getFirstName() == null || possibleUser.getEmployee().getFirstName().equalsIgnoreCase(""))){
+							shellCommands.clearConsole();
+							shellResult.printInfo("No Employee Information! Please input now!");
+							do{
+								shellCommands.updateItem("Employee Information", "First Name", HrisApplication.getCurrentUser(), false);
+								shellCommands.updateItem("Employee Information", "Last Name", HrisApplication.getCurrentUser(), false);
+								shellCommands.updateItem("Employee Information", "Date Of Birth", HrisApplication.getCurrentUser(), false);
+								break;
+							}while(true);
+						}
+
 						shellCommands.clearConsole();
 						shellCommands.displayBanner();
 						shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
@@ -282,7 +295,7 @@ class BasicCommands{
 					}
 				}else if(selection.equalsIgnoreCase("B")){
 					shellResult.printSuccess("Register Account");
-					Account user = shellCommands.createAccount();
+					Account user = shellCommands.createAccount("Candidate");
 					if(user == null){
 						connect();
 					}else{
@@ -625,8 +638,17 @@ class ManagerCommands{
 	@ShellMethod(key="performance", value="Add performance review to Employee")
 	@ShellMethodAvailability("managerRestricted")
 	public void performance(){
-
-
+		if(shellCommands.makePerformance(HrisApplication.getCurrentUser())){
+			shellCommands.clearConsole();
+			shellCommands.displayBanner();
+			shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+			shellResult.printInfo("Performance Review Successful!");
+		}else{
+			shellCommands.clearConsole();
+			shellCommands.displayBanner();
+			shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+			shellResult.printInfo("Performance Review Scrapped.");
+		}
 	}
 
 	@ShellMethod(key="view-performance", value="View performance review of Employee")
@@ -734,7 +756,7 @@ class HRCommands{
 			shellCommands.clearConsole();
 			shellCommands.displayBanner();
 			shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
-			shellResult.printError("Failed to Promote Account!");
+			shellResult.printError("Failed to Promote Account!" + " " + shellCommands.getDebug());
 		}
 	}
 
@@ -820,7 +842,7 @@ class HRCommands{
 				Map<String, String> items = new HashMap<>();
 				items.put("A", "Payrate"); // Done
 				items.put("B", "Department"); // Done
-				items.put("C", "Training");
+				items.put("C", "Training"); // Done
 				items.put("D", "Benefits"); // Done
 
 				if(type.equalsIgnoreCase("D")){
@@ -861,17 +883,37 @@ class HRCommands{
 	@ShellMethod(key="manage", value="Manage Company")
 	@ShellMethodAvailability("hrAvailability")
 	public void manageCompany(){
+		Boolean changed = false;
 		Map<String, String> manageable = new HashMap<>();
-		manageable.put("A", "Positions");
-		manageable.put("B", "Benefits");
-		manageable.put("C", "Departments");
-		manageable.put("D", "Trainings");
+		manageable.put("A", "Position");
+		manageable.put("B", "Benefit");
+		manageable.put("C", "Department");
+		manageable.put("D", "Training");
+		manageable.put("E", "Employee"); // Create Employee | Delete Employee
 		manageable.put("X", "EXIT");
 
-		String manageSelection = inputReader.listInput("Manage",
-				"Please select an option [] above to manage.",
-				manageable,
-				true);
+		do {
+			shellCommands.clearConsole();
+			shellResult.printInfo("Manage:");
+			String manageSelection = inputReader.listInput("Manage",
+					"Please select an option [] above to manage.",
+					manageable,
+					true);
+			if(manageSelection.equalsIgnoreCase("X")){
+				break;
+			}
+			if(shellCommands.manageCompany(manageable.get(manageSelection))){
+				changed = true;
+			}
+		}while(true);
 
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+		if(changed){
+			shellResult.printSuccess("Changes Updated Successfully!");
+		}else{
+			shellResult.printInfo("No Changes Detected.");
+		}
 	}
 }

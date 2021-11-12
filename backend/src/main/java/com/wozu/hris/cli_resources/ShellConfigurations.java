@@ -23,7 +23,7 @@ public class ShellConfigurations {
     public InputReader inputReader(@Lazy LineReader lineReader, ShellResult shellResult){return new InputReader(lineReader, shellResult);}
 
     @Bean
-    public ShellCommands shellCommands(@Lazy AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService){
-        return new ShellCommands(aRepo, inputReader, shellResult, aService, eService, rRepo, bCryptPasswordEncoder, prService, dService, dEService, pService, bService, tService, eTService);
+    public ShellCommands shellCommands(@Lazy AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService, PerformanceService pfService){
+        return new ShellCommands(aRepo, inputReader, shellResult, aService, eService, rRepo, bCryptPasswordEncoder, prService, dService, dEService, pService, bService, tService, eTService, pfService);
     }
 }

@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
     Position findByName(String name);
+
+    Boolean existsByName(String name);
 }

@@ -25,6 +25,18 @@ public class ShellResult {
     @Value("${shell.out.bright}")
     public String brightColor;
 
+    @Value("${shell.out.table.header}")
+    public String tableHeader;
+
+    @Value("${shell.out.table.border}")
+    public String tableBorder;
+
+    @Value("${shell.out.table.data}")
+    public String tableData;
+
+    @Value("${shell.out.table.prompt}")
+    public String tablePrompt;
+
     private Terminal terminal;
 
     public ShellResult(Terminal terminal) {
@@ -51,6 +63,14 @@ public class ShellResult {
         return getColored(message, PromptColor.valueOf(errorColor));
     }
 
+    public String getTableHeader(String message){return getColored(message, PromptColor.valueOf(tableHeader));}
+
+    public String getTableBorder(String message){return getColored(message, PromptColor.valueOf(tableBorder));}
+
+    public String getTableData(String message){return getColored(message, PromptColor.valueOf(tableData));}
+
+    public String getTablePrompt(String message){return getColored(message, PromptColor.valueOf(tablePrompt));}
+
     public void print(String message){
         print(message, null);
     }
@@ -73,6 +93,14 @@ public class ShellResult {
 
     public void printBright(String message){print(message, PromptColor.valueOf(brightColor));}
 
+    public void printTableHeader(String message){print(message, PromptColor.valueOf(tableHeader));}
+
+    public void printTableBorder(String message){print(message, PromptColor.valueOf(tableBorder));}
+
+    public void printTableData(String message){print(message, PromptColor.valueOf(tableData));}
+
+    public void printTablePrompt(String message){print(message, PromptColor.valueOf(tablePrompt));}
+
     public void print(String message, PromptColor color){
         String toPrint = message;
         if(color != null){
@@ -82,6 +110,14 @@ public class ShellResult {
         terminal.flush();
     }
 
+    public void printSingle(String message, PromptColor color){
+        String toPrint = message;
+        if(color != null){
+            toPrint = getColored(message, color);
+        }
+        terminal.writer().print(toPrint);
+        terminal.flush();
+    }
 
     public void printList(String header, LinkedHashMap<String, Map<String, String>> Olist){
         LinkedHashMap<String, Map<String, String>> l = Olist;
@@ -110,4 +146,5 @@ public class ShellResult {
         }
     }
 
+    public void printTable(String header, LinkedHashMap<String, Map<String, String>> list){}
 }

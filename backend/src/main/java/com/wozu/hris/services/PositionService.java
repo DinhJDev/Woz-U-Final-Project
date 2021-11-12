@@ -56,4 +56,12 @@ public class PositionService {
         this.posRepo.deleteById(pid);
     }
 
+    public Boolean existsByName(String name){
+        return posRepo.existsByName(name);
+    }
+
+    public Boolean existsById(Long Id){
+        return posRepo.existsById(Id);
+    }
+
 }
