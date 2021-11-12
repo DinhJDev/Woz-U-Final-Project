@@ -11,6 +11,7 @@ import com.wozu.hris.services.EmployeeService;
 import com.wozu.hris.services.TimesheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,7 @@ public class TimesheetController {
     }
 
     // Clock-In Request
+    @PostAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
         Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
@@ -69,6 +71,7 @@ public class TimesheetController {
 
 
     // Clock-Out Request
+    @PostAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockout")
     public ResponseEntity<?> clockoutTimesheet(@RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
