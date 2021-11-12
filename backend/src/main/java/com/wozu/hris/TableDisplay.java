@@ -54,8 +54,9 @@ public class TableDisplay {
     public void managerTable(Employee[] employee) {
 
         String[] temp = new String[8];
-        Object[][] set = new String[employee.length][8];
-        int count = 0;
+        Object[][] set = new String[employee.length + 1][8];
+        set[0] = new String[]{"ID", "First name", "Last name", "Department", "Position", "Training", "Performance", "Status"};
+        int count = 1;
         for (Employee e : employee){
             temp[0] = e.getId().toString();
             temp[1] = e.getFirstName();
@@ -83,7 +84,8 @@ public class TableDisplay {
     @ShellMethod("Display all personnel")
     public void hrTable(Employee[] employee) {
         String[] temp = new String[13];
-        Object[][] set = new String[employee.length][13];
+        Object[][] set = new String[employee.length + 1][13];
+        set[0] = new String[] {"ID", "First Name", "Last Name", "Date of Birth", "Department", "Position", "Payrate", "Total Hours", "Training", "Performance", "Benefits", "Role", "Status"};
         int count = 0;
         for (Employee e : employee){
             temp[0] = e.getId().toString();
@@ -117,11 +119,12 @@ public class TableDisplay {
     public void candidateTable(Employee employee) {
 
         String[] temp = new String[3];
-        temp[0] = employee.getId().toString();
-        temp[1] = employee.getFirstName();
+        temp[0] = employee.getFirstName();
+        temp[1] = employee.getLastName();
         temp[2] = "Pending"; //find status
 
         Object[][] set = new String[][] {
+                {"First name", "Last name", "Status"},
                 temp
         };
 
