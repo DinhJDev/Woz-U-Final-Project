@@ -53,14 +53,15 @@ class TrainingsTable extends Component {
       updatedTrainingName: "", // Similar to trainingName and trainingDescription at the top. New name when we push it in
       updatedTrainingDescription: "",
       showUpdateModal: false, //  New modal.
-      showDeleteModal: false,                             // NEW @@@
+      showDeleteModal: false, // NEW @@@
     };
 
     this.openUpdateTrainingModal = this.openUpdateTrainingModal.bind(this);
     this.updatedTrainingName = this.updatedTrainingName.bind(this);
-    this.updatedTrainingDescription = this.updatedTrainingDescription.bind(this);
-    this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this);           // NEW @@@
-    this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this);           // NEW @@@
+    this.updatedTrainingDescription =
+      this.updatedTrainingDescription.bind(this);
+    this.closeDeleteTrainingModal = this.closeDeleteTrainingModal.bind(this); // NEW @@@
+    this.openDeleteTrainingModal = this.openDeleteTrainingModal.bind(this); // NEW @@@
   }
 
   // update input function: this are the funciton that will captures every change made to the inputs withint he update training item modal
@@ -83,26 +84,6 @@ class TrainingsTable extends Component {
 
   // this lets us run a function where we pass a parameter for the training item id and pass it throught he update end point
 
-  async updatedTrainingItem(id, e) {
-    e.preventDefault();
-    const trainingDetails = {
-      trainingName:
-        this.state.updatedTrainingName.length > 0 // Is the number of characters greater then 0? then I am going to set it to the updatedTrainingName otherwise I am going to set it to the trainingName oir the original one.
-          ? this.state.updatedTrainingName
-          : this.state.chosenTraining.trainingName,
-      description:
-        this.state.updatedTrainingDescription.length > 0 // NEW
-          ? this.state.updatedTrainingDescription
-          : this.state.chosenTraining.description,
-    };
-    TrainingsService.updateTrainingById(id, trainingDetails).then((res) => {
-      if (res) {
-        console.log(res.data);
-      }
-    });
-    this.forceUpdate();
-  }
-
   // this will open and close the modal for updating a training item
 
   async openUpdateTrainingModal(id) {
@@ -124,7 +105,8 @@ class TrainingsTable extends Component {
     }); // NEW
   }
 
-  async openDeleteTrainingModal(id) {                                                           // NEW @@@
+  async openDeleteTrainingModal(id) {
+    // NEW @@@
     this.setState({
       showDeleteModal: true,
     });
@@ -137,7 +119,8 @@ class TrainingsTable extends Component {
     console.log(this.state.chosenTraining.id); // NEW
   }
 
-  closeDeleteTrainingModal() {                                                              // NEW @@@
+  closeDeleteTrainingModal() {
+    // NEW @@@
     this.setState({
       showDeleteModal: false,
     });
@@ -145,16 +128,28 @@ class TrainingsTable extends Component {
 
   // this is to removes a training item within the delete training item end point. we are passing the training item id here
 
-  async deleteTraining(id, e) {                                                     // NEW @@@
+  // CREATE
+
+  async submitNewTraining(e) {
     e.preventDefault();
-    TrainingsService.deleteTraining(id).then((res) => {
-      this.setState({
-        trainings: this.state.trainings.filter(
-          (training) => training.id !== id                                      
-        ),
+
+    let trainingObject = {
+      trainingName: this.state.trainingName,
+      description: this.state.trainingDescription,
+    };
+
+    TrainingsService.createTraining(trainingObject)
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data.message);
+        }
       });
-    });
   }
+
+  // READ
 
   async componentDidMount() {
     await TrainingsService.getAllTrainings()
@@ -182,6 +177,42 @@ class TrainingsTable extends Component {
       });
   }
 
+  // UPDATE
+
+  async updatedTrainingItem(id, e) {
+    e.preventDefault();
+    const trainingDetails = {
+      trainingName:
+        this.state.updatedTrainingName.length > 0 // Is the number of characters greater then 0? then I am going to set it to the updatedTrainingName otherwise I am going to set it to the trainingName oir the original one.
+          ? this.state.updatedTrainingName
+          : this.state.chosenTraining.trainingName,
+      description:
+        this.state.updatedTrainingDescription.length > 0 // NEW
+          ? this.state.updatedTrainingDescription
+          : this.state.chosenTraining.description,
+    };
+    TrainingsService.updateTrainingById(id, trainingDetails).then((res) => {
+      if (res) {
+        console.log(res.data);
+      }
+    });
+    this.forceUpdate();
+  }
+
+  // DELETE
+
+  async deleteTraining(id, e) {
+    // NEW @@@
+    e.preventDefault();
+    TrainingsService.deleteTraining(id).then((res) => {
+      this.setState({
+        trainings: this.state.trainings.filter(
+          (training) => training.id !== id
+        ),
+      });
+    });
+  }
+
   closeCreateTrainingModal() {
     this.setState({
       showCreateModal: false,
@@ -200,25 +231,6 @@ class TrainingsTable extends Component {
       this.state.trainingName.length > 0 &&
       this.state.trainingDescription.length > 0
     );
-  }
-
-  async submitNewTraining(e) {
-    e.preventDefault();
-
-    let trainingObject = {
-      trainingName: this.state.trainingName,
-      description: this.state.trainingDescription,
-    };
-
-    TrainingsService.createTraining(trainingObject)
-      .then((res) => {
-        console.log(res.data.message);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.data.message);
-        }
-      });
   }
 
   createTable() {
@@ -246,7 +258,7 @@ class TrainingsTable extends Component {
             ></button>
           ),
           delete: (
-            <button                                                                                   // NEW @@@
+            <button // NEW @@@
               className="row-expand-button bx bx-trash"
               onClick={() => this.openDeleteTrainingModal(training.id)}
             ></button>
@@ -388,7 +400,8 @@ class TrainingsTable extends Component {
     );
   }
 
-  deleteModal() {                                                                       // NEW @@@        Line 412. String Interpulation. Can put strings and variables.  ' ' = String Interpulation. Which means you can put strings and variables. 
+  deleteModal() {
+    // NEW @@@        Line 412. String Interpulation. Can put strings and variables.  ' ' = String Interpulation. Which means you can put strings and variables.
     const { chosenTraining } = this.state;
     return (
       <Modal
@@ -396,10 +409,10 @@ class TrainingsTable extends Component {
         handleclose={this.closeDeleteTrainingModal}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
-        centered  
-      >                                                                                         
+        centered
+      >
         <ModalBody className="modal-main">
-          <h3> Now deleting: {`\t` + chosenTraining.trainingName}</h3>                    
+          <h3> Now deleting: {`\t` + chosenTraining.trainingName}</h3>
           <button
             to="/"
             size="lg"
@@ -425,13 +438,13 @@ class TrainingsTable extends Component {
     );
   }
 
-  render() {                                                                
+  render() {
     return (
-      <div className="white-box full-width zero-margin-box">   
+      <div className="white-box full-width zero-margin-box">
         <div className="box-padding">{this.createTable()}</div>
         {this.updateModal()}
         {this.createModal()}
-        {this.deleteModal()}                                           
+        {this.deleteModal()}
       </div>
     );
   }
@@ -439,9 +452,7 @@ class TrainingsTable extends Component {
 
 export default TrainingsTable;
 
-
-// ADD DELETE MODAL IN THE RENDER METHOD LINE 434. 
-
+// ADD DELETE MODAL IN THE RENDER METHOD LINE 434.
 
 // Delete the delete button on Performances table
 
@@ -449,4 +460,3 @@ export default TrainingsTable;
 // Benefits
 // Departments
 // Positions
-
