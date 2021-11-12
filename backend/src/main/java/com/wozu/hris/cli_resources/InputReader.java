@@ -91,4 +91,8 @@ public class InputReader {
         result = answer.equalsIgnoreCase("Y") ? true : false;
         return result;
     }
+
+    public void finishedPrompt(){
+        lineReader.readLine(shellResult.getTablePrompt("[FINISHED]:"));
+    }
 }

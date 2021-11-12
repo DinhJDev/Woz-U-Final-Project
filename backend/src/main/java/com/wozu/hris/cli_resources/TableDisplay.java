@@ -1,6 +1,9 @@
-package com.wozu.hris;
+package com.wozu.hris.cli_resources;
 
 import com.wozu.hris.cli_resources.ShellResult;
+import com.wozu.hris.models.Department;
+import com.wozu.hris.models.DepartmentEmployee;
+import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -9,26 +12,35 @@ import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 
-@ShellComponent
+@Service
 public class TableDisplay {
+
+    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
 
     @Autowired
-    ShellResult shellResult;
+    private ShellResult shellResult;
 
-    @ShellMethod("Display personal Information")
+    @Autowired
+    private ShellCommands shellCommands;
+
+    // Display Personal Information
     public void employeeTable(Employee employee) {
         //this should only take in one line... hm
+
         String[] temp = new String[12];
-        temp[0] = employee.getId().toString();
-        temp[1] = employee.getFirstName();
-        temp[2] = employee.getLastName();
-        temp[3] = employee.getDateOfBirth().toString();
+        temp[0] = employee.getId().toString(); //
+        temp[1] = employee.getFirstName(); //
+        temp[2] = employee.getLastName(); //
+        temp[3] = format.format(employee.getDateOfBirth()); //
         temp[4] = employee.getEmployeeDepartmentString();
-        temp[5] = employee.getPosition();
-        temp[6] = employee.getPayrate().toString();
+        temp[5] = shellCommands.getPermissionString(employee.getAccount().getRoles());
+        temp[6] = shellCommands.getPermissionLevel(employee.getAccount().getRoles()) >= ERole.ROLE_MANAGER.getID() ? employee.getPayrate().getSalary().toString() : employee.getPayrate().getHourlyRate().toString();
         temp[7] = employee.totalHours();
         temp[8] = employee.getEmployeeTrainingString();
         temp[9] = employee.getPerformances().toString();
@@ -50,7 +62,7 @@ public class TableDisplay {
 
     }
 
-    @ShellMethod("Display team")
+    // Display Team
     public void managerTable(Employee[] employee) {
 
         String[] temp = new String[8];
@@ -81,7 +93,7 @@ public class TableDisplay {
 
     }
 
-    @ShellMethod("Display all personnel")
+    // Display All Personnel
     public void hrTable(Employee[] employee) {
         String[] temp = new String[13];
         Object[][] set = new String[employee.length + 1][13];
@@ -115,7 +127,7 @@ public class TableDisplay {
 
     }
 
-    @ShellMethod("Display candidate table")
+    // Candidate Display
     public void candidateTable(Employee employee) {
 
         String[] temp = new String[3];

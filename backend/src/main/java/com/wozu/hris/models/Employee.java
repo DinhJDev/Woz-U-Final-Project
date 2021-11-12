@@ -3,12 +3,15 @@ package com.wozu.hris.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 @Entity
@@ -27,25 +30,30 @@ public class Employee {
     @OneToOne(mappedBy = "employee")
     private Account account;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee")
     private List<Timesheet> timesheets;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee")
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee")
     private List<Payroll> payrolls;
 
     @OneToOne(mappedBy = "employee")
     private Payrate payrate;
 
-    @ManyToOne
-    @JoinColumn(name="benefit_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="benefit_id", insertable=false, updatable=false)
     private Benefit benefit;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "reviewer")
     private List<Performance> reviews;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "reviewee")
     private List<Performance> performances;
 
@@ -53,6 +61,7 @@ public class Employee {
     @JsonIgnore
     private Department mDepartment;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee")
     private List<DepartmentEmployee> department;
 
@@ -139,9 +148,12 @@ public class Employee {
     public String totalHours(){
         double total = 0;
         for (Timesheet t: timesheets){
-            total = t.getEnd().getTime() - t.getStart().getTime();
+            if(t.getEnd() != null) {
+                long diffInMillies = Math.abs(t.getStart().getTime() - t.getEnd().getTime());
+                total += TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS) / 60;
+            }
         }
-        total = (total / (1000*60*60)) % 24;
+        total = Math.round(total * 100.0)/100.0;
 
         return String.valueOf(total);
     }
@@ -160,8 +172,9 @@ public class Employee {
 
         for (EmployeeTraining e: employeeTrainings){
             trainingList.append(e.getTraining().getTrainingName());
-            if (count < (employeeTrainings.size()-1)){
+            if (count < (employeeTrainings.size())){
                 trainingList.append(", ");
+                count++;
             }
         }
         return trainingList.toString();
@@ -244,9 +257,11 @@ public class Employee {
         int count = 1;
 
         for (DepartmentEmployee d: department){
-            departemntList.append(d.getDepartment().getName());
-            if (count < (department.size()-1)){
-                departemntList.append(", ");
+            if(d.getDepartment() != null) {
+                departemntList.append(d.getDepartment().getName());
+                if (count < (department.size() - 1)) {
+                    departemntList.append(", ");
+                }
             }
         }
         return departemntList.toString();
@@ -266,6 +281,7 @@ public class Employee {
     public String getPosition(){
         return "Employee";
     }
+
     public Boolean getClockedIn() {
         return isClockedIn;
     }

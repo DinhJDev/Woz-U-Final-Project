@@ -41,6 +41,7 @@ public class ShellCommands {
     private TrainingService tService;
     private EmployeeTrainingService eTService;
     private PerformanceService pfService;
+    private TableDisplay tDisplay;
 
     public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService, PerformanceService pfService){
         this.aRepo = aRepo;
@@ -885,7 +886,7 @@ public class ShellCommands {
             }else if(selection.equalsIgnoreCase("B")){
                 Long id = null;
                 do{
-                    String holder = inputReader.prompt(String.format("%s ID:", type));
+                    String holder = inputReader.prompt(String.format("%s ID", type));
 
                     try{
                         id = Long.parseLong(holder);

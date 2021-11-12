@@ -1,9 +1,6 @@
 package com.wozu.hris;
 
-import com.wozu.hris.cli_resources.CustomPromptProvider;
-import com.wozu.hris.cli_resources.InputReader;
-import com.wozu.hris.cli_resources.ShellCommands;
-import com.wozu.hris.cli_resources.ShellResult;
+import com.wozu.hris.cli_resources.*;
 import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
@@ -12,19 +9,12 @@ import com.wozu.hris.services.AccountService;
 import com.wozu.hris.services.EmployeeService;
 import com.wozu.hris.services.PayrollService;
 import com.wozu.hris.services.TimesheetService;
-import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.*;
-import org.springframework.boot.Banner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
@@ -34,7 +24,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.LogManager;
+import java.util.function.Supplier;
 
 @SpringBootApplication
 public class HrisApplication {
@@ -411,6 +401,8 @@ class EmployeeCommands {
 	EmployeeService eService;
 	@Autowired
 	PayrollService prService;
+	@Autowired
+	TableDisplay tDisplay;
 
 
 	public Availability employeeAvailability(){
@@ -559,7 +551,14 @@ class EmployeeCommands {
 
 	@ShellMethod(key="info", value="View Employee Information")
 	@ShellMethodAvailability("employeeAvailability")
-	public void info(){}
+	public void info(){
+		shellCommands.clearConsole();
+		tDisplay.employeeTable(HrisApplication.getCurrentUser().getEmployee());
+		inputReader.finishedPrompt();
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+	}
 }
 
 @ShellComponent

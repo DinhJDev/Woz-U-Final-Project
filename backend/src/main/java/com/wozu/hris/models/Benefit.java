@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -57,6 +59,7 @@ public class Benefit {
     RELATIONSHIPS
     ----------------------------------------------------------------*/
 
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OneToMany(mappedBy = "benefit")
     private List<Employee> employees;
 
