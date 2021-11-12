@@ -946,7 +946,21 @@ public class ShellCommands {
             }else if(selection.equalsIgnoreCase("C")){
 
             }else if(selection.equalsIgnoreCase("D")){
-
+                if(type.equalsIgnoreCase("Department")){
+                    clearConsole();
+                    String dId = inputReader.prompt("Department ID");
+                    shellResult.printInfo("Department: Update Manager");
+                    String id = inputReader.prompt("ID");
+                    Account target = aService.findAccountById(Long.parseLong(id));
+                    Department d = dService.findDepartmentById(Long.parseLong(dId));
+                    if(target != null){
+                        clearConsole();
+                        d.setManager(target.getEmployee());
+                        dService.updateDepartemnts(d.getId(), d);
+                        shellResult.printSuccess("Updated Manager Successfully!");
+                        result = true;
+                    }
+                }
             }
         }while(true);
 

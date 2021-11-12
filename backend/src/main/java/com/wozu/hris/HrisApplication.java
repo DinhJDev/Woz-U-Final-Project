@@ -369,7 +369,7 @@ class CandidateCommands{
 			shellResult.printError(e.toString());
 		}
 		do {
-			if (inputReader.confirmationPrompt("Done reading")) {
+			if (inputReader.finishedPrompt()) {
 				shellCommands.clearConsole();
 				shellCommands.displayBanner();
 				shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));

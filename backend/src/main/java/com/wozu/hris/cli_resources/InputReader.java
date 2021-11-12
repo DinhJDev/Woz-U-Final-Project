@@ -92,7 +92,8 @@ public class InputReader {
         return result;
     }
 
-    public void finishedPrompt(){
+    public Boolean finishedPrompt(){
         lineReader.readLine(shellResult.getTablePrompt("[FINISHED]:"));
+        return true;
     }
 }

@@ -46,7 +46,7 @@ public class Employee {
     private Payrate payrate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="benefit_id", insertable=false, updatable=false)
+    @JoinColumn(name="benefit_id")
     private Benefit benefit;
 
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -83,6 +83,7 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
+        this.isClockedIn = false;
     }
 
     public Long getId() {
@@ -205,7 +206,11 @@ public class Employee {
     }
 
     public String getBenefitName(){
-        return benefit.getName();
+        if(benefit != null) {
+            return benefit.getName();
+        }else{
+            return "N/A";
+        }
     }
 
     public void setBenefit(Benefit benefit) {
@@ -221,9 +226,11 @@ public class Employee {
     }
 
     public String getStatus(){
-        if (isClockedIn){
+        if (isClockedIn == null){
+            return "Clocked Out";
+        } else if (isClockedIn){
             return "Clocked In";
-        } else {
+        }else{
             return "Clocked Out";
         }
     }
@@ -283,6 +290,9 @@ public class Employee {
     }
 
     public Boolean getClockedIn() {
+        if(isClockedIn == null){
+            return false;
+        }
         return isClockedIn;
     }
 
