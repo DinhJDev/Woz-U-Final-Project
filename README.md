@@ -21,6 +21,10 @@
 
 McMillan and Associates have hired our development team to design, develop, and implement an HRIS for their respected company. The information system will support the organization’s HR division, in support of the organization as a whole. This HRIS is the online solution to help McMillan an Associates to collect and store data on their employees. Included in this project is an applicant tracking system, payroll, benefits, time & attendance, training, performance, management, and employee self-service. This system will also allow for the management of all employee information.
 
+## 💻 ERD <a name = "erd"></a>
+![image](https://user-images.githubusercontent.com/82099912/141489015-db07da3a-39b2-4eb8-9c05-7094ee77a2f3.png)
+
+
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
