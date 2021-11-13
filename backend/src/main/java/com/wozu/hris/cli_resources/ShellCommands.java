@@ -225,24 +225,23 @@ public class ShellCommands {
                 permLvl = r.getRoleId();
             }
         }
-        if(permLvl <= ERole.ROLE_MANAGER.getID()){
-            if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
-                return "Employee";
-            }else if(permLvl == ERole.ROLE_CANDIDATE.getID()){
-                return "Candidate";
-            }else{
-                return "Manager";
-            }
+        if(permLvl == ERole.ROLE_CANDIDATE.getID()){
+            return "Candidate";
+        }else if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
+            return "Employee";
+        }else if(permLvl == ERole.ROLE_MANAGER.getID()){
+            return "Manager";
         }else{
             return "HR";
         }
+
     }
 
     public LinkedHashMap<String, Map<String, String>> getCommandGroup(int permLvl){
         LinkedHashMap<String, Map<String, String>> listedCommands = new LinkedHashMap<>();
 
 
-        //Commands available to All Roles
+        //Commands available to Candidate+ Roles
         if(permLvl >= ERole.ROLE_CANDIDATE.getID()){
             Map<String, String> commands = new HashMap<>();
 
@@ -251,7 +250,7 @@ public class ShellCommands {
             if(permLvl == ERole.ROLE_CANDIDATE.getID()){
                 commands.put("view", "View Company Information");
             }
-
+            //Command Level
             listedCommands.put("Level 0", commands);
         }
 
@@ -263,10 +262,11 @@ public class ShellCommands {
             commands.put("update", "Update Information");
             commands.put("info", "View Your Information");
 
+            //Role Restricted Commands
             if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
 
             }
-
+            //Command Level
             listedCommands.put("Level 1", commands);
         }
 
@@ -276,10 +276,11 @@ public class ShellCommands {
 
             commands.put("view-performance", "View performance review of Employee");
 
+            //Role Restricted Commands
             if(permLvl == ERole.ROLE_MANAGER.getID()){
                 commands.put("performance", "Add performance review to Employee");
             }
-
+            //Command Level
             listedCommands.put("Level 2", commands);
         }
 
@@ -291,10 +292,11 @@ public class ShellCommands {
             commands.put("deactivate", "Deactivate current Interface");
             commands.put("manage", "Manage Company");
 
+            //Role Restricted Commands
             if(permLvl == ERole.ROLE_HR.getID()){
 
             }
-
+            //Command Level
             listedCommands.put("Level 3", commands);
         }
 

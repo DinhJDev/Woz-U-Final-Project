@@ -517,7 +517,7 @@ class EmployeeCommands {
 					items.put("A", "First Name");
 					items.put("B", "Last Name");
 					items.put("C", "Date Of Birth");
-					items.put("D", "Benefits");
+					//items.put("D", "Benefits");
 
 				}
 				items.put("X", "BACK");

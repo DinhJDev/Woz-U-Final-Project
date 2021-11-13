@@ -40,7 +40,7 @@ public class TableDisplay {
         temp[3] = format.format(employee.getDateOfBirth()); //
         temp[4] = employee.getEmployeeDepartmentString();
         temp[5] = shellCommands.getPermissionString(employee.getAccount().getRoles());
-        temp[6] = shellCommands.getPermissionLevel(employee.getAccount().getRoles()) >= ERole.ROLE_MANAGER.getID() ? employee.getPayrate().getSalary().toString() + "/year" : employee.getPayrate().getHourlyRate().toString() + "/hour";
+        temp[6] = employee.getPayrate() != null ? shellCommands.getPermissionLevel(employee.getAccount().getRoles()) >= ERole.ROLE_MANAGER.getID() ? employee.getPayrate().getSalary().toString() + "/year" : employee.getPayrate().getHourlyRate().toString() + "/hour" : "N/A";
         temp[7] = employee.totalHours();
         temp[8] = employee.getEmployeeTrainingString();
         temp[9] = employee.getlastPerformance();

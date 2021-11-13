@@ -60,7 +60,7 @@ public class Benefit {
     ----------------------------------------------------------------*/
 
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @OneToMany(mappedBy = "benefit")
+    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Employee> employees;
 
     public Benefit(){}

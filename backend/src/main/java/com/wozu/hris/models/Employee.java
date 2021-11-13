@@ -222,7 +222,11 @@ public class Employee {
     }
 
     public String getlastPerformance(){
-        return performances.get(performances.size()-1).getComment();
+        if(performances.size() > 0) {
+            return performances.get(performances.size() - 1).getComment();
+        }else{
+            return "N/A";
+        }
     }
 
     public String getStatus(){
