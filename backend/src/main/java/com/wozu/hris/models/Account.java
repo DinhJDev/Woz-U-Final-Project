@@ -27,7 +27,7 @@ public class Account {
     private Date createdAt;
     private Date updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
     @JsonIgnore
     private Employee employee;

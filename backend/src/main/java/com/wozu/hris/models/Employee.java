@@ -24,7 +24,7 @@ public class Employee {
     private Date updatedAt;
     private Boolean isClockedIn;
 
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL , orphanRemoval = true)
     private Account account;
 
     @OneToMany(mappedBy = "employee")
