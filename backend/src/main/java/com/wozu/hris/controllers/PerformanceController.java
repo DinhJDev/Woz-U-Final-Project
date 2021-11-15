@@ -5,6 +5,7 @@ import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Performance;
 import com.wozu.hris.payload.request.PerformanceRequest;
+import com.wozu.hris.payload.response.PerformanceResponse;
 import com.wozu.hris.repositories.EmployeeRepository;
 import com.wozu.hris.repositories.PerformanceRepository;
 import com.wozu.hris.repositories.RoleRepository;
@@ -109,7 +110,7 @@ public class PerformanceController {
     // Post manager/HR's review of employee
     @PostAuthorize("hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/create")
-    public ResponseEntity<Performance> createPerformance(@RequestBody PerformanceRequest performanceRequest,
+    public ResponseEntity<?> createPerformance(@RequestBody PerformanceRequest performanceRequest,
                                                          @RequestHeader("Authorization") String token) {
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Employee employee = eService.findByUsername(username);
@@ -117,7 +118,10 @@ public class PerformanceController {
         try {
             Performance performance = new Performance(performanceRequest.getComment(), employee, eRepo.getById(performanceRequest.getReviewee()));
             Performance _performance = pService.createPerformance(performance);
-            return new ResponseEntity<>(_performance, HttpStatus.CREATED);
+            PerformanceResponse pR = new PerformanceResponse(_performance.getId(), _performance.getCreatedAt(),
+                    _performance.getUpdatedAt(), _performance.getComment(), _performance.getReviewer().getId(),
+                    _performance.getReviewee().getId());
+            return new ResponseEntity<>(pR, HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
