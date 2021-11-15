@@ -21,6 +21,8 @@ import java.util.List;
 @Repository
 public interface PayrollRepository extends JpaRepository<Payroll, Long> {
 
+    List<Payroll> findAll();
+
     List<Payroll> findAllByDateBetweenAndEmployeeOrderByIdAsc(Date start, Date end, Employee employee);
 
 }

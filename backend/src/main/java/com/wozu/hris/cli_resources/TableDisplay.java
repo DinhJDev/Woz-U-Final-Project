@@ -1,10 +1,12 @@
 package com.wozu.hris.cli_resources;
 
+import antlr.ASTNULLType;
 import com.wozu.hris.cli_resources.ShellResult;
-import com.wozu.hris.models.Department;
-import com.wozu.hris.models.DepartmentEmployee;
-import com.wozu.hris.models.ERole;
-import com.wozu.hris.models.Employee;
+import com.wozu.hris.models.*;
+import com.wozu.hris.repositories.BenefitRepository;
+import com.wozu.hris.repositories.DepartmentRepository;
+import com.wozu.hris.repositories.PayrollRepository;
+import com.wozu.hris.repositories.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -16,15 +18,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Service
 public class TableDisplay {
 
     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-
+    SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
 
     @Autowired
     private ShellResult shellResult;
+    TrainingRepository trainingRepository;
+    DepartmentRepository deptRepo;
+    PayrollRepository payrollRepo;
+    BenefitRepository beneRepo;
 
     @Autowired
     private ShellCommands shellCommands;
@@ -56,7 +63,6 @@ public class TableDisplay {
         TableBuilder tableBuilder = new TableBuilder(model);
 
 
-        shellResult.printInfo("oldschool border style");
         tableBuilder.addFullBorder(BorderStyle.oldschool);
         shellResult.print(tableBuilder.build().render(80));
 
@@ -87,7 +93,6 @@ public class TableDisplay {
         TableBuilder tableBuilder = new TableBuilder(model);
 
 
-        shellResult.printInfo("oldschool border style");
         tableBuilder.addFullBorder(BorderStyle.oldschool);
         shellResult.print(tableBuilder.build().render(80));
 
@@ -103,7 +108,7 @@ public class TableDisplay {
             temp[0] = e.getId().toString();
             temp[1] = e.getFirstName();
             temp[2] = e.getLastName();
-            temp[3] = e.getDateOfBirth().toString();
+            temp[3] = format.format(e.getDateOfBirth());
             temp[4] = e.getEmployeeDepartmentString();
             temp[5] = e.getPosition();
             temp[6] = e.getPayrate().toString();
@@ -121,7 +126,6 @@ public class TableDisplay {
         TableBuilder tableBuilder = new TableBuilder(model);
 
 
-        shellResult.printInfo("oldschool border style");
         tableBuilder.addFullBorder(BorderStyle.oldschool);
         shellResult.print(tableBuilder.build().render(80));
 
@@ -144,10 +148,116 @@ public class TableDisplay {
         TableBuilder tableBuilder = new TableBuilder(model);
 
 
-        shellResult.printInfo("oldschool border style");
         tableBuilder.addFullBorder(BorderStyle.oldschool);
         shellResult.print(tableBuilder.build().render(80));
 
     }
+
+    public void listDepartments(){
+        List<Department> deptList = deptRepo.findAll();
+        Object[][] set = new String[deptList.size()][1];
+        String[] temp = new String[1];
+        int count = 0;
+        for (Department d : deptList) {
+            temp[0] = d.getName();
+            set[count] = temp;
+            count ++;
+        }
+
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+
+    public void listPayrolls(){
+        List<Payroll> payrollList = payrollRepo.findAll();
+        Object[][] set = new String[payrollList.size()][1];
+        String[] temp = new String[1];
+        int count = 0;
+        for (Payroll p : payrollList) {
+            temp[0] = String.valueOf(p.getAmount());
+            set[count] = temp;
+            count ++;
+        }
+
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+
+    }
+    public void listTrainings(){
+        List<Training> trainingList = trainingRepository.findAll();
+        Object[][] set = new String[trainingList.size()][1];
+        String[] temp = new String[1];
+        int count = 0;
+        for (Training t : trainingList) {
+            temp[0] = t.getTrainingName();
+            set[count] = temp;
+            count ++;
+        }
+
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+    public void listBenefits(){
+        List<Benefit> benefitList = beneRepo.findAll();
+        Object[][] set = new String[benefitList.size()][1];
+        String[] temp = new String[1];
+        int count = 0;
+        for (Benefit b : benefitList) {
+            temp[0] = b.getName();
+            set[count] = temp;
+            count ++;
+        }
+
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+
+    public void listPerformance(Employee e){
+        List<Performance> perfLisr = e.getReviews();
+        Object[][] set = new String[perfLisr.size()+1][3];
+        String[] temp = new String[3];
+        int count = 0;
+        set[0] = new String[] {"Date", "Performance", "Manager"};
+        for (Performance p : perfLisr) {
+            temp[0] = p.getCreatedAt().toString();
+            temp[1] = p.getComment();
+            temp[2] = p.getReviewer().getFirstName() + " " + p.getReviewer().getLastName();
+            set[count] = temp;
+            count ++;
+        }
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+
+    public void listTimeSheets(Employee e){
+        List<Timesheet> timeList = e.getTimesheets();
+        timeList = timeList.subList(timeList.size()-3, timeList.size());
+        Object[][] set = new String[4][3];
+        String[] temp = new String[3];
+        int count = 0;
+        set[0] = new String[] {"Clock-In", "Clock-Out", "Hours"};
+        for (Timesheet t : timeList){
+            temp[0] = timeFormat.format(t.getStart());
+            temp[1] = timeFormat.format(t.getEnd());
+            temp[2] = String.valueOf(Math.abs(t.getStart().getTime() - t.getEnd().getTime()));
+            set[count] = temp;
+            count ++;
+        }
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+
 
 }
