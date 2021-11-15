@@ -3,10 +3,8 @@ package com.wozu.hris.cli_resources;
 import antlr.ASTNULLType;
 import com.wozu.hris.cli_resources.ShellResult;
 import com.wozu.hris.models.*;
-import com.wozu.hris.repositories.BenefitRepository;
-import com.wozu.hris.repositories.DepartmentRepository;
-import com.wozu.hris.repositories.PayrollRepository;
-import com.wozu.hris.repositories.TrainingRepository;
+import com.wozu.hris.repositories.*;
+import com.wozu.hris.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,6 +31,19 @@ public class TableDisplay {
     DepartmentRepository deptRepo;
     PayrollRepository payrollRepo;
     BenefitRepository beneRepo;
+    PositionRepository posRepo;
+
+    @Autowired
+    TrainingService tService;
+    @Autowired
+    DepartmentService dService;
+    @Autowired
+    PayrollService pRService;
+    @Autowired
+    BenefitService bService;
+    @Autowired
+    PositionService posService;
+
 
     @Autowired
     private ShellCommands shellCommands;
@@ -99,19 +111,19 @@ public class TableDisplay {
     }
 
     // Display All Personnel
-    public void hrTable(Employee[] employee) {
-        String[] temp = new String[13];
-        Object[][] set = new String[employee.length + 1][13];
+    public void hrTable(List<Employee> employee) {
+        Object[][] set = new String[employee.size() + 1][13];
         set[0] = new String[] {"ID", "First Name", "Last Name", "Date of Birth", "Department", "Position", "Payrate", "Total Hours", "Training", "Performance", "Benefits", "Role", "Status"};
-        int count = 0;
+        int count = 1;
         for (Employee e : employee){
+            String[] temp = new String[13];
             temp[0] = e.getId().toString();
             temp[1] = e.getFirstName();
             temp[2] = e.getLastName();
             temp[3] = format.format(e.getDateOfBirth());
             temp[4] = e.getEmployeeDepartmentString();
-            temp[5] = e.getPosition();
-            temp[6] = e.getPayrate().toString();
+            temp[5] = shellCommands.getPermissionString(e.getAccount().getRoles());
+            temp[6] = e.getPayrate() != null ? shellCommands.getPermissionLevel(e.getAccount().getRoles()) >= ERole.ROLE_MANAGER.getID() ? e.getPayrate().getSalary().toString() + "/year" : e.getPayrate().getHourlyRate().toString() + "/hour" : "N/A";
             temp[7] = e.totalHours();
             temp[8] = e.getEmployeeTrainingString();
             temp[9] = e.getlastPerformance();
@@ -120,7 +132,7 @@ public class TableDisplay {
             temp[12] = e.getStatus();
 
             set[count] = temp;
-            count ++;
+            count++;
         }
         TableModel model = new ArrayTableModel(set);
         TableBuilder tableBuilder = new TableBuilder(model);
@@ -154,12 +166,13 @@ public class TableDisplay {
     }
 
     public void listDepartments(){
-        List<Department> deptList = deptRepo.findAll();
+        List<Department> deptList = dService.allDepts();
         Object[][] set = new String[deptList.size()][1];
-        String[] temp = new String[1];
         int count = 0;
         for (Department d : deptList) {
-            temp[0] = d.getName();
+            String[] temp = new String[2];
+            temp[0] = String.valueOf(d.getId());
+            temp[1] = d.getName();
             set[count] = temp;
             count ++;
         }
@@ -170,13 +183,15 @@ public class TableDisplay {
         shellResult.print(tableBuilder.build().render(80));
     }
 
-    public void listPayrolls(){
-        List<Payroll> payrollList = payrollRepo.findAll();
+    public void listPayrolls(Employee e){
+        Date start = shellCommands.getStartOfMonth();
+        List<Payroll> payrollList = pRService.findAllByDateBetweenAndEmployeeOrderByIdAsc(start, new Date(), e);
         Object[][] set = new String[payrollList.size()][1];
-        String[] temp = new String[1];
         int count = 0;
         for (Payroll p : payrollList) {
-            temp[0] = String.valueOf(p.getAmount());
+            String[] temp = new String[2];
+            temp[0] = String.valueOf(p.getId());
+            temp[1] = String.format("$%.2f", p.getAmount());
             set[count] = temp;
             count ++;
         }
@@ -187,13 +202,15 @@ public class TableDisplay {
         shellResult.print(tableBuilder.build().render(80));
 
     }
+
     public void listTrainings(){
-        List<Training> trainingList = trainingRepository.findAll();
+        List<Training> trainingList = tService.allTrainings();
         Object[][] set = new String[trainingList.size()][1];
-        String[] temp = new String[1];
         int count = 0;
         for (Training t : trainingList) {
-            temp[0] = t.getTrainingName();
+            String[] temp = new String[2];
+            temp[0] = String.valueOf(t.getId());
+            temp[1] = t.getTrainingName();
             set[count] = temp;
             count ++;
         }
@@ -203,15 +220,36 @@ public class TableDisplay {
         tableBuilder.addFullBorder(BorderStyle.oldschool);
         shellResult.print(tableBuilder.build().render(80));
     }
+
     public void listBenefits(){
-        List<Benefit> benefitList = beneRepo.findAll();
+        List<Benefit> benefitList = bService.allBenefits();
         Object[][] set = new String[benefitList.size()][1];
-        String[] temp = new String[1];
         int count = 0;
         for (Benefit b : benefitList) {
-            temp[0] = b.getName();
+            String[] temp = new String[2];
+            temp[0] = String.valueOf(b.getId());
+            temp[1] = b.getName();
             set[count] = temp;
             count ++;
+        }
+
+        TableModel model = new ArrayTableModel(set);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.oldschool);
+        shellResult.print(tableBuilder.build().render(80));
+    }
+
+    public void listPositions(){
+        List<Position> positionList = posService.allPos();
+        Object[][] set = new String[positionList.size()][1];
+
+        int count = 0;
+        for (Position p : positionList) {
+            String[] temp = new String[2];
+            temp[0] = String.valueOf(p.getId());
+            temp[1] = p.getName();
+            set[count] = temp;
+            count++;
         }
 
         TableModel model = new ArrayTableModel(set);
@@ -223,13 +261,14 @@ public class TableDisplay {
     public void listPerformance(Employee e){
         List<Performance> perfLisr = e.getReviews();
         Object[][] set = new String[perfLisr.size()+1][3];
-        String[] temp = new String[3];
         int count = 0;
         set[0] = new String[] {"Date", "Performance", "Manager"};
         for (Performance p : perfLisr) {
-            temp[0] = p.getCreatedAt().toString();
-            temp[1] = p.getComment();
-            temp[2] = p.getReviewer().getFirstName() + " " + p.getReviewer().getLastName();
+            String[] temp = new String[4];
+            temp[0] = String.valueOf(p.getId());
+            temp[1] = p.getCreatedAt().toString();
+            temp[2] = p.getComment();
+            temp[3] = p.getReviewer().getFirstName() + " " + p.getReviewer().getLastName();
             set[count] = temp;
             count ++;
         }
@@ -241,15 +280,16 @@ public class TableDisplay {
 
     public void listTimeSheets(Employee e){
         List<Timesheet> timeList = e.getTimesheets();
-        timeList = timeList.subList(timeList.size()-3, timeList.size());
+        timeList = timeList.size() > 3 ? timeList.subList(timeList.size()-3, timeList.size()) : timeList;
         Object[][] set = new String[4][3];
-        String[] temp = new String[3];
-        int count = 0;
+        int count = 1;
         set[0] = new String[] {"Clock-In", "Clock-Out", "Hours"};
         for (Timesheet t : timeList){
-            temp[0] = timeFormat.format(t.getStart());
-            temp[1] = timeFormat.format(t.getEnd());
-            temp[2] = String.valueOf(Math.abs(t.getStart().getTime() - t.getEnd().getTime()));
+            String[] temp = new String[3];
+            temp[0] = String.valueOf(t.getId());
+            temp[1] = timeFormat.format(t.getStart());
+            temp[2] = t.getEnd() != null ? timeFormat.format(t.getEnd()) : "N/A";
+
             set[count] = temp;
             count ++;
         }

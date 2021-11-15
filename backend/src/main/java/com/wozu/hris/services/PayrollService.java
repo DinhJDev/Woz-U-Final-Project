@@ -80,4 +80,8 @@ public class PayrollService {
     public void deletePayroll(Long Id){
         this.prRepo.deleteById(Id);
     }
+
+    public List<Payroll> findAllByDateBetweenAndEmployeeOrderByIdAsc(Date start, Date end, Employee e){
+        return prRepo.findAllByDateBetweenAndEmployeeOrderByIdAsc(start, end, e);
+    }
 }

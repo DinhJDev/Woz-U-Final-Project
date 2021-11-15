@@ -26,4 +26,9 @@ public class ShellConfigurations {
     public ShellCommands shellCommands(@Lazy AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService, PerformanceService pfService){
         return new ShellCommands(aRepo, inputReader, shellResult, aService, eService, rRepo, bCryptPasswordEncoder, prService, dService, dEService, pService, bService, tService, eTService, pfService);
     }
+
+    @Bean
+    public TableDisplay tDisplay(){
+        return new TableDisplay();
+    }
 }

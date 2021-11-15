@@ -41,6 +41,8 @@ public class ShellCommands {
     private TrainingService tService;
     private EmployeeTrainingService eTService;
     private PerformanceService pfService;
+
+    @Autowired
     private TableDisplay tDisplay;
 
     public ShellCommands(AccountRepository aRepo, InputReader inputReader, ShellResult shellResult, AccountService aService, EmployeeService eService, RoleRepository rRepo, PasswordEncoder bCryptPasswordEncoder, PayrateService prService, DepartmentService dService, DepartmentEmployeeService dEService, PositionService pService, BenefitService bService, TrainingService tService, EmployeeTrainingService eTService, PerformanceService pfService){
@@ -59,7 +61,6 @@ public class ShellCommands {
         this.tService = tService;
         this.eTService = eTService;
         this.pfService = pfService;
-        this.tDisplay = new TableDisplay();
     }
 
     public String getDebug(){
@@ -262,6 +263,8 @@ public class ShellCommands {
             commands.put("cOut", "Clock Out");
             commands.put("update", "Update Information");
             commands.put("info", "View Your Information");
+            commands.put("payrolls", "View Your Payrolls (Current Month)");
+            commands.put("timesheet", "View Your Timesheets (Last 3)");
 
             //Role Restricted Commands
             if(permLvl == ERole.ROLE_EMPLOYEE.getID()){
@@ -947,7 +950,34 @@ public class ShellCommands {
                     }
                 }while(id == null);
             }else if(selection.equalsIgnoreCase("C")){
-
+                if(inputReader.confirmationPrompt(String.format("View all %ss", type))){
+                    if(type.equalsIgnoreCase("Position")){
+                        clearConsole();
+                        tDisplay.listPositions();
+                        inputReader.finishedPrompt();
+                        clearConsole();
+                    }else if(type.equalsIgnoreCase("Benefit")){
+                        clearConsole();
+                        tDisplay.listBenefits();
+                        inputReader.finishedPrompt();
+                        clearConsole();
+                    }else if(type.equalsIgnoreCase("Department")){
+                        clearConsole();
+                        tDisplay.listDepartments();
+                        inputReader.finishedPrompt();
+                        clearConsole();
+                    }else if(type.equalsIgnoreCase("Training")){
+                        clearConsole();
+                        tDisplay.listTrainings();
+                        inputReader.finishedPrompt();
+                        clearConsole();
+                    }else if(type.equalsIgnoreCase("Employee")){
+                        clearConsole();
+                        tDisplay.hrTable(eService.allEmployees());
+                        inputReader.finishedPrompt();
+                        clearConsole();
+                    }
+                }
             }else if(selection.equalsIgnoreCase("D")){
                 if(type.equalsIgnoreCase("Department")){
                     clearConsole();
@@ -1321,4 +1351,16 @@ public class ShellCommands {
     }
 
 
+    public Date getStartOfMonth(){
+        Date start;
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        start = calendar.getTime();
+        return start;
+    }
 }

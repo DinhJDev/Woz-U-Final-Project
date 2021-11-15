@@ -559,6 +559,28 @@ class EmployeeCommands {
 		shellCommands.displayBanner();
 		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
 	}
+
+	@ShellMethod(key="payrolls", value="View Your Payrolls (Current Month)")
+	@ShellMethodAvailability("employeeAvailability")
+	public void payrolls(){
+		shellCommands.clearConsole();
+		tDisplay.listPayrolls(HrisApplication.getCurrentUser().getEmployee());
+		inputReader.finishedPrompt();
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+	}
+
+	@ShellMethod(key="timesheet", value="View Your Timesheets (Last 3)")
+	@ShellMethodAvailability("employeeAvailability")
+	public void timesheet(){
+		shellCommands.clearConsole();
+		tDisplay.listTimeSheets(HrisApplication.getCurrentUser().getEmployee());
+		inputReader.finishedPrompt();
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+	}
 }
 
 @ShellComponent
