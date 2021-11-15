@@ -170,8 +170,9 @@ class EmployeesTable extends Component {
     const performance = {
       comment: this.state.performanceComments,
       reviewee: this.state.chosenEmployee.id,
+      reviewer: this.state.employeeInfo.id,
     };
-    console.log(this.state.chosenEmployee.id.toString());
+    console.log(this.state.chosenEmployee.id);
     console.log(this.state.performanceComments);
     PerformanceService.createPerformance(performance)
       .then((res) => {

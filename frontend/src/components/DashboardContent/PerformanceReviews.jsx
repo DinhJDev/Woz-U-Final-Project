@@ -33,6 +33,11 @@ class PerformanceReviews extends Component {
           field: "createdAt",
           width: "100%",
         },
+        {
+          label: "Updated",
+          field: "updatedAt",
+          width: "100%",
+        },
       ],
     };
   }
@@ -69,6 +74,7 @@ class PerformanceReviews extends Component {
         this.setState({ reviews: reviewsList });
         console.log(reviewsList);
         console.log(data);
+        console.log(this.state.currentUser.id);
       })
       .catch((err) => {
         if (err.response) {

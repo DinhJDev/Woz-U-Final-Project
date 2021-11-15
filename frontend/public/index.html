@@ -94,8 +94,6 @@
         </style>
       </template>
     </dom-module>
-
-    <script type="text/javascript" src="%PUBLIC_URL%/js/paginate.js"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -114,15 +112,6 @@
       src="https://unpkg.com/scrollreveal"
       type="text/javascript"
     ></script>
-    <script>
-      const navLink = document.querySelectorAll(".nav__link");
-
-      function linkAction() {
-        const navMenu = document.getElementById("nav-menu");
-        navMenu.classList.remove("show-menu");
-      }
-      navLink.forEach((n) => n.addEventListener("click", linkAction));
-    </script>
     <script>
       function scrollTop() {
         const scrollTop = document.getElementById("scroll-top");
