@@ -2,6 +2,7 @@ import React from "react";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import PerformanceReviews from "./PerformanceReviews";
+import TimesheetBoard from "./TimesheetBoard";
 
 function InboxTabs() {
   return (
@@ -15,7 +16,9 @@ function InboxTabs() {
         <PerformanceReviews />
       </TabPanel>
 
-      <TabPanel></TabPanel>
+      <TabPanel>
+        <TimesheetBoard />
+      </TabPanel>
     </Tabs>
   );
 }

@@ -15,6 +15,12 @@ class TimesheetService {
     return axios.get(TIMESHEET_API_BASE_URL + "/" + timesheetId);
   }
 
+  async getEmployeeTimesheets(employeeId) {
+    return axios.get(TIMESHEET_API_BASE_URL + "/" + employeeId, {
+      headers: await AuthorizationHeader(),
+    });
+  }
+
   async getLastThreeTimesheets(timesheetId) {
     return axios.get(TIMESHEET_API_BASE_URL + "/" + timesheetId, {
       headers: await AuthorizationHeader(),

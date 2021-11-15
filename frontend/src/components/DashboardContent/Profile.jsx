@@ -63,9 +63,7 @@ class Profile extends Component {
             </div>
 
             <div className="card-team-page-social-media-wrapper">
-              <button className="action-button"></button>
-              <button className="action-button"></button>
-              <button className="action-button"></button>
+              <button className="add-data-button ">Edit profile</button>
             </div>
           </div>
         </div>
