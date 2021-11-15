@@ -42,7 +42,7 @@ public class AccountService {
     public Account registerEmployeeAccount(Account account) {
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         Set<Role> roles = account.getRoles();
-        roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+        roles.add(rRepo.findByName(ERole.ROLE_EMPLOYEE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
         account.setRoles(roles);
         Employee e = new Employee();
         account.setEmployee(e);
@@ -65,20 +65,39 @@ public class AccountService {
             return null;
         }
     }
-    // Promotes Employee Account to HR Account
+    // Promotes Employee Account to Manager Account
     public Account promoteEmployeeAccount(Account account) {
         Set<Role> roles = account.getRoles();
         if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
-            if (roles.contains(rRepo.findByName(ERole.ROLE_CANDIDATE))){
+            if (roles.contains(rRepo.findByName(ERole.ROLE_MANAGER))){
                 // Account already has Employee Role.
                 return null;
             } else {
-                roles.add(rRepo.findByName(ERole.ROLE_CANDIDATE).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
+                roles.add(rRepo.findByName(ERole.ROLE_MANAGER).orElseThrow(()-> new RuntimeException("Error: Role is not found.")));
                 account.setRoles(roles);
                 return aRepo.save(account);
             }
         } else {
             // Account doesn't exist.
+            return null;
+        }
+    }
+
+    // Promotes Manager Account to HR Account
+    public Account promoteManagerAccount(Account account){
+        System.out.println(account);
+        Set<Role> roles = account.getRoles();
+        System.out.println(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent());
+        if(aRepo.findByUsernameIgnoreCase(account.getUsername()).isPresent()){
+            if(roles.contains(rRepo.findByName(ERole.ROLE_HR))){
+                return null;
+            }else{
+                System.out.println("Check");
+                roles.add(rRepo.findByName(ERole.ROLE_HR).orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
+                account.setRoles(roles);
+                return aRepo.save(account);
+            }
+        }else{
             return null;
         }
     }
@@ -113,5 +132,9 @@ public class AccountService {
     // Delete an employee
     public void deleteAccount(Long id) {
         this.aRepo.deleteById(id);
+    }
+
+    public Boolean existsById(Long id){
+        return aRepo.existsById(id);
     }
 }

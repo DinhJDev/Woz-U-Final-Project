@@ -1,5 +1,7 @@
 package com.wozu.hris.models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -57,8 +59,15 @@ public class Benefit {
     RELATIONSHIPS
     ----------------------------------------------------------------*/
 
-    @OneToMany(mappedBy = "benefit")
+    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL)
     private List<Employee> employees;
+
+    public Benefit(){}
+
+    public Benefit(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 
     /*----------------------------------------------------------------
     GETTERS
@@ -107,4 +116,5 @@ public class Benefit {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }

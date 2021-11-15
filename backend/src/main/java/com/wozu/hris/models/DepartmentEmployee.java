@@ -33,6 +33,12 @@ public class DepartmentEmployee {
         this.position = null;
     }
 
+    public DepartmentEmployee(Department department, Employee employee, Position position) {
+        this.department = department;
+        this.employee = employee;
+        this.position = position;
+    }
+
     public Long getId() {
         return id;
     }

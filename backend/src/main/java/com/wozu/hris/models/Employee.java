@@ -3,12 +3,15 @@ package com.wozu.hris.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 @Entity
@@ -23,37 +26,43 @@ public class Employee {
     private Date createdAt;
     private Date updatedAt;
     private Boolean isClockedIn;
-
-    @OneToOne(mappedBy = "employee")
+  
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Account account;
 
-    @OneToMany(mappedBy = "employee")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Timesheet> timesheets;
 
-    @OneToMany(mappedBy = "employee")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
-    @OneToMany(mappedBy = "employee")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Payroll> payrolls;
 
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private Payrate payrate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="benefit_id")
     private Benefit benefit;
 
-    @OneToMany(mappedBy = "reviewer")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL)
     private List<Performance> reviews;
 
-    @OneToMany(mappedBy = "reviewee")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "reviewee", cascade = CascadeType.ALL)
     private List<Performance> performances;
 
     @OneToOne(mappedBy = "manager")
     @JsonIgnore
     private Department mDepartment;
 
-    @OneToMany(mappedBy = "employee")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<DepartmentEmployee> department;
 
     @PrePersist
@@ -74,6 +83,7 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
+        this.isClockedIn = false;
     }
 
     public Long getId() {
@@ -136,12 +146,39 @@ public class Employee {
         return timesheets;
     }
 
+    public String totalHours(){
+        double total = 0;
+        for (Timesheet t: timesheets){
+            if(t.getEnd() != null) {
+                long diffInMillies = Math.abs(t.getStart().getTime() - t.getEnd().getTime());
+                total += TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS) / 60;
+            }
+        }
+        total = Math.round(total * 100.0)/100.0;
+
+        return String.valueOf(total);
+    }
+
     public void setTimesheets(List<Timesheet> timesheets) {
         this.timesheets = timesheets;
     }
 
     public Set<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
+    }
+
+    public String getEmployeeTrainingString(){
+        StringBuilder trainingList = new StringBuilder();
+        int count = 1;
+
+        for (EmployeeTraining e: employeeTrainings){
+            trainingList.append(e.getTraining().getTrainingName());
+            if (count < (employeeTrainings.size())){
+                trainingList.append(", ");
+                count++;
+            }
+        }
+        return trainingList.toString();
     }
 
     public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
@@ -168,12 +205,38 @@ public class Employee {
         return benefit;
     }
 
+    public String getBenefitName(){
+        if(benefit != null) {
+            return benefit.getName();
+        }else{
+            return "N/A";
+        }
+    }
+
     public void setBenefit(Benefit benefit) {
         this.benefit = benefit;
     }
 
     public List<Performance> getReviews() {
         return reviews;
+    }
+
+    public String getlastPerformance(){
+        if(performances.size() > 0) {
+            return performances.get(performances.size() - 1).getComment();
+        }else{
+            return "N/A";
+        }
+    }
+
+    public String getStatus(){
+        if (isClockedIn == null){
+            return "Clocked Out";
+        } else if (isClockedIn){
+            return "Clocked In";
+        }else{
+            return "Clocked Out";
+        }
     }
 
     public void setReviews(List<Performance> reviews) {
@@ -200,11 +263,40 @@ public class Employee {
         return department;
     }
 
+    public String getEmployeeDepartmentString(){
+        StringBuilder departemntList = new StringBuilder();
+        int count = 1;
+
+        for (DepartmentEmployee d: department){
+            if(d.getDepartment() != null) {
+                departemntList.append(d.getDepartment().getName());
+                if (count < (department.size() - 1)) {
+                    departemntList.append(", ");
+                }
+            }
+        }
+        return departemntList.toString();
+    }
+
     public void setDepartment(List<DepartmentEmployee> department) {
         this.department = department;
     }
 
+    public Employee (String firstName, String lastName, Date dateOfBirth, Benefit benefit){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.benefit = benefit; //or whatever level employees should have by default
+    }
+
+    public String getPosition(){
+        return "Employee";
+    }
+
     public Boolean getClockedIn() {
+        if(isClockedIn == null){
+            return false;
+        }
         return isClockedIn;
     }
 

@@ -36,6 +36,11 @@ public class Position {
     @OneToMany(mappedBy = "position")
     private List<DepartmentEmployee> departmentEmployee;
 
+    public Position(){}
+
+    public Position(String name){
+        this.name = name;
+    }
 
     //getters
 

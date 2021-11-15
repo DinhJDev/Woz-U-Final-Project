@@ -45,4 +45,6 @@ public class Role {
     public void setAccount(Set<Account> account) {
         this.account = account;
     }
+
+    public int getRoleId(){return name.getID();}
 }
