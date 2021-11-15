@@ -5,6 +5,8 @@ import com.wozu.hris.models.Employee;
 import com.wozu.hris.repositories.BenefitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +81,7 @@ public class BenefitService {
     ----------------------------------------------------------------*/
 
     public void deleteBenefit(Long benefitID) {
-        this.benefitRepository.deleteById(benefitID);
+        benefitRepository.deleteById(benefitID);
     }
 
     /*----------------------------------------------------------------
@@ -110,4 +112,5 @@ public class BenefitService {
     public Boolean existsById(Long Id){
         return benefitRepository.existsById(Id);
     }
+
 }

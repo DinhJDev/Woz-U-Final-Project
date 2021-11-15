@@ -27,22 +27,22 @@ public class Employee {
     private Date updatedAt;
     private Boolean isClockedIn;
   
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Account account;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Timesheet> timesheets;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Payroll> payrolls;
 
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private Payrate payrate;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -50,11 +50,11 @@ public class Employee {
     private Benefit benefit;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "reviewer")
+    @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL)
     private List<Performance> reviews;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "reviewee")
+    @OneToMany(mappedBy = "reviewee", cascade = CascadeType.ALL)
     private List<Performance> performances;
 
     @OneToOne(mappedBy = "manager")
@@ -62,7 +62,7 @@ public class Employee {
     private Department mDepartment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<DepartmentEmployee> department;
 
     @PrePersist

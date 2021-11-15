@@ -59,8 +59,7 @@ public class Benefit {
     RELATIONSHIPS
     ----------------------------------------------------------------*/
 
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL)
     private List<Employee> employees;
 
     public Benefit(){}
@@ -117,4 +116,5 @@ public class Benefit {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }
