@@ -2,6 +2,7 @@ package com.wozu.hris.services;
 
 import com.wozu.hris.models.Benefit;
 import com.wozu.hris.repositories.BenefitRepository;
+import com.wozu.hris.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -30,6 +31,8 @@ public class BenefitService {
     ----------------------------------------------------------------*/
 
     @Autowired BenefitRepository benefitRepository;
+    @Autowired
+    EmployeeRepository eRepo;
 
     /*----------------------------------------------------------------
     RETURN ALL BENEFITS
@@ -78,6 +81,7 @@ public class BenefitService {
     ----------------------------------------------------------------*/
 
     public void deleteBenefit(Long benefitID) {
+
         this.benefitRepository.deleteById(benefitID);
     }
 }

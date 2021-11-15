@@ -1,8 +1,13 @@
 package com.wozu.hris.controllers;
 
 
+import com.wozu.hris.models.Department;
+import com.wozu.hris.models.DepartmentEmployee;
 import com.wozu.hris.models.ERole;
 import com.wozu.hris.models.Employee;
+import com.wozu.hris.payload.request.EmployeeBenefitsRequest;
+import com.wozu.hris.payload.request.EmployeeDepartmentRequest;
+import com.wozu.hris.payload.request.EmployeeRequest;
 import com.wozu.hris.repositories.EmployeeRepository;
 import com.wozu.hris.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
@@ -118,23 +124,45 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-    // update employee rest api
+    // update employee details
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee employeeDetails){
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeRequest employeeDetails){
         Employee employee = employeeService.findEmployee(id);
 
         employee.setFirstName(employeeDetails.getFirstName());
         employee.setLastName(employeeDetails.getLastName());
         employee.setDateOfBirth(employeeDetails.getDateOfBirth());
-        employee.setEmployeeTrainings(employeeDetails.getEmployeeTrainings());
-        employee.setBenefit(employeeDetails.getBenefit());
-
-        // Finds difference between request List/Set vs existing and makes updates
 
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
 
         return  ResponseEntity.ok(updatedEmployee);
     }
+
+    // update employee benefits
+    @PutMapping("/employees/{id}/benefits")
+    public ResponseEntity<?> updateEmployeeBenefits(@PathVariable("id") Long id, @RequestBody EmployeeBenefitsRequest employeeDetails) {
+        Employee employee = employeeService.findEmployee(id);
+
+        employee.setBenefit(employeeDetails.getBenefit());
+        employeeService.updateEmployee(id, employee);
+
+        return ResponseEntity.ok("Employee " + employee.getId() + " updated with the following benefit: " + employeeDetails.getBenefit().getName());
+    }
+
+    // update employee department
+    /*@PutMapping("/employees/{id}/departments")
+    public ResponseEntity<?> updateEmployeeDepartments(@PathVariable("id") Long id, @RequestBody EmployeeDepartmentRequest employeeDepartmentRequest) {
+        Employee employee = employeeService.findEmployee(id);
+        List<Department> addList = employee.getDepartment().stream().map(DepartmentEmployee::getDepartment).collect(Collectors.toList());
+        List<Department> delList = employeeDepartmentRequest.getDepartment();
+
+        // Check if Department added
+        addList.removeAll(employeeDepartmentRequest.getDepartment());
+        delList.removeAll(employee.getDepartment().stream().map(DepartmentEmployee::getDepartment).collect(Collectors.toList()));
+    }*/
+
+    // update employee trainings
+    @PutMapping("/employees/{id}/trainings")
 
     // delete employee rest api
     @DeleteMapping("/employees/{id}")

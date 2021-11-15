@@ -1,5 +1,7 @@
 package com.wozu.hris.services;
+import com.wozu.hris.models.EmployeeTraining;
 import com.wozu.hris.models.Training;
+import com.wozu.hris.repositories.EmployeeTrainingRepository;
 import com.wozu.hris.repositories.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import java.util.Optional;
 public class TrainingService {
     @Autowired
     TrainingRepository trainingRepository;
+    @Autowired
+    EmployeeTrainingRepository employeeTRepo;
     public List<Training> allTrainings() {
         return trainingRepository.findAll();
     }
@@ -34,6 +38,8 @@ public class TrainingService {
         }
     }
     public void deleteTraining(Long id) {
+        List<EmployeeTraining> eT = employeeTRepo.findAllByTrainingId(id);
+        employeeTRepo.deleteAllInBatch(eT);
         this.trainingRepository.deleteById(id);
     }
 }
