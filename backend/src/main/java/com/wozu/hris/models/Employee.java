@@ -36,9 +36,8 @@ public class Employee {
     private List<Timesheet> timesheets;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
-    private Set<EmployeeTraining> employeeTrainings; //
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<>(); //
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)

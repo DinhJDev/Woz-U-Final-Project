@@ -24,4 +24,6 @@ public interface EmployeeTrainingRepository extends JpaRepository<EmployeeTraini
 
     Optional<EmployeeTraining> findByEmployeeAndTraining(Employee e, Training t);
 
+    List<EmployeeTraining> findAllByTrainingId(Long id);
+
 }

@@ -74,12 +74,12 @@ public class EmployeeTrainingService {
         return eTRepo.existsByEmployee(e);
     }
 
-    public void saveAll(List<EmployeeTraining> e){
+    public void saveAll(Set<EmployeeTraining> e){
         eTRepo.saveAll(e);
     }
 
     public void deleteAll(Training t){
-       List<EmployeeTraining> et = eTRepo.findAllByTraining(t);
+        List<EmployeeTraining> et = eTRepo.findAllByTraining(t);
        eTRepo.deleteAllInBatch(et);
     }
 }

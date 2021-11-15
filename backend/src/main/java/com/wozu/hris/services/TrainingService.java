@@ -20,7 +20,7 @@ public class TrainingService {
     EmployeeTrainingService etService;
 
     @Autowired
-    EmployeeTrainingRepository eTRepo;
+    EmployeeTrainingRepository employeeTRepo;
 
     public List<Training> allTrainings() {
         return trainingRepository.findAll();
@@ -46,12 +46,11 @@ public class TrainingService {
     }
     public void deleteTraining(Long id) {
         Training t = trainingRepository.findById(id).get();
-        List<EmployeeTraining> et = t.getEmployeeTrainings();
+        Set<EmployeeTraining> et = t.getEmployeeTrainings();
         et.forEach((e)->e.setEmployee(null));
         etService.saveAll(et);
-        etService.deleteAll(t);
 
-        trainingRepository.delete(t);
+        this.trainingRepository.deleteById(id);
     }
 
     public List<Training> findAllNotIn(List<String> t){

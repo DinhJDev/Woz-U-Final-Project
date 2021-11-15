@@ -22,8 +22,8 @@ public class Training {
     private String description;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<EmployeeTraining> employeeTrainings;
+    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<>();
 
     public Training(){}
 
@@ -72,11 +72,11 @@ public class Training {
         this.description = description;
     }
 
-    public List<EmployeeTraining> getEmployeeTrainings() {
+    public Set<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
     }
 
-    public void setEmployeeTrainings(List<EmployeeTraining> employeeTrainings) {
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
     }
 }
