@@ -6,8 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import { ModalBody } from "react-bootstrap";
 import EmployeeService from "../../services/EmployeeService";
 import { getCurrentDate } from "../../utils/getCurrentDate";
-
-import "@vaadin/vaadin-date-picker/vaadin-date-picker.js";
+import formatDate from "../../utils/formatDate";
 
 class PayratesTable extends Component {
   constructor(props) {
@@ -98,7 +97,6 @@ class PayratesTable extends Component {
     this.setState({
       showCreateModal: true,
     });
-    console.log(this.state.showCreateModal);
   }
 
   closeCreatePayrateModal(e) {
@@ -125,9 +123,12 @@ class PayratesTable extends Component {
     e.preventDefault();
 
     let payrateObject = {
+      employee: document.querySelector('input[name="employee-list"]:checked')
+        .value,
       hourlyRate: this.state.newHourlyRate,
       salary: this.state.newSalary,
-      effectiveDate: this.state.newEffectiveDate,
+      /*
+      effectiveDate: formatDate(getCurrentDate()) + "T06:00:00.000+00:00",*/
     };
 
     PayratesService.createPayrate(payrateObject)
@@ -246,44 +247,27 @@ class PayratesTable extends Component {
           handleclose={this.closeCreatePayrateModal}
         >
           <ModalBody className="modal-main">
-            <h4>Employees List</h4>
-
-            <div className="white-box full-width">
-              <div className="box-padding">
+            <form>
+              <label className="label">Employee ID</label>
+              <div className="white-box full-width box-padding">
                 {employees &&
                   employees.map((employee) => (
-                    <div>
-                      {employee.id +
-                        `.\n` +
-                        employee.firstName +
-                        `\n` +
-                        employee.lastName}
+                    <div className="input-container">
+                      <input
+                        type="radio"
+                        value={employee.id}
+                        name="employee-list"
+                        id={employee.id}
+                        aria-checked
+                      />
+                      <label for={employee.id}>
+                        {" "}
+                        {employee.id}{" "}
+                        {employee.firstName + `\n` + employee.lastName}
+                      </label>
                     </div>
                   ))}
               </div>
-            </div>
-            <form>
-              <label className="label">Employee ID</label>
-              <input
-                type="name"
-                maxLength="256"
-                name="name"
-                placeholder="Enter the employee ID"
-                className="input payrate"
-                value={this.state.newEmployeeId}
-                onChange={this.newEmployeeId}
-              />
-              <input
-                id="effective-date"
-                theme="custom-input-field-style-modal"
-                className="input payrate"
-                label="Effective Date"
-                type="date"
-                placeholder={getCurrentDate()}
-                style={{ width: "100%", bottom: "-140px", zIndex: "2000000" }}
-                value={this.state.newEffectiveDate}
-                onChange={this.newEffectiveDate}
-              ></input>
 
               <label className="label">Hourly Rate</label>
               <input
@@ -308,6 +292,7 @@ class PayratesTable extends Component {
               <button
                 type="submit"
                 onClick={(e) => {
+                  this.submitNewPayrate(e);
                   this.closeCreatePayrateModal(e);
                 }}
                 className="add-data-button middle-button"

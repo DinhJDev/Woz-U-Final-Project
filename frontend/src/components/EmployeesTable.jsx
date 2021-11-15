@@ -155,16 +155,6 @@ class EmployeesTable extends Component {
     }
   }
 
-  async updateEmployee(department, training, benefit, e) {
-    e.preventDefault();
-    const employee = {
-      department: [department],
-      employeeTrainings: [training],
-      benefit: benefit,
-    };
-    EmployeeService.updateEmployee(employee);
-  }
-
   async createPerformanceReview(revieweeId, reviewerId, e) {
     e.preventDefault();
     const performance = {
@@ -435,6 +425,16 @@ class EmployeesTable extends Component {
                       </div>
                     ))}
                 </form>
+                <button
+                  to="/"
+                  size="lg"
+                  type="submit"
+                  value="Login"
+                  data-wait="Login"
+                  className="add-data-button middle-button"
+                >
+                  Update
+                </button>
               </TabPanel>
               <TabPanel>
                 <h4>Employee's Current Benefit</h4>
@@ -451,8 +451,8 @@ class EmployeesTable extends Component {
                         <input
                           type="radio"
                           value={benefit.id}
-                          name={benefit.id}
-                          id="benefits-list"
+                          name="benefits-list"
+                          id={benefit.id}
                         />
                         <label for={benefit.id}>{benefit.name}</label>
                       </div>
