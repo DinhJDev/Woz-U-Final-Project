@@ -53,6 +53,7 @@ public class AccountsController {
         return ResponseEntity.ok(account);
     }
 
+    // Promote account
     @PreAuthorize("hasRole('MANAGER') or hasRole('HR')")
     @PutMapping("/promote/{id}")
     public ResponseEntity<?> promoteAccount(@PathVariable("id") Long id) {
