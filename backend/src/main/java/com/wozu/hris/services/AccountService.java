@@ -133,4 +133,8 @@ public class AccountService {
     public void deleteAccount(Long id) {
         this.aRepo.deleteById(id);
     }
+
+    public Boolean existsById(Long id){
+        return aRepo.existsById(id);
+    }
 }

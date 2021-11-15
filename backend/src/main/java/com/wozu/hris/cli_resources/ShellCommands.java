@@ -59,6 +59,7 @@ public class ShellCommands {
         this.tService = tService;
         this.eTService = eTService;
         this.pfService = pfService;
+        this.tDisplay = new TableDisplay();
     }
 
     public String getDebug(){
@@ -950,18 +951,309 @@ public class ShellCommands {
             }else if(selection.equalsIgnoreCase("D")){
                 if(type.equalsIgnoreCase("Department")){
                     clearConsole();
-                    String dId = inputReader.prompt("Department ID");
-                    shellResult.printInfo("Department: Update Manager");
-                    String id = inputReader.prompt("ID");
-                    Account target = aService.findAccountById(Long.parseLong(id));
-                    Department d = dService.findDepartmentById(Long.parseLong(dId));
-                    if(target != null){
+                    Long dId = null;
+                    Department targetD = null;
+                    Account target = null;
+                    do{
+                        try{
+                            dId = Long.parseLong(inputReader.prompt("Department ID"));
+                            if(dService.existsById(dId)){
+                                targetD = dService.findDepartmentById(dId);
+                                if(inputReader.confirmationPrompt(String.format("Target Department %s", targetD.getName()))){
+                                    break;
+                                }else{
+                                    targetD = null;
+                                }
+                            }else{
+                                shellResult.printError("Invalid ID (ID does not exist)");
+                            }
+                        }catch(NumberFormatException e){
+                            shellResult.printError("Invalid Input");
+                            dId = null;
+                            result = false;
+                            debug = e.toString();
+                        }
+                    }while(targetD == null);
+
+                    Map<String, String> departmentOptions = new HashMap<>();
+                    departmentOptions.put("A", "Name");
+                    departmentOptions.put("B", "Manager");
+                    departmentOptions.put("X", "FINISH/CANCEL");
+
+                    String departmentSelection = null;
+
+                    do{
+                        departmentSelection = inputReader.listInput("Edit Department",
+                                "Please select an option [] above.",
+                                departmentOptions,
+                                true);
+
+                    }while(departmentSelection == null);
+
+                    if(departmentSelection.equalsIgnoreCase("X")){
                         clearConsole();
-                        d.setManager(target.getEmployee());
-                        dService.updateDepartemnts(d.getId(), d);
-                        shellResult.printSuccess("Updated Manager Successfully!");
-                        result = true;
+                        debug = "Operation Cancelled";
+                       return result;
                     }
+
+                    if(departmentSelection.equalsIgnoreCase("A")){
+                        do{
+                            clearConsole();
+                            String newName = inputReader.prompt("New Department Name(input \"exit\" to cancel)");
+                            if(newName.equalsIgnoreCase("exit")){
+                                break;
+                            }
+
+                            if(inputReader.confirmationPrompt(String.format("New Name %s", newName))){
+                                result = true;
+                                clearConsole();
+                                shellResult.printSuccess("Changed Department Name Successfully!");
+                                targetD.setName(newName);
+                                dService.updateDepartemnts(targetD.getId(), targetD);
+                                break;
+                            }
+                        }while(true);
+                    }else if(departmentSelection.equalsIgnoreCase("B")) {
+                        Map<String, String> targetOptions = new HashMap<>();
+                        targetOptions.put("A", "Account ID");
+                        targetOptions.put("B", "Account Username");
+                        targetOptions.put("C", "Employee ID");
+                        targetOptions.put("X", "FINISH/CANCEL");
+                        String targetSelection;
+                        clearConsole();
+                        do {
+
+                            String t;
+                            targetSelection = inputReader.listInput("New Manager",
+                                    "Please select an option [] above.",
+                                    targetOptions,
+                                    true);
+
+                            if (targetSelection.equalsIgnoreCase("X")) {
+                                clearConsole();
+                                debug = "Operation Cancelled";
+                                target = null;
+                                break;
+                            }
+
+                            t = inputReader.prompt(targetOptions.get(targetSelection));
+                            if (targetSelection.equalsIgnoreCase("A")) {
+                                if (aService.existsById(Long.parseLong(t))) {
+                                    target = aService.findAccountById(Long.parseLong(t));
+                                } else {
+                                    shellResult.printError("Invalid ID");
+                                }
+                            }else if(targetSelection.equalsIgnoreCase("B")){
+                                if(aService.findByUsername(t) != null){
+                                    target = aService.findByUsername(t).get();
+                                }else{
+                                    clearConsole();
+                                    shellResult.printError("Account with Username does not exist!");
+                                }
+                            }else if(targetSelection.equalsIgnoreCase("C")){
+                                if (eService.existsById(Long.parseLong(t))) {
+                                    target = eService.findEmployee(Long.parseLong(t)).getAccount();
+                                } else {
+                                    shellResult.printError("Invalid ID");
+                                }
+                            }
+
+                            if (getPermissionLevel(target.getRoles()) < ERole.ROLE_MANAGER.getID()) {
+                                clearConsole();
+                                shellResult.printError("New Manager Must Be A \"Manager\" or above!");
+                                continue;
+                            } else if (dService.findByManagerId(target.getEmployee()) != null) {
+                                clearConsole();
+                                shellResult.printError("Employee Already Manages A Department!");
+                                continue;
+                            }
+
+                            if(target != null) {
+                                if (inputReader.confirmationPrompt(String.format("New Manager %s %s", target.getEmployee().getFirstName(), target.getEmployee().getLastName()))) {
+                                    clearConsole();
+                                    result = true;
+                                    shellResult.printSuccess("Updated Department Manager Successfully!");
+                                    targetD.setManager(target.getEmployee());
+                                    dService.updateDepartemnts(targetD.getId(), targetD);
+                                    break;
+                                }
+                            }
+                        } while(true);
+                    }
+                }else if(type.equalsIgnoreCase("Benefit")){
+                    Map<String, String> option = new HashMap<>();
+                    option.put("A", "Name");
+                    option.put("B", "Description");
+                    option.put("X", "FINISH/CANCEL");
+                    Benefit target = null;
+                    Long id = null;
+                    String benefitSelection = null;
+
+                    do{
+                        String holder = inputReader.prompt("Benefit ID");
+                        try{
+                            id = Long.parseLong(holder);
+                            if(bService.existsById(id)){
+                                target = bService.findBenefit(id);
+                                if(inputReader.confirmationPrompt(String.format("Edit Benefit %s", target.getName()))){
+                                    break;
+                                }else{
+                                    target = null;
+                                    id = null;
+                                    continue;
+                                }
+                            }else{
+                                shellResult.printError("ID does not exist!");
+                                id = null;
+                                continue;
+                            }
+                        }catch(NumberFormatException e){
+                            shellResult.printError("Invalid Input");
+                            id = null;
+                            result = false;
+                            debug = e.toString();
+                        }
+                    }while(id == null);
+
+                    do{
+                        benefitSelection = inputReader.listInput("Benefit",
+                                "Please select an option [] above.",
+                                option,
+                                true);
+                        if(benefitSelection.equalsIgnoreCase("X")){
+                            debug = "Operation Cancelled!";
+                            break;
+                        }
+
+                        if(benefitSelection.equalsIgnoreCase("A")){
+                            String holder = inputReader.prompt("New Name(input \"exit\" to cancel)");
+                            if(holder.equalsIgnoreCase("exit")){
+                                continue;
+                            }
+                            if(inputReader.confirmationPrompt(String.format("New Name %s", holder))){
+                                clearConsole();
+                                result = true;
+                                shellResult.printSuccess("Changed Name Successfully!");
+                                target.setName(holder);
+                                bService.updateBenefit(target.getId(), target);
+                                break;
+                            }
+                        }else if(benefitSelection.equalsIgnoreCase("B")){
+                            String holder = inputReader.prompt("New Description(input \"exit\" to cancel)");
+                            if(holder.equalsIgnoreCase("exit")){
+                                continue;
+                            }
+                            if(inputReader.confirmationPrompt(String.format("New Description %s", holder))){
+                                clearConsole();
+                                result = true;
+                                shellResult.printSuccess("Changed Description Successfully!");
+                                target.setDescription(holder);
+                                bService.updateBenefit(target.getId(), target);
+                                break;
+                            }
+                        }
+
+                    }while(true);
+                }else if(type.equalsIgnoreCase("Position")){
+                    Long id;
+                    Position target;
+                    String newName;
+
+                    do {
+                        String holder = inputReader.prompt("Position ID(input \"exit\" to cancel)");
+                        if (!holder.equalsIgnoreCase("exit")) {
+                            try{
+                                id = Long.parseLong(holder);
+                                if(pService.existsById(id)){
+                                    target = pService.findAccountById(id);
+                                    if(inputReader.confirmationPrompt(String.format("Edit %s", target.getName()))){
+                                        do{
+                                            newName = inputReader.prompt("New Name");
+                                            if(inputReader.confirmationPrompt(String.format("New Name %s", newName))){
+                                                break;
+                                            }
+                                        }while(true);
+                                        clearConsole();
+                                        shellResult.printSuccess("Changed Name Successfully!");
+                                        target.setName(newName);
+                                        pService.updateDepartments(target.getId(), target);
+                                        break;
+                                    }else{
+                                        id = null;
+                                        target = null;
+                                        continue;
+                                    }
+                                }else{
+                                    debug = "ID does not exist";
+                                    shellResult.printError("ID Does Not Exist");
+                                    continue;
+                                }
+                            }catch(NumberFormatException e){
+                                debug = "Invalid Input";
+                                shellResult.printError("Invalid Input");
+                                continue;
+                            }
+                        }
+                    }while(true);
+                }else if(type.equalsIgnoreCase("Training")){
+                    Map<String, String> trainingOptions = new HashMap<>();
+                    trainingOptions.put("A", "Name");
+                    trainingOptions.put("B", "Description");
+                    trainingOptions.put("X", "FINISH/CANCEL");
+                    Training target = null;
+                    Long id = null;
+
+                    do{
+                        String holder = inputReader.prompt("Training ID");
+                        try{
+                            id = Long.parseLong(holder);
+                            if(tService.existsById(id)){
+                                target = tService.findTraining(id);
+                                if(inputReader.confirmationPrompt(String.format("Edit %s", target.getTrainingName()))){
+                                    break;
+                                }
+                            }else{
+                                shellResult.printError("ID Does Not Exist!");
+                                continue;
+                            }
+                        }catch(Exception e){
+                            shellResult.printError("Invalid Input");
+                            continue;
+                        }
+
+                    }while(true);
+                    clearConsole();
+                    do{
+                        String trainingSelection = inputReader.listInput("Training",
+                                "Please select an option [] above",
+                                trainingOptions,
+                                true);
+
+                        if(trainingSelection.equalsIgnoreCase("X")){
+                            debug = "Operation Cancelled";
+                            break;
+                        }
+
+                        String newValue = inputReader.prompt(String.format("New %s", trainingOptions.get(trainingSelection)));
+                        if(!inputReader.confirmationPrompt(String.format("New %s", newValue))){
+                            continue;
+                        }
+                        if(trainingSelection.equalsIgnoreCase("A")){
+                            clearConsole();
+                            shellResult.printSuccess("Updated Name Successfully!");
+                            result = true;
+                            target.setTrainingName(newValue);
+                            tService.updateTraining(target.getId(), target);
+                            break;
+                        }else if(trainingSelection.equalsIgnoreCase("B")){
+                            clearConsole();
+                            shellResult.printSuccess("Updated Description Successfully!");
+                            result = true;
+                            target.setDescription(newValue);
+                            tService.updateTraining(target.getId(), target);
+                            break;
+                        }
+                    }while(true);
                 }
             }
         }while(true);
