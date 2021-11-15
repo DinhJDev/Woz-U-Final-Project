@@ -115,7 +115,7 @@ public class PerformanceController {
         Employee employee = eService.findByUsername(username);
 
         try {
-            Performance performance = new Performance(performanceRequest.getComment(), eRepo.getById(performanceRequest.getReviewee()), employee);
+            Performance performance = new Performance(performanceRequest.getComment(), employee, eRepo.getById(performanceRequest.getReviewee()));
             Performance _performance = pService.createPerformance(performance);
             return new ResponseEntity<>(_performance, HttpStatus.CREATED);
         } catch (Exception e){
