@@ -112,15 +112,15 @@ public class TableDisplay {
 
     // Display All Personnel
     public void hrTable(List<Employee> employee) {
-        Object[][] set = new String[employee.size() + 1][13];
-        set[0] = new String[] {"ID", "First Name", "Last Name", "Date of Birth", "Department", "Position", "Payrate", "Total Hours", "Training", "Performance", "Benefits", "Role", "Status"};
+        Object[][] set = new String[employee.size() + 1][12];
+        set[0] = new String[] {"ID", "First Name", "Last Name", "Date of Birth", "Department", "Position", "Payrate", "Total Hours", "Training", "Performance", "Benefits", "Status"};
         int count = 1;
         for (Employee e : employee){
-            String[] temp = new String[13];
+            String[] temp = new String[12];
             temp[0] = e.getId().toString();
             temp[1] = e.getFirstName();
             temp[2] = e.getLastName();
-            temp[3] = format.format(e.getDateOfBirth());
+            temp[3] = e.getDateOfBirth() != null ? format.format(e.getDateOfBirth()) : "N/A";
             temp[4] = e.getEmployeeDepartmentString();
             temp[5] = shellCommands.getPermissionString(e.getAccount().getRoles());
             temp[6] = e.getPayrate() != null ? shellCommands.getPermissionLevel(e.getAccount().getRoles()) >= ERole.ROLE_MANAGER.getID() ? e.getPayrate().getSalary().toString() + "/year" : e.getPayrate().getHourlyRate().toString() + "/hour" : "N/A";
@@ -128,8 +128,7 @@ public class TableDisplay {
             temp[8] = e.getEmployeeTrainingString();
             temp[9] = e.getlastPerformance();
             temp[10] = e.getBenefitName();
-            temp[11] = e.getPosition();
-            temp[12] = e.getStatus();
+            temp[11] = e.getStatus();
 
             set[count] = temp;
             count++;

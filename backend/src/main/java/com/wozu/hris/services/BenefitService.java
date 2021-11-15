@@ -3,6 +3,8 @@ package com.wozu.hris.services;
 import com.wozu.hris.models.Benefit;
 import com.wozu.hris.models.Employee;
 import com.wozu.hris.repositories.BenefitRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,7 @@ public class BenefitService {
     ----------------------------------------------------------------*/
 
     @Autowired BenefitRepository benefitRepository;
+    @Autowired EmployeeService eService;
 
     /*----------------------------------------------------------------
     RETURN ALL BENEFITS
@@ -81,6 +84,12 @@ public class BenefitService {
     ----------------------------------------------------------------*/
 
     public void deleteBenefit(Long benefitID) {
+        Benefit b = benefitRepository.getById(benefitID);
+        List<Employee> emps = b.getEmployees();
+        emps.forEach((e)-> e.setBenefit(null));
+
+        eService.updateEmployees(emps);
+
         benefitRepository.deleteById(benefitID);
     }
 

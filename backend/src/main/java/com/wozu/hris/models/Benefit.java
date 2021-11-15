@@ -59,7 +59,7 @@ public class Benefit {
     RELATIONSHIPS
     ----------------------------------------------------------------*/
 
-    @OneToMany(mappedBy = "benefit", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "benefit")
     private List<Employee> employees;
 
     public Benefit(){}
@@ -92,6 +92,8 @@ public class Benefit {
     public Date getUpdatedAt(){
         return updatedAt;
     }
+
+    public List<Employee> getEmployees(){return employees;}
 
     /*----------------------------------------------------------------
     SETTERS

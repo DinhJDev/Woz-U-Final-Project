@@ -3,6 +3,7 @@ package com.wozu.hris.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -36,7 +37,8 @@ public class Employee {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    private Set<EmployeeTraining> employeeTrainings; //
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
@@ -45,9 +47,9 @@ public class Employee {
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private Payrate payrate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="benefit_id")
-    private Benefit benefit;
+    private Benefit benefit; // x
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL)
@@ -55,15 +57,15 @@ public class Employee {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "reviewee", cascade = CascadeType.ALL)
-    private List<Performance> performances;
+    private List<Performance> performances; // x
 
     @OneToOne(mappedBy = "manager")
     @JsonIgnore
     private Department mDepartment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    private List<DepartmentEmployee> department;
+    @OneToMany(mappedBy = "employee")
+    private List<DepartmentEmployee> department; // x
 
     @PrePersist
     protected void onCreate(){

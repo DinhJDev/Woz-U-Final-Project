@@ -50,4 +50,8 @@ public class DepartmentEmployeeService {
             return null;
         }
     }
+
+    public void saveAll(List<DepartmentEmployee> de){
+        dERepo.saveAll(de);
+    }
 }

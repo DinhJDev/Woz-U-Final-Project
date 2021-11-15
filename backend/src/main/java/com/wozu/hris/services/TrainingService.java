@@ -1,16 +1,27 @@
 package com.wozu.hris.services;
+import com.wozu.hris.models.EmployeeTraining;
 import com.wozu.hris.models.Training;
+import com.wozu.hris.repositories.EmployeeTrainingRepository;
 import com.wozu.hris.repositories.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TrainingService {
     @Autowired
     TrainingRepository trainingRepository;
+
+    @Autowired
+    EmployeeTrainingService etService;
+
+    @Autowired
+    EmployeeTrainingRepository eTRepo;
+
     public List<Training> allTrainings() {
         return trainingRepository.findAll();
     }
@@ -34,7 +45,13 @@ public class TrainingService {
         }
     }
     public void deleteTraining(Long id) {
-        this.trainingRepository.deleteById(id);
+        Training t = trainingRepository.findById(id).get();
+        List<EmployeeTraining> et = t.getEmployeeTrainings();
+        et.forEach((e)->e.setEmployee(null));
+        etService.saveAll(et);
+        etService.deleteAll(t);
+
+        trainingRepository.delete(t);
     }
 
     public List<Training> findAllNotIn(List<String> t){

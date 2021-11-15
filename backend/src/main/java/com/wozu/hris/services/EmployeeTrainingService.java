@@ -4,17 +4,22 @@ import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.EmployeeTraining;
 import com.wozu.hris.models.Training;
 import com.wozu.hris.repositories.EmployeeTrainingRepository;
+import com.wozu.hris.repositories.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EmployeeTrainingService {
 
     @Autowired
     EmployeeTrainingRepository eTRepo;
+
+    @Autowired
+    TrainingRepository tRepo;
 
     public EmployeeTraining createEmployeeTraining(EmployeeTraining et){
         return eTRepo.save(et);
@@ -69,4 +74,12 @@ public class EmployeeTrainingService {
         return eTRepo.existsByEmployee(e);
     }
 
+    public void saveAll(List<EmployeeTraining> e){
+        eTRepo.saveAll(e);
+    }
+
+    public void deleteAll(Training t){
+       List<EmployeeTraining> et = eTRepo.findAllByTraining(t);
+       eTRepo.deleteAllInBatch(et);
+    }
 }

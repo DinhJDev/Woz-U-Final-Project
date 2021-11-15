@@ -1,5 +1,6 @@
 package com.wozu.hris.services;
 
+import com.wozu.hris.models.DepartmentEmployee;
 import com.wozu.hris.models.Position;
 import com.wozu.hris.repositories.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import java.util.Optional;
 public class PositionService {
     @Autowired
     PositionRepository posRepo;
+
+    @Autowired
+    DepartmentEmployeeService deService;
 
     //return all positions
     public List<Position> allPos() {
@@ -55,7 +59,12 @@ public class PositionService {
 
     //delete position
     public void deletePosition(Long pid) {
+        Position p = posRepo.findById(pid).get();
+        List<DepartmentEmployee> de = p.getDepartmentEmployee();
+        de.forEach((e)->e.setPosition(null));
+        deService.saveAll(de);
         this.posRepo.deleteById(pid);
+
     }
 
     public Boolean existsByName(String name){

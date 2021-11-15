@@ -1,5 +1,6 @@
 package com.wozu.hris.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
@@ -19,9 +20,10 @@ public class Training {
     @NotNull
     private String trainingName;
     private String description;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "employee")
-    private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<EmployeeTraining> employeeTrainings;
 
     public Training(){}
 
@@ -70,11 +72,11 @@ public class Training {
         this.description = description;
     }
 
-    public Set<EmployeeTraining> getEmployeeTrainings() {
+    public List<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
     }
 
-    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+    public void setEmployeeTrainings(List<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
     }
 }

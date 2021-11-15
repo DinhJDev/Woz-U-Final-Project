@@ -58,5 +58,9 @@ public class EmployeeService {
     public Boolean existsById(Long Id){
         return employeeRepository.existsById(Id);
     }
+
+    public void updateEmployees(List<Employee> e){
+        employeeRepository.saveAll(e);
+    }
 }
 

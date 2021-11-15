@@ -12,13 +12,13 @@ public class DepartmentEmployee {
     private Long id;
     @ManyToOne
     @JoinColumn(name="position_id")
-    private Position position;
+    private Position position; // x
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="department_id")
     private Department department;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonIgnore
     @JoinColumn(name="employee_id")
     private Employee employee;

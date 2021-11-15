@@ -61,6 +61,8 @@ public class Position {
         return updatedAt;
     }
 
+    public List<DepartmentEmployee> getDepartmentEmployee(){return departmentEmployee;}
+
 
     //setters
 

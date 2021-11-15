@@ -42,7 +42,7 @@ public class Department {
     @JsonIgnore
     private Employee manager;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<DepartmentEmployee> employees;
 
