@@ -1,10 +1,7 @@
 package com.wozu.hris.controllers;
 
 
-import com.wozu.hris.models.Department;
-import com.wozu.hris.models.DepartmentEmployee;
-import com.wozu.hris.models.ERole;
-import com.wozu.hris.models.Employee;
+import com.wozu.hris.models.*;
 import com.wozu.hris.payload.request.EmployeeBenefitsRequest;
 import com.wozu.hris.payload.request.EmployeeDepartmentRequest;
 import com.wozu.hris.payload.request.EmployeeRequest;
@@ -13,6 +10,7 @@ import com.wozu.hris.payload.response.MessageResponse;
 import com.wozu.hris.repositories.DepartmentEmployeeRepository;
 import com.wozu.hris.repositories.DepartmentRepository;
 import com.wozu.hris.repositories.EmployeeRepository;
+import com.wozu.hris.repositories.EmployeeTrainingRepository;
 import com.wozu.hris.services.EmployeeService;
 import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,9 @@ public class EmployeeController {
     @Autowired
     EmployeeRepository eRepo;
     @Autowired
-    DepartmentRepository dRepo;
-    @Autowired
     DepartmentEmployeeRepository dERepo;
+    @Autowired
+    EmployeeTrainingRepository eTRepo;
 
     // Get all candidates
     @PreAuthorize("hasRole('HR') or hasRole('MANAGER')")
@@ -182,12 +180,30 @@ public class EmployeeController {
     }
 
     // update employee trainings
-    /*
     @PutMapping("/employees/{id}/trainings")
-    public ResponseEntity<?> updateEmployeeTrainings(@PathVariable("id") Long id, @RequestBody EmployeeTrainingsRequest) {
+    public ResponseEntity<?> updateEmployeeTrainings(@PathVariable("id") Long id, @RequestBody EmployeeTrainingsRequest employeeTrainingsRequest) {
+        Employee employee = employeeService.findEmployee(id);
+        // List of old Departments
+        List<Training> addList = employee.getEmployeeTrainings().stream().map(EmployeeTraining::getTraining).collect(Collectors.toList());
+        // List of new Departments
+        List<Training> delList = employeeTrainingsRequest.getTrainings();
 
+        // Find what's missing from the old list of departments (New stuff to add)
+        addList.removeAll(employeeTrainingsRequest.getTrainings());
+        // Find what's missing from the new list of departments (Old stuff to remove)
+        delList.removeAll(employee.getEmployeeTrainings().stream().map(EmployeeTraining::getTraining).collect(Collectors.toList()));
+        for (int i = 0; i < addList.size(); i++) {
+            EmployeeTraining eT = new EmployeeTraining(addList.get(i), employee);
+            eTRepo.save(eT);
+        }
+        for (int i = 0; i < delList.size(); i++) {
+            Optional<EmployeeTraining> eT = eTRepo.findByEmployeeAndTraining(employee, delList.get(i));
+            if (eT.isPresent()) {
+                eTRepo.delete(eT.get());
+            }
+        }
+        return ResponseEntity.ok(new MessageResponse("Employee " + employee.getId() + "'s trainings have been updated."));
     }
-    */
 
     // delete employee rest api
     @DeleteMapping("/employees/{id}")

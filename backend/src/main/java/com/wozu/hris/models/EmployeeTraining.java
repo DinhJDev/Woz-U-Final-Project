@@ -27,6 +27,11 @@ public class EmployeeTraining {
     @JoinColumn(insertable = false, updatable = false, name="training_id")
     private Training training;
 
+    public EmployeeTraining(Training training, Employee employee) {
+        this.employee = employee;
+        this.training = training;
+    }
+
     public Long getId() {
         return id;
     }
