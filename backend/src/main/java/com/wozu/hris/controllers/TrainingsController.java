@@ -75,7 +75,7 @@ public class TrainingsController {
     }
 
     // delete training rest api
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
+    // @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @DeleteMapping("/trainings/{id}")
     public ResponseEntity<?> deleteTraining(@PathVariable Long id){
         trainingService.deleteTraining(id);

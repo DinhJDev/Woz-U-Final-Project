@@ -30,7 +30,7 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Timesheet> timesheets;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
     @OneToMany(mappedBy = "employee")
@@ -53,7 +53,7 @@ public class Employee {
     @JsonIgnore
     private Department mDepartment;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartmentEmployee> department;
 
     @PrePersist

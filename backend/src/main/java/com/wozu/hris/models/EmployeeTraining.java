@@ -32,6 +32,8 @@ public class EmployeeTraining {
         this.training = training;
     }
 
+    public EmployeeTraining(){}
+
     public Long getId() {
         return id;
     }
