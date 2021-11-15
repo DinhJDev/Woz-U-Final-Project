@@ -129,6 +129,8 @@ public class EmployeeController {
         employee.setEmployeeTrainings(employeeDetails.getEmployeeTrainings());
         employee.setBenefit(employeeDetails.getBenefit());
 
+        // Finds difference between request List/Set vs existing and makes updates
+
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
 
         return  ResponseEntity.ok(updatedEmployee);
