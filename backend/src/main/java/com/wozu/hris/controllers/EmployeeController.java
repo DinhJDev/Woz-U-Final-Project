@@ -133,12 +133,9 @@ public class EmployeeController {
     public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeRequest employeeDetails){
         Employee employee = employeeService.findEmployee(id);
 
-        /*
         employee.setFirstName(employeeDetails.getFirstName());
         employee.setLastName(employeeDetails.getLastName());
-        employee.setDateOfBirth(employeeDetails.getDateOfBirth());*/
-        employee.setEmployeeTrainings(employeeDetails.getEmployeeTrainings());
-        employee.setBenefit(employeeDetails.getBenefit());
+        employee.setDateOfBirth(employeeDetails.getDateOfBirth());
 
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
 
