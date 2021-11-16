@@ -42,6 +42,12 @@ class EmployeeService {
     });
   }
 
+  async deleteEmployee(employeeId) {
+    return axios.delete(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
+  }
+
+  // updates
+
   async updateEmployee(employeeId, employeeDetails) {
     return axios.put(
       EMPLOYEE_API_BASE_URL + "/employees/" + employeeId,
@@ -49,9 +55,11 @@ class EmployeeService {
     );
   }
 
-  async deleteEmployee(employeeId) {
-    return axios.delete(EMPLOYEE_API_BASE_URL + "/employees/" + employeeId);
-  }
+  // trainings
+
+  // departments
+
+  // benefits
 }
 
 export default new EmployeeService();
