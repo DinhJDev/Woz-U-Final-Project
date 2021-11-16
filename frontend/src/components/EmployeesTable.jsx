@@ -109,12 +109,12 @@ class EmployeesTable extends Component {
   }
 
   async updateEmployeeTrainings() {
-    const updatedDetails = {
+    const updatedTrainings = {
       employeeTrainings: this.state.updatedTrainings,
     };
-    await EmployeeService.updateEmployee(
+    await EmployeeService.updateEmployeeTrainings(
       this.state.chosenEmployee.id,
-      updatedDetails
+      updatedTrainings
     ).then((res) => {
       console.log(res);
     });

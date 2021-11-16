@@ -57,9 +57,30 @@ class EmployeeService {
 
   // trainings
 
+  async updateEmployeeTrainings(employeeId, employeeTrainings) {
+    return axios.put(
+      EMPLOYEE_API_BASE_URL + "/employees/" + employeeId + "/trainings",
+      employeeTrainings
+    );
+  }
+
   // departments
 
+  async updateEmployeeDepartments(employeeId, employeeDepartments) {
+    return axios.put(
+      EMPLOYEE_API_BASE_URL + "/employees/" + employeeId + "/departments",
+      employeeDepartments
+    );
+  }
+
   // benefits
+
+  async updateEmployeeBenefits(employeeId, employeeBenefits) {
+    return axios.put(
+      EMPLOYEE_API_BASE_URL + "/employees/" + employeeId + "/benefits",
+      employeeBenefits
+    );
+  }
 }
 
 export default new EmployeeService();

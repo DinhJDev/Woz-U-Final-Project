@@ -136,9 +136,9 @@ public class EmployeeController {
         /*
         employee.setFirstName(employeeDetails.getFirstName());
         employee.setLastName(employeeDetails.getLastName());
-        employee.setDateOfBirth(employeeDetails.getDateOfBirth());*/
+        employee.setDateOfBirth(employeeDetails.getDateOfBirth());
         employee.setEmployeeTrainings(employeeDetails.getEmployeeTrainings());
-        employee.setBenefit(employeeDetails.getBenefit());
+        employee.setBenefit(employeeDetails.getBenefit());*/
 
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
 
