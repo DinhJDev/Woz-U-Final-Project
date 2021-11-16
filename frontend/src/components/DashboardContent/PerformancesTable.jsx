@@ -8,7 +8,7 @@ class PerformancesTable extends Component {
     super(props);
 
     this.state = {
-      mydata: "",
+      updatedComments: "",
       currentUser: [],
       reviews: [],
       reviewsColumns: [
@@ -37,15 +37,16 @@ class PerformancesTable extends Component {
           width: "100%",
         },
       ],
+      showUpdateModal: false,
     };
   }
 
-  deleteAccount(id) {
-    PerformanceService.deletePerformance(id).then((res) => {
-      this.setState({
-        reviews: this.state.reviews.filter((review) => review.id !== id),
-      });
-    });
+  async updatePerformanceItem(id) {
+    await PerformanceService.updatePerformance();
+  }
+
+  async openUpdateModal(id) {
+    this.setState({ showUpdateModal: true });
   }
 
   async componentDidMount() {
@@ -81,16 +82,11 @@ class PerformancesTable extends Component {
           label: "",
           field: "expand",
         },
-        {
-          label: "",
-          field: "delete",
-        },
       ],
       rows: [
         ...this.state.reviews.map((review, index) => ({
           ...review,
           expand: <button className="row-expand-button bx bx-expand"></button>,
-          delete: <button className="row-expand-button bx bx-trash"></button>,
         })),
       ],
     };
