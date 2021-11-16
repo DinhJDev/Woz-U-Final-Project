@@ -20,7 +20,7 @@ public class Training {
     private String trainingName;
     private String description;
     @JsonIgnore
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
 
 

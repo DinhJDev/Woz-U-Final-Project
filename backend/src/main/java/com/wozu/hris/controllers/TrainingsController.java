@@ -5,6 +5,7 @@ import com.wozu.hris.payload.request.TrainingRequest;
 import com.wozu.hris.payload.response.MessageResponse;
 import com.wozu.hris.repositories.TrainingRepository;
 import com.wozu.hris.services.TrainingService;
+import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,14 +75,10 @@ public class TrainingsController {
     }
 
     // delete training rest api
-    @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
+    // @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @DeleteMapping("/trainings/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteTraining(@PathVariable Long id){
-        Training training = trainingService.findTraining(id);
+    public ResponseEntity<?> deleteTraining(@PathVariable Long id){
         trainingService.deleteTraining(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return  ResponseEntity.ok(response);
+        return ResponseEntity.ok(new MessageResponse("Training deleted"));
     }
-
 }

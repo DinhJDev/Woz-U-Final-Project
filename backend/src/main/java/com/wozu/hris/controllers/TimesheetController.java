@@ -55,18 +55,22 @@ public class TimesheetController {
     @PostAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER') or hasRole('HR')")
     @PostMapping("/clockin")
     public ResponseEntity<?> clockIn(@RequestHeader("Authorization") String token) {
-        Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
-
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Optional<Account> account = aService.findByUsername(username);          // Utilizes JwtToken to obtain username & gets Employee
         Employee employee = account.get().getEmployee();
 
-        timesheet.setStart(new Date());
-        timesheet.setEmployee(employee);
-        tService.createTimesheet(timesheet);                                    // Updates Attributes & Saves
-        employee.setClockedIn(true);                                            // Sets isClockedIn to true
-        eService.updateEmployee(employee.getId(), employee);
-        return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
+        if (!employee.getClockedIn() == true) {
+            Timesheet timesheet = new Timesheet();                                  // Initializes Timesheet Object
+
+            timesheet.setStart(new Date());
+            timesheet.setEmployee(employee);
+            tService.createTimesheet(timesheet);                                    // Updates Attributes & Saves
+            employee.setClockedIn(true);                                            // Sets isClockedIn to true
+            eService.updateEmployee(employee.getId(), employee);
+            return ResponseEntity.ok(new MessageResponse("User successfully clocked in at " + timesheet.getStart()));
+        } else {
+            return ResponseEntity.ok(new MessageResponse("Clock out before you can clock in."));
+        }
     }
 
 
