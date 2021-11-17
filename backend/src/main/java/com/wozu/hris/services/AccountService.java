@@ -22,6 +22,8 @@ public class AccountService {
     private PasswordEncoder bCryptPasswordEncoder;
     @Autowired
     RoleRepository rRepo;
+    @Autowired
+    EmployeeService eService;
 
     // Returns all the accounts
     public List<Account> allAccounts() {
@@ -131,7 +133,9 @@ public class AccountService {
     }
     // Delete an employee
     public void deleteAccount(Long id) {
-        this.aRepo.deleteById(id);
+        Account a = aRepo.findById(id).get();
+
+        eService.deleteEmployee(a.getEmployee().getId());
     }
 
     public Boolean existsById(Long id){

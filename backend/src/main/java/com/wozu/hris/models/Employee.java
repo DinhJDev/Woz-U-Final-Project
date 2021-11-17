@@ -63,7 +63,7 @@ public class Employee {
     private Department mDepartment;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartmentEmployee> department; // x
 
     @PrePersist

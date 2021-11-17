@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -22,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Transactional
 public class ShellCommands {
 
     private String debug;
@@ -759,6 +762,7 @@ public class ShellCommands {
 
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Boolean manageCompany(String type){
         clearConsole();
         Boolean result = false;
@@ -932,6 +936,9 @@ public class ShellCommands {
                     }else if(type.equalsIgnoreCase("Training")){
                         if(tService.existsById(id)){
                             tService.deleteTraining(id);
+                            if(tService.existsById(id)){
+                                tService.deleteTraining(id);
+                            }
                             clearConsole();
                             shellResult.printSuccess(String.format("Removed %s Successfully!", type));
                             result = true;
@@ -1350,7 +1357,6 @@ public class ShellCommands {
         return true;
     }
 
-
     public Date getStartOfMonth(){
         Date start;
         Calendar calendar = GregorianCalendar.getInstance();
@@ -1362,5 +1368,11 @@ public class ShellCommands {
         calendar.set(Calendar.MILLISECOND, 0);
         start = calendar.getTime();
         return start;
+    }
+
+    public void viewPerfomance(Account target){
+        clearConsole();
+        tDisplay.listPerformance(target.getEmployee());
+        inputReader.finishedPrompt();
     }
 }

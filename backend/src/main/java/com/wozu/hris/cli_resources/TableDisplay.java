@@ -166,12 +166,14 @@ public class TableDisplay {
 
     public void listDepartments(){
         List<Department> deptList = dService.allDepts();
-        Object[][] set = new String[deptList.size()][1];
-        int count = 0;
+        Object[][] set = new String[deptList.size() + 1][3];
+        set[0] = new String[] {"ID", "Name", "# of Employees"};
+        int count = 1;
         for (Department d : deptList) {
-            String[] temp = new String[2];
+            String[] temp = new String[3];
             temp[0] = String.valueOf(d.getId());
             temp[1] = d.getName();
+            temp[2] = Integer.toString(d.getEmployees().size());
             set[count] = temp;
             count ++;
         }
@@ -185,7 +187,7 @@ public class TableDisplay {
     public void listPayrolls(Employee e){
         Date start = shellCommands.getStartOfMonth();
         List<Payroll> payrollList = pRService.findAllByDateBetweenAndEmployeeOrderByIdAsc(start, new Date(), e);
-        Object[][] set = new String[payrollList.size()][1];
+        Object[][] set = new String[payrollList.size()][2];
         int count = 0;
         for (Payroll p : payrollList) {
             String[] temp = new String[2];
@@ -204,12 +206,14 @@ public class TableDisplay {
 
     public void listTrainings(){
         List<Training> trainingList = tService.allTrainings();
-        Object[][] set = new String[trainingList.size()][1];
-        int count = 0;
+        Object[][] set = new String[trainingList.size() + 1][3];
+        set[0] = new String[] {"ID", "Name", "Description"};
+        int count = 1;
         for (Training t : trainingList) {
-            String[] temp = new String[2];
+            String[] temp = new String[3];
             temp[0] = String.valueOf(t.getId());
             temp[1] = t.getTrainingName();
+            temp[2] = t.getDescription();
             set[count] = temp;
             count ++;
         }
@@ -222,12 +226,14 @@ public class TableDisplay {
 
     public void listBenefits(){
         List<Benefit> benefitList = bService.allBenefits();
-        Object[][] set = new String[benefitList.size()][1];
-        int count = 0;
+        Object[][] set = new String[benefitList.size() + 1][3];
+        set[0] = new String[] {"ID", "Name", "Description"};
+        int count = 1;
         for (Benefit b : benefitList) {
-            String[] temp = new String[2];
+            String[] temp = new String[3];
             temp[0] = String.valueOf(b.getId());
             temp[1] = b.getName();
+            temp[2] = b.getDescription();
             set[count] = temp;
             count ++;
         }
@@ -240,7 +246,7 @@ public class TableDisplay {
 
     public void listPositions(){
         List<Position> positionList = posService.allPos();
-        Object[][] set = new String[positionList.size()][1];
+        Object[][] set = new String[positionList.size()][2];
 
         int count = 0;
         for (Position p : positionList) {
@@ -258,10 +264,10 @@ public class TableDisplay {
     }
 
     public void listPerformance(Employee e){
-        List<Performance> perfLisr = e.getReviews();
-        Object[][] set = new String[perfLisr.size()+1][3];
-        int count = 0;
-        set[0] = new String[] {"Date", "Performance", "Manager"};
+        List<Performance> perfLisr = e.getPerformances();
+        Object[][] set = new String[perfLisr.size()+1][4];
+        int count = 1;
+        set[0] = new String[] {"ID", "Date", "Performance", "Manager"};
         for (Performance p : perfLisr) {
             String[] temp = new String[4];
             temp[0] = String.valueOf(p.getId());

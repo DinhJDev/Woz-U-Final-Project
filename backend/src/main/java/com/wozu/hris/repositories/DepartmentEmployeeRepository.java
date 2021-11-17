@@ -18,4 +18,5 @@ public interface DepartmentEmployeeRepository extends JpaRepository<DepartmentEm
     List<DepartmentEmployee> findAllByDepartment(Department d);
 
     List<DepartmentEmployee> findAllByEmployee(Employee e);
+
 }

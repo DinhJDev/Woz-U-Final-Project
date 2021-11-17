@@ -7,6 +7,8 @@ import com.wozu.hris.repositories.EmployeeTrainingRepository;
 import com.wozu.hris.repositories.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,11 @@ public class EmployeeTrainingService {
     }
 
     public void deleteEmployeeTraining(Long Id){
+        EmployeeTraining et = eTRepo.findById(Id).get();
+        et.setEmployee(null);
+        et.setTraining(null);
+        eTRepo.save(et);
+
         eTRepo.deleteById(Id);
     }
 

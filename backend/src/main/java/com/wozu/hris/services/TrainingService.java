@@ -3,8 +3,12 @@ import com.wozu.hris.models.EmployeeTraining;
 import com.wozu.hris.models.Training;
 import com.wozu.hris.repositories.EmployeeTrainingRepository;
 import com.wozu.hris.repositories.TrainingRepository;
+import org.hibernate.SharedSessionContract;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class TrainingService {
     @Autowired
     TrainingRepository trainingRepository;
@@ -44,6 +49,8 @@ public class TrainingService {
             return null;
         }
     }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteTraining(Long id) {
         Training t = trainingRepository.findById(id).get();
         Set<EmployeeTraining> et = t.getEmployeeTrainings();
@@ -51,6 +58,7 @@ public class TrainingService {
         etService.saveAll(et);
 
         this.trainingRepository.deleteById(id);
+
     }
 
     public List<Training> findAllNotIn(List<String> t){

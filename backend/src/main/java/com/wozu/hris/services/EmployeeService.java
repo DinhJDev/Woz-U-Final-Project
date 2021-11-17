@@ -1,18 +1,26 @@
 package com.wozu.hris.services;
 
+import com.wozu.hris.models.Department;
+import com.wozu.hris.models.DepartmentEmployee;
 import com.wozu.hris.models.Employee;
+import com.wozu.hris.models.EmployeeTraining;
 import com.wozu.hris.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EmployeeService {
     // Adding the employee repository as a dependency
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    DepartmentEmployeeService deService;
+    @Autowired
+    EmployeeTrainingService etService;
 
     // Returns all the employees
     public List<Employee> allEmployees() {
@@ -52,6 +60,16 @@ public class EmployeeService {
     }
     // Delete an employee
     public void deleteEmployee(Long id) {
+        Employee E = employeeRepository.getById(id);
+
+        List<DepartmentEmployee> de = E.getDepartment();
+        de.forEach((e)-> e.setDepartment(null));
+        deService.saveAll(de);
+
+        Set<EmployeeTraining> et = E.getEmployeeTrainings();
+        et.forEach((e)->e.setTraining(null));
+        etService.saveAll(et);
+
         employeeRepository.deleteById(id);
     }
 

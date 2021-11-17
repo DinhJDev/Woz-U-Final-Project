@@ -19,7 +19,7 @@ public class EmployeeTraining {
         this.dateOfCompletion = new Date();
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonIgnore
     @JoinColumn(name="employee_id")
     private Employee employee;

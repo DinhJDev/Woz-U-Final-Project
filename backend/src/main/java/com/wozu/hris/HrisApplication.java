@@ -5,10 +5,7 @@ import com.wozu.hris.models.*;
 import com.wozu.hris.repositories.AccountRepository;
 import com.wozu.hris.repositories.RoleRepository;
 import com.wozu.hris.repositories.TimesheetRepository;
-import com.wozu.hris.services.AccountService;
-import com.wozu.hris.services.EmployeeService;
-import com.wozu.hris.services.PayrollService;
-import com.wozu.hris.services.TimesheetService;
+import com.wozu.hris.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -590,15 +587,18 @@ class ManagerCommands{
 
 	@Autowired
 	ShellResult shellResult;
-
 	@Autowired
 	InputReader inputReader;
-
 	@Autowired
 	AccountService aService;
-
 	@Autowired
 	ShellCommands shellCommands;
+	@Autowired
+	EmployeeService eService;
+	@Autowired
+	DepartmentEmployeeService dEService;
+	@Autowired
+	DepartmentService dService;
 
 	public Availability managerAvailability(){
 		Account authUser = aService.findAccountById(HrisApplication.getCurrentUser().getId());
@@ -674,7 +674,110 @@ class ManagerCommands{
 
 	@ShellMethod(key="view-performance", value="View performance review of Employee")
 	@ShellMethodAvailability("managerAvailability")
-	public void viewPerformance(){}
+	public void viewPerformance(){
+		shellCommands.clearConsole();
+		Map<String, String> options = new HashMap<>();
+		options.put("A", "Account ID");
+		options.put("B", "Account Username");
+		options.put("C", "Employee ID");
+		options.put("X", "CANCEL");
+
+		String selection = null;
+		Account target = null;
+
+		do{
+			selection = inputReader.listInput("Employee",
+					"Please select an option [] above.",
+					options,
+					true);
+
+			if(selection.equalsIgnoreCase("X")){
+				shellCommands.clearConsole();
+				shellCommands.clearConsole();
+				shellCommands.displayBanner();
+				shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+				return;
+			}
+
+			String input = inputReader.prompt(options.get(selection) + "(input \"exit\" to cancel)");
+
+			if(input.equalsIgnoreCase("exit")){
+				shellCommands.clearConsole();
+				continue;
+			}
+
+			if(selection.equalsIgnoreCase("A")){
+				Long id;
+				try{
+					id = Long.parseLong(input);
+				}catch(NumberFormatException e){
+					shellResult.printError("Invalid Input");
+					continue;
+				}
+
+				if(aService.existsById(id)){
+					target = aService.findAccountById(id);
+				}else{
+					shellCommands.clearConsole();
+					shellResult.printError("Account Does Not Exist!");
+					continue;
+				}
+			}else if(selection.equalsIgnoreCase("B")){
+				if(inputReader.confirmationPrompt(input)){
+					Optional<Account> opt = aService.findByUsername(input);
+					if(opt.isPresent()){
+						target = opt.get();
+					}else{
+						shellCommands.clearConsole();
+						shellResult.printError("Account Does Not Exist!");
+						continue;
+					}
+				}else{
+					shellCommands.clearConsole();
+					continue;
+				}
+			}else if(selection.equalsIgnoreCase("C")){
+				Long id;
+				try{
+					id = Long.parseLong(input);
+				}catch(NumberFormatException e){
+					shellResult.printError("Invalid Input");
+					continue;
+				}
+
+				if(eService.existsById(id)){
+					target = eService.findEmployee(id).getAccount();
+				}else{
+					shellCommands.clearConsole();
+					shellResult.printError("Account Does Not Exist!");
+					continue;
+				}
+			}
+
+			if(inputReader.confirmationPrompt(String.format("Employee %s %s", target.getEmployee().getFirstName(), target.getEmployee().getLastName()))){
+				if(HrisApplication.getPermissionLevel() == ERole.ROLE_MANAGER.getID()){
+					if(!dEService.existsByEmployeeAndDepartment(target.getEmployee(), dService.findByManagerId(HrisApplication.getCurrentUser().getEmployee()))){
+						shellCommands.clearConsole();
+						shellResult.printError("Employee Not In Department!");
+						continue;
+					}
+				}
+				if(shellCommands.getPermissionLevel(target.getRoles()) > ERole.ROLE_MANAGER.getID() || shellCommands.getPermissionLevel(target.getRoles()) > HrisApplication.getPermissionLevel()){
+					shellCommands.clearConsole();
+					shellResult.printError("Invalid Permission Level");
+					continue;
+				}
+				break;
+			}
+
+		}while(true);
+
+
+		shellCommands.viewPerfomance(target);
+		shellCommands.clearConsole();
+		shellCommands.displayBanner();
+		shellResult.printList("Commands", shellCommands.getCommandGroup(HrisApplication.getPermissionLevel()));
+	}
 
 }
 
@@ -822,27 +925,31 @@ class HRCommands{
 				return;
 			}
 
+			Account holder = null;
+
 			if(type.equals("A")){
-				target = aService.findAccountById(Long.parseLong(t));
-				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
+				holder = aService.findAccountById(Long.parseLong(t));
+				if(shellCommands.getPermissionLevel(holder.getRoles()) >= HrisApplication.getPermissionLevel()){
 					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
-					target = null;
+					holder = null;
 				}
 			}else if(type.equals("B")){
-				target = aService.findByUsername(t).get();
-				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
+				holder = aService.findByUsername(t).get();
+				if(shellCommands.getPermissionLevel(holder.getRoles()) >= HrisApplication.getPermissionLevel()){
 					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
-					target = null;
+					holder = null;
 				}
 			}else if(type.equals("C")){
-				target = eService.findEmployee(Long.parseLong(t)).getAccount();
-				if(shellCommands.getPermissionLevel(target.getRoles()) >= HrisApplication.getPermissionLevel()){
-					shellResult.printWarning("Unable to edit Employee! Permission Level Not High Enough!");
-					target = null;
+				holder = eService.findEmployee(Long.parseLong(t)).getAccount();
+				if(holder == null || shellCommands.getPermissionLevel(holder.getRoles()) >= HrisApplication.getPermissionLevel()){
+					shellResult.printWarning("Unable to edit Employee! Invalid Target!");
+					holder = null;
 				}
 			}else if(type.equals("D")){
-				target = HrisApplication.getCurrentUser();
+				holder = HrisApplication.getCurrentUser();
 			}
+
+			target = holder;
 		}while(target == null);
 
 		boolean active = true;
