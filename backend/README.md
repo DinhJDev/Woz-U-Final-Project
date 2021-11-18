@@ -10,12 +10,8 @@
 
 - [About](#about)
 - [Getting Started](#getting_started)
-- [Usage](#usage)
-- [Deployment](#deployment)
 - [Built Using](#built_using)
 - [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
-- [Style Guide](#style_guide)
 
 ## 🧐 About <a name = "about"></a>
 
