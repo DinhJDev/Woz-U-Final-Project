@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/main/assets/McMillian%20HRIS.png">
+<img src="https://github.com/DinhJDev/Woz-U-Final-Project/blob/web-interface/assets/McMillian%20HRIS%20Header.png">
 
 <h1 align="center">McMillianHRIS</h1>
 
@@ -20,6 +20,10 @@
 ## 🧐 About <a name = "about"></a>
 
 McMillan and Associates have hired our development team to design, develop, and implement an HRIS for their respected company. The information system will support the organization’s HR division, in support of the organization as a whole. This HRIS is the online solution to help McMillan an Associates to collect and store data on their employees. Included in this project is an applicant tracking system, payroll, benefits, time & attendance, training, performance, management, and employee self-service. This system will also allow for the management of all employee information.
+
+## 💻 ERD <a name = "erd"></a>
+
+![image](https://user-images.githubusercontent.com/82099912/141489015-db07da3a-39b2-4eb8-9c05-7094ee77a2f3.png)
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 

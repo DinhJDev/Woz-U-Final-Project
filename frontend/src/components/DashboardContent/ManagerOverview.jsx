@@ -1,5 +1,6 @@
 import Clock from "./Clock";
 import ClockInClockOut from "./ClockInClockOut";
+import DepartmentsBreakdownChart from "./DepartmentBreakdownChart";
 
 function ManagerOverview() {
   return (
@@ -18,12 +19,6 @@ function ManagerOverview() {
             tempor incididunt ut labore et dolore magna aliqua.
           </div>
         </div>
-      </div>
-      <div className="white-box two-third mobile-full-box">
-        <div className="box-padding"></div>
-      </div>
-      <div className="white-box third mobile-full-box">
-        <div className="box-padding"></div>
       </div>
     </div>
   );

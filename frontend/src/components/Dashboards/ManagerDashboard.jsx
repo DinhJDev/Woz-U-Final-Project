@@ -9,6 +9,7 @@ import ManagerOverview from "../DashboardContent/ManagerOverview";
 import Profile from "../DashboardContent/Profile";
 import PerformanceReviews from "../DashboardContent/PerformanceReviews";
 import InboxTabs from "../DashboardContent/InboxTabs";
+import TeamTabs from "../../components/DashboardContent/TeamTabs";
 
 const ManagerDashboard = () => {
   return (
@@ -66,7 +67,7 @@ const ManagerDashboard = () => {
           <div className="board-header">
             <span>Team Management</span>
           </div>
-          Team Management Tab (view team table, and performance review table)
+          <TeamTabs />
         </TabPanel>
 
         <TabPanel className="dashboard-view-panel">
