@@ -1,4 +1,4 @@
-<img src="https://github.com/DinhJDev/Woz-U-Final-Project/blob/web-interface/assets/McMillian%20HRIS%20Web%20Header.png">
+<img src="https://raw.githubusercontent.com/DinhJDev/Woz-U-Final-Project/web-interface/assets/McMillian%20HRIS%20Web%20Header.png">
 
 <h1 align="center">McMillianHRIS</h1>
 
