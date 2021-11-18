@@ -9,6 +9,7 @@
 ## 📝 Table of Contents
 
 - [About](#about)
+- [ERD](#erd)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
 - [Deployment](#deployment)
@@ -29,47 +30,19 @@ McMillan and Associates have hired our development team to design, develop, and 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
-### Prerequisites
-
-What things you need to install the software and how to install them.
-
-```
-Examples
-```
-
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
-
-Step 1:
+Installing the project is quite simple. In your terminal, navigate to the location by which you would like to house the repository. You can use the following command:
 
 ```
-Examples
+cd <directory>
 ```
 
-Step 2:
+Copy the repository URL by clicking "Code" and choosing the "HTTPS" method (you can configure this step as you wish). Use the following command in yout terminal to clone the repository.
 
 ```
-Examples
+git clone <repo-url>
 ```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🔧 Running the tests <a name = "tests"></a>
-
-You can test the system by first creating an administrator account (HR) and adding the set of sample employees.
-
-```
-Examples
-```
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
-
-## 🚀 Deployment <a id = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a id = "built_using"></a>
 
@@ -86,39 +59,3 @@ Add additional notes about how to deploy this on a live system.
 - [@Collin](https://github.com/CVL101516)
 - [@Jason](https://github.com/DinhJDev)
 - [@Nathan](https://github.com/KienDu)
-
-## 🎉 Acknowledgements <a name = "acknowledgement"></a>
-
-- Inspiration
-- References
-
-## 🎨 Style Guide <a name = "style_guide"></a>
-
-#### Colors
-
-| Color       | Hex                                                                |
-| ----------- | ------------------------------------------------------------------ |
-| Smoke White | ![#F8F9FD](https://via.placeholder.com/10/F8F9FD?text=+) `#F8F9FD` |
-| Alice Blue  | ![#E3E7EF](https://via.placeholder.com/10/E3E7EF?text=+) `#E3E7EF` |
-| Ice Blue    | ![#E3E7EE](https://via.placeholder.com/10/E3E7EE?text=+) `#E3E7EE` |
-| Blue Sky    | ![#85C8FF](https://via.placeholder.com/10/85C8FF?text=+) `#85C8FF` |
-| Dodgerblue  | ![#1E90FF](https://via.placeholder.com/10/1E90FF?text=+) `#1E90FF` |
-| Deep Shadow | ![#171C26](https://via.placeholder.com/10/171C26?text=+) `#171C26` |
-| Granite     | ![#030304](https://via.placeholder.com/10/030304?text=+) `#030304` |
-
-#### Fonts
-
-| Use       | Font                                                                           | Alternative                                                                  |
-| --------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Headings  | [Thicccboi](https://github.com/wonderunit/font-thicccboi)                      |                                                                              |
-| Text      | [Larsseit](https://www.fonts.com/font/type-dynamic/larsseit)                   | [DM Sans](https://fonts.google.com/specimen/DM+Sans)                         |
-| Monospace | [Relative Mono 10 Pitch](https://www.colophon-foundry.org/typefaces/relative/) | [Insolata](https://fonts.google.com/specimen/Inconsolata?category=Monospace) |
-
-#### Illustrations
-
-| Website                              |
-| ------------------------------------ |
-| [Absurd](https://absurd.design)      |
-| [Unsplash](https://unsplash.com)     |
-| [Rawpixel](https://www.rawpixel.com) |
-| [Scribbl](https://weareskribbl.com)  |
