@@ -21,62 +21,74 @@
 
 McMillan and Associates have hired our development team to design, develop, and implement an HRIS for their respected company. The information system will support the organization’s HR division, in support of the organization as a whole. This HRIS is the online solution to help McMillan an Associates to collect and store data on their employees. Included in this project is an applicant tracking system, payroll, benefits, time & attendance, training, performance, management, and employee self-service. This system will also allow for the management of all employee information.
 
-## 💻 ERD <a name = "erd"></a>
-
-![image](https://user-images.githubusercontent.com/82099912/141489015-db07da3a-39b2-4eb8-9c05-7094ee77a2f3.png)
-
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
-
-```
-Examples
-```
+In order to get this web interface running, you’ll need to have [Node](https://nodejs.org/en/) >= 14.0.0 and npm >= 5.6 on your machine.
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
-
-Step 1:
+Installing the application is quite simple. In your terminal, navigate to the location by which you would like to house the repository. You can use the following command:
 
 ```
-Examples
+cd <directory>
 ```
 
-Step 2:
+Copy the repository URL by clicking "Code" and choosing the "HTTPS" method (you can configure this step as you wish). Use the following command in yout terminal to clone the repository.
 
 ```
-Examples
+git clone <repo-url>
 ```
-
-End with an example of getting some data out of the system or using it for a little demo.
 
 ## 🔧 Running the tests <a name = "tests"></a>
 
-You can test the system by first creating an administrator account (HR) and adding the set of sample employees.
-
-```
-Examples
-```
+You can test the system by first creating an account (Candidate) and adding a set of sample employees.
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+The web application should support most C.R.U.D functionalities as they pertain to a typical human resource information system. This includes (but is not limited to): creating, reading, updating and deleting organizational entities (departments, postions, benefits, accounts etc.), employee self-services (generation of timesheet with clock-in clock-out functionality), and an applicant tracking system.
 
 ## 🚀 Deployment <a id = "deployment"></a>
 
-Add additional notes about how to deploy this on a live system.
+To get the application up and running, open the `backend` folder in any integrated development environment (for Java) of your choosing (IntelliJ IDEA, Eclipse). Next, cd into the `frontend` folder with your terminal using the following command:
+
+```
+cd <Woz-U-Final-Project/frontend>
+```
+
+Intall the react dependencies with the following command:
+
+```
+yarn install
+```
+
+or
+
+```
+npm i
+```
+
+Now start the react environment using the follwoing command:
+
+```
+yarn start
+```
+
+or
+
+```
+npm start
+```
 
 ## ⛏️ Built Using <a id = "built_using"></a>
 
 - [Java](https://www.java.com/en/) - Server-side
 - [Spring Shell](https://vuejs.org/) - JDBC
 - [MySQL](https://www.mysql.com) - Database
-- [React](https://reactjs.org) - User Interface
+- [React](https://reactjs.org) - Web Interface
 
 ## ✍️ Authors <a id = "authors"></a>
 
@@ -89,8 +101,10 @@ Add additional notes about how to deploy this on a live system.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Inspiration
-- References
+Our team decided to use a few libraries to supplement our web application. These libraries allowed for us to focus on building the system without the need of getting into the weeds of building certain component elements.
+
+- [Vaadin Date Picker](https://vaadin.com/components/vaadin-date-picker)
+- [MDB React Datatables](https://mdbootstrap.com/docs/react/tables/datatables/)
 
 ## 🎨 Style Guide <a name = "style_guide"></a>
 
