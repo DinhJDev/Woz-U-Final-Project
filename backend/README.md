@@ -9,7 +9,6 @@
 ## 📝 Table of Contents
 
 - [About](#about)
-- [ERD](#erd)
 - [Getting Started](#getting_started)
 - [Built Using](#built_using)
 - [Authors](#authors)
