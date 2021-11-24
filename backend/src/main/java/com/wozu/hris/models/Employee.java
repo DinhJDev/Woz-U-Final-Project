@@ -276,6 +276,9 @@ public class Employee {
                 }
             }
         }
+        if(departemntList == null || departemntList.length() < 1){
+            return "";
+        }
         return departemntList.toString();
     }
 
