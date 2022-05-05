@@ -1,5 +1,6 @@
 package com.wozu.hris.services;
 
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Payrate;
 import com.wozu.hris.repositories.PayrateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,19 @@ public class PayrateService {
 
     public Payrate findPayrate(Long Id){
         Optional<Payrate> optionalPayrate = prRepo.findById(Id);
+        if(optionalPayrate.isPresent()){
+            return optionalPayrate.get();
+        }else{
+            return null;
+        }
+    }
+
+    public boolean existsByEmployee(Employee employee){
+        return prRepo.existsByEmployee(employee);
+    }
+
+    public Payrate findPayrateByEmployee(Employee employee){
+        Optional<Payrate> optionalPayrate = prRepo.findByEmployee(employee);
         if(optionalPayrate.isPresent()){
             return optionalPayrate.get();
         }else{

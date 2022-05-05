@@ -9,5 +9,9 @@ import java.util.List;
 public interface PerformanceRepository extends CrudRepository<Performance, Long> {
     List<Performance> findAll();
 
+    // Employee being reviewed (Employee)
     List<Performance> findAllByRevieweeId(Long id);
+
+    // Employee reviewing (Manager)
+    List<Performance> findAllByReviewerId(Long Id);
 }

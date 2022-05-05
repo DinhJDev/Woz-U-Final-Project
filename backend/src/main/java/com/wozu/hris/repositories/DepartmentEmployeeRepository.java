@@ -7,8 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DepartmentEmployeeRepository extends JpaRepository<DepartmentEmployee, Long> {
-    List<DepartmentEmployee> findByEmployeeAndDepartment(Employee e, Department d);
+    Optional<DepartmentEmployee> findByEmployeeAndDepartment(Employee e, Department d);
+
+    Boolean existsByEmployeeAndDepartment(Employee e, Department d);
+
+    List<DepartmentEmployee> findAllByDepartment(Department d);
+
+    List<DepartmentEmployee> findAllByEmployee(Employee e);
+
 }

@@ -1,6 +1,7 @@
 package com.wozu.hris.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,14 +19,22 @@ public class EmployeeTraining {
         this.dateOfCompletion = new Date();
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonIgnore
-    @JoinColumn(insertable = false, updatable = false, name="employee_id")
+    @JoinColumn(name="employee_id")
     private Employee employee;
 
-    @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name="training_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="training_id")
     private Training training;
+
+    public EmployeeTraining(){}
+
+    public EmployeeTraining(Employee e, Training t, Date d){
+        this.employee = e;
+        this.training = t;
+        this.dateOfCompletion = d;
+    }
 
     public Long getId() {
         return id;

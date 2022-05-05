@@ -1,5 +1,6 @@
 package com.wozu.hris.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
@@ -19,9 +20,17 @@ public class Training {
     @NotNull
     private String trainingName;
     private String description;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "employee")
-    private Set<EmployeeTraining> employeeTrainings = new HashSet<EmployeeTraining>();
+    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<>();
+
+    public Training(){}
+
+    public Training(String name, String description){
+        this.trainingName = name;
+        this.description = description;
+    }
 
 
     @PrePersist

@@ -36,6 +36,11 @@ public class Position {
     @OneToMany(mappedBy = "position")
     private List<DepartmentEmployee> departmentEmployee;
 
+    public Position(){}
+
+    public Position(String name){
+        this.name = name;
+    }
 
     //getters
 
@@ -55,6 +60,8 @@ public class Position {
     public Date getUpdatedAt() {
         return updatedAt;
     }
+
+    public List<DepartmentEmployee> getDepartmentEmployee(){return departmentEmployee;}
 
 
     //setters

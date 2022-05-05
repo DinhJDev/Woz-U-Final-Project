@@ -1,8 +1,12 @@
 package com.wozu.hris.repositories;
 
+import com.wozu.hris.models.Employee;
 import com.wozu.hris.models.Payroll;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 /*
 
@@ -16,4 +20,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PayrollRepository extends JpaRepository<Payroll, Long> {
+
+    List<Payroll> findAll();
+
+    List<Payroll> findAllByDateBetweenAndEmployeeOrderByIdAsc(Date start, Date end, Employee employee);
+
 }

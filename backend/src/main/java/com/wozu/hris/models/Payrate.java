@@ -48,6 +48,21 @@ public class Payrate {
     /*
 
    -----------------------------------------------------------------------------------
+                                       Constructor
+   -----------------------------------------------------------------------------------
+
+    */
+
+    public Payrate(){}
+
+    public Payrate(Employee employee){
+        this.employee = employee;
+    }
+
+
+    /*
+
+   -----------------------------------------------------------------------------------
                                CREATED AND UPDATED AT
    -----------------------------------------------------------------------------------
 
@@ -74,7 +89,7 @@ public class Payrate {
     */
 
     @OneToOne
-    @JoinColumn(insertable = false, updatable = false, name = "employee_id")
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     /*
@@ -92,6 +107,10 @@ public class Payrate {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void setEmployee(Employee employee){this.employee = employee;}
+
+    public Employee getEmployee(){return this.employee;}
 
     public Double getHourlyRate() {
         return hourlyRate;
@@ -131,9 +150,5 @@ public class Payrate {
 
     public Date getUpdatedAt() {
         return updatedAt;
-    }
-
-    public Employee getEmployee() {
-        return employee;
     }
 }
